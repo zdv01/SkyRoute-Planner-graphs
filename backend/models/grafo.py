@@ -56,7 +56,7 @@ class Grafo:
 
     def dijkstra_simple(self, grafo, inicio_id, destino_id):
         # Obtener todos los identificadores
-        todos = [v.identifer for v in grafo.vertices]
+        todos = [v.identifier for v in grafo.vertices]
 
         dist = {v: math.inf for v in todos}
         pred = {v: None for v in todos}
@@ -88,7 +88,7 @@ class Grafo:
             # Relajar aristas usando la estructura Arista
             vertice_actual = mapa_vertices[u]
             for arista in vertice_actual.adjacencies:
-                v = arista.destino.identifier
+                v = arista.destino
                 if v in no_visitados:
                     nueva_dist = dist[u] + arista.get_Weight()
                     if nueva_dist < dist[v]:
