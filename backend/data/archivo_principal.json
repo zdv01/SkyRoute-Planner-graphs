@@ -1,0 +1,97 @@
+{
+  "nodos": [
+    {
+      "id": "BOG",
+      "nombre": "Aeropuerto Internacional El Dorado",
+      "ciudad": "Bogotá",
+      "pais": "Colombia",
+      "zonaHoraria": "GMT-5",
+      "esHub": true,
+      "costoAlojamiento": 50,
+      "costoAlimentacion": 15,
+      "actividades": [
+        {
+          "nombre": "Tour por la ciudad",
+          "tipo": "turismo",
+          "duracionMin": 180,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Visita a museo",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 10
+        }
+      ],
+      "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        }
+      ]
+    },
+    {
+      "id": "MDE",
+      "nombre": "Aeropuerto Internacional José María Córdova",
+      "ciudad": "Medellín",
+      "pais": "Colombia",
+      "zonaHoraria": "GMT-5",
+      "esHub": false,
+      "costoAlojamiento": 40,
+      "costoAlimentacion": 12,
+      "actividades": [
+        {
+          "nombre": "Parapente",
+          "tipo": "aventura",
+          "duracionMin": 90,
+          "costoUSD": 50
+        }
+      ],
+      "trabajos": [
+        {
+          "nombre": "Guía turístico",
+          "tarifaHora": 10,
+          "maxHoras": 5
+        }
+      ]
+    }
+  ],
+  "aristas": [
+    {
+      "origen": "BOG",
+      "destino": "MDE",
+      "distanciaKm": 250,
+      "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+      "costoBase": 0,
+      "estanciaMinima": 60
+    },
+    {
+      "origen": "MDE",
+      "destino": "BOG",
+      "distanciaKm": 250,
+      "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+      "costoBase": 20,
+      "estanciaMinima": 45
+    }
+  ],
+  "configuracion": {
+    "aeronaves": {
+      "Avión Comercial": {
+        "costoKm": 0.18,
+        "tiempoKm": 0.7
+      },
+      "Avión Regional": {
+        "costoKm": 0.25,
+        "tiempoKm": 1.1
+      },
+      "Hélice": {
+        "costoKm": 0.12,
+        "tiempoKm": 2.5
+      }
+    },
+    "presupuestoMinimoPorc": 35,
+    "intervaloAlojamiento": 20,
+    "intervaloAlimentacion": 8
+  }
+}
