@@ -1,4 +1,4 @@
-from .vertice import Vertice
+from models.vertice import Vertice
 
 
 class Actividad:

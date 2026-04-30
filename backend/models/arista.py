@@ -38,7 +38,7 @@ class Arista:
             estanciaMinima=data.get("estanciaMinima", 0),
         )
 
-    def get_weight(self):
+    def get_Weight(self):
         return self.distanciaKm
 
     def __repr__(self):

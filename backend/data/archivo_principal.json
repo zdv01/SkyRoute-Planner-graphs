@@ -55,7 +55,187 @@
           "maxHoras": 5
         }
       ]
-    }
+    },
+      {
+    "id": "LIM",
+    "nombre": "Aeropuerto Internacional Jorge Chávez",
+    "ciudad": "Lima",
+    "pais": "Perú",
+    "zonaHoraria": "GMT-5",
+    "esHub": true,
+    "costoAlojamiento": 45,
+    "costoAlimentacion": 14,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "SCL",
+    "nombre": "Aeropuerto Internacional Arturo Merino Benítez",
+    "ciudad": "Santiago",
+    "pais": "Chile",
+    "zonaHoraria": "GMT-4",
+    "esHub": true,
+    "costoAlojamiento": 55,
+    "costoAlimentacion": 18,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "EZE",
+    "nombre": "Aeropuerto Internacional Ministro Pistarini",
+    "ciudad": "Buenos Aires",
+    "pais": "Argentina",
+    "zonaHoraria": "GMT-3",
+    "esHub": true,
+    "costoAlojamiento": 50,
+    "costoAlimentacion": 16,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "GRU",
+    "nombre": "Aeropuerto Internacional de São Paulo-Guarulhos",
+    "ciudad": "São Paulo",
+    "pais": "Brasil",
+    "zonaHoraria": "GMT-3",
+    "esHub": true,
+    "costoAlojamiento": 60,
+    "costoAlimentacion": 20,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "MEX",
+    "nombre": "Aeropuerto Internacional de la Ciudad de México",
+    "ciudad": "Ciudad de México",
+    "pais": "México",
+    "zonaHoraria": "GMT-6",
+    "esHub": true,
+    "costoAlojamiento": 55,
+    "costoAlimentacion": 17,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "CUN",
+    "nombre": "Aeropuerto Internacional de Cancún",
+    "ciudad": "Cancún",
+    "pais": "México",
+    "zonaHoraria": "GMT-5",
+    "esHub": false,
+    "costoAlojamiento": 70,
+    "costoAlimentacion": 25,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "PTY",
+    "nombre": "Aeropuerto Internacional de Tocumen",
+    "ciudad": "Panamá",
+    "pais": "Panamá",
+    "zonaHoraria": "GMT-5",
+    "esHub": true,
+    "costoAlojamiento": 50,
+    "costoAlimentacion": 15,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "UIO",
+    "nombre": "Aeropuerto Internacional Mariscal Sucre",
+    "ciudad": "Quito",
+    "pais": "Ecuador",
+    "zonaHoraria": "GMT-5",
+    "esHub": false,
+    "costoAlojamiento": 35,
+    "costoAlimentacion": 10,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "GYE",
+    "nombre": "Aeropuerto Internacional José Joaquín de Olmedo",
+    "ciudad": "Guayaquil",
+    "pais": "Ecuador",
+    "zonaHoraria": "GMT-5",
+    "esHub": false,
+    "costoAlojamiento": 30,
+    "costoAlimentacion": 9,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "CCS",
+    "nombre": "Aeropuerto Internacional Simón Bolívar",
+    "ciudad": "Caracas",
+    "pais": "Venezuela",
+    "zonaHoraria": "GMT-4",
+    "esHub": false,
+    "costoAlojamiento": 40,
+    "costoAlimentacion": 12,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "LAP",
+    "nombre": "Aeropuerto Internacional Manuel Márquez de León",
+    "ciudad": "La Paz",
+    "pais": "México",
+    "zonaHoraria": "GMT-7",
+    "esHub": false,
+    "costoAlojamiento": 45,
+    "costoAlimentacion": 13,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "ASU",
+    "nombre": "Aeropuerto Internacional Silvio Pettirossi",
+    "ciudad": "Asunción",
+    "pais": "Paraguay",
+    "zonaHoraria": "GMT-4",
+    "esHub": false,
+    "costoAlojamiento": 30,
+    "costoAlimentacion": 10,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "SDQ",
+    "nombre": "Aeropuerto Internacional Las Américas",
+    "ciudad": "Santo Domingo",
+    "pais": "República Dominicana",
+    "zonaHoraria": "GMT-4",
+    "esHub": false,
+    "costoAlojamiento": 45,
+    "costoAlimentacion": 14,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "HAV",
+    "nombre": "Aeropuerto Internacional José Martí",
+    "ciudad": "La Habana",
+    "pais": "Cuba",
+    "zonaHoraria": "GMT-5",
+    "esHub": false,
+    "costoAlojamiento": 35,
+    "costoAlimentacion": 11,
+    "actividades": [],
+    "trabajos": []
+  },
+  {
+    "id": "SJO",
+    "nombre": "Aeropuerto Internacional Juan Santamaría",
+    "ciudad": "San José",
+    "pais": "Costa Rica",
+    "zonaHoraria": "GMT-6",
+    "esHub": false,
+    "costoAlojamiento": 50,
+    "costoAlimentacion": 15,
+    "actividades": [],
+    "trabajos": []
+  }
   ],
   "aristas": [
     {
@@ -67,13 +247,141 @@
       "estanciaMinima": 60
     },
     {
+      "origen": "BOG",
+      "destino": "LIM",
+      "distanciaKm": 1880,
+      "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+      "costoBase": 0,
+      "estanciaMinima": 60
+    },
+    {
       "origen": "MDE",
       "destino": "BOG",
       "distanciaKm": 250,
       "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
       "costoBase": 20,
       "estanciaMinima": 45
-    }
+    },
+      {
+    "origen": "LIM",
+    "destino": "SCL",
+    "distanciaKm": 2450,
+    "aeronaves": ["Avión Comercial"],
+    "costoBase": 0,
+    "estanciaMinima": 60
+  },
+  {
+    "origen": "LIM",
+    "destino": "BOG",
+    "distanciaKm": 1880,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "costoBase": 10,
+    "estanciaMinima": 50
+  },
+  {
+    "origen": "SCL",
+    "destino": "EZE",
+    "distanciaKm": 1130,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "costoBase": 5,
+    "estanciaMinima": 45
+  },
+  {
+    "origen": "GRU",
+    "destino": "EZE",
+    "distanciaKm": 1670,
+    "aeronaves": ["Avión Comercial"],
+    "costoBase": 0,
+    "estanciaMinima": 60
+  },
+  {
+    "origen": "GRU",
+    "destino": "SCL",
+    "distanciaKm": 2610,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "costoBase": 15,
+    "estanciaMinima": 70
+  },
+  {
+    "origen": "MEX",
+    "destino": "CUN",
+    "distanciaKm": 1290,
+    "aeronaves": ["Avión Comercial", "Hélice"],
+    "costoBase": 0,
+    "estanciaMinima": 40
+  },
+  {
+    "origen": "MEX",
+    "destino": "PTY",
+    "distanciaKm": 2400,
+    "aeronaves": ["Avión Comercial"],
+    "costoBase": 20,
+    "estanciaMinima": 80
+  },
+  {
+    "origen": "PTY",
+    "destino": "BOG",
+    "distanciaKm": 760,
+    "aeronaves": ["Avión Regional", "Hélice"],
+    "costoBase": 0,
+    "estanciaMinima": 30
+  },
+  {
+    "origen": "UIO",
+    "destino": "GYE",
+    "distanciaKm": 270,
+    "aeronaves": ["Hélice"],
+    "costoBase": 0,
+    "estanciaMinima": 20
+  },
+  {
+    "origen": "CCS",
+    "destino": "PTY",
+    "distanciaKm": 1050,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "costoBase": 10,
+    "estanciaMinima": 50
+  },
+  {
+    "origen": "ASU",
+    "destino": "GRU",
+    "distanciaKm": 1130,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "costoBase": 0,
+    "estanciaMinima": 45
+  },
+  {
+    "origen": "SDQ",
+    "destino": "HAV",
+    "distanciaKm": 1400,
+    "aeronaves": ["Avión Comercial"],
+    "costoBase": 5,
+    "estanciaMinima": 60
+  },
+  {
+    "origen": "HAV",
+    "destino": "MEX",
+    "distanciaKm": 1800,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "costoBase": 10,
+    "estanciaMinima": 70
+  },
+  {
+    "origen": "SJO",
+    "destino": "PTY",
+    "distanciaKm": 800,
+    "aeronaves": ["Avión Regional", "Hélice"],
+    "costoBase": 0,
+    "estanciaMinima": 30
+  },
+  {
+    "origen": "CUN",
+    "destino": "SJO",
+    "distanciaKm": 1250,
+    "aeronaves": ["Avión Comercial", "Hélice"],
+    "costoBase": 15,
+    "estanciaMinima": 50
+  }
   ],
   "configuracion": {
     "aeronaves": {

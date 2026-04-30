@@ -31,5 +31,12 @@ for ap in aeropuertos:
 
 # crear un grafo con los aeropuertos
 grafo = Grafo()
-for iata in aeropuertos:
-    print(iata.identifier)
+for aeropuerto in aeropuertos:
+    verticeOrigen = Vertice(aeropuerto.origen)
+    verticeOrigen.add_adjacency(
+        Arista(verticeOrigen, aeropuerto.destino, aeropuerto.distanciaKm)
+    )
+    grafo.agregar_vertice(verticeOrigen)
+
+grafo.imprimir_grafo()
+grafo.visualizar("Grafo de prueba")

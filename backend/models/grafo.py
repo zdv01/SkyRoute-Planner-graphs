@@ -1,8 +1,8 @@
 import math
 import networkx as nx
 import matplotlib.pyplot as plt
-from models.arista import Arista
-from models.vertice import Vertice
+from .arista import Arista
+from .vertice import Vertice
 
 
 class Grafo:
@@ -15,9 +15,9 @@ class Grafo:
     def imprimir_grafo(self):
         for v in self.vertices:
             print("***************************")
-            print(v.identificador)
-            for a in v.adyacencias:
-                print(a.vertice_destino.identificador, a.getPeso())
+            print(v.identifier)
+            for a in v.adjacencies:
+                print(a.destino, a.get_Weight())
         print("-------------------------------------")
         print("-------------------------------------")
 
@@ -26,11 +26,11 @@ class Grafo:
 
         # Construir el grafo de networkx desde la estructura propia
         for v in self.vertices:
-            for arista in v.adyacencias:
+            for arista in v.adjacencies:
                 G_nx.add_edge(
-                    v.identificador,
-                    arista.vertice_destino.identificador,
-                    weight=arista.getPeso(),
+                    v.identifier,
+                    arista.destino,
+                    weight=arista.get_Weight(),
                 )
 
         # Dibujar
@@ -56,7 +56,7 @@ class Grafo:
 
     def dijkstra_simple(self, grafo, inicio_id, destino_id):
         # Obtener todos los identificadores
-        todos = [v.identificador for v in grafo.vertices]
+        todos = [v.identifer for v in grafo.vertices]
 
         dist = {v: math.inf for v in todos}
         pred = {v: None for v in todos}
@@ -65,7 +65,7 @@ class Grafo:
         no_visitados = set(todos)
 
         # Mapa de id → objeto Vertice para acceso rápido
-        mapa_vertices = {v.identificador: v for v in grafo.vertices}
+        mapa_vertices = {v.identifier: v for v in grafo.vertices}
 
         print("=== Iteración inicial ===")
         for v in todos:
@@ -87,10 +87,10 @@ class Grafo:
 
             # Relajar aristas usando la estructura Arista
             vertice_actual = mapa_vertices[u]
-            for arista in vertice_actual.adyacencias:
-                v = arista.vertice_destino.identificador
+            for arista in vertice_actual.adjacencies:
+                v = arista.destino.identifier
                 if v in no_visitados:
-                    nueva_dist = dist[u] + arista.getPeso()
+                    nueva_dist = dist[u] + arista.get_Weight()
                     if nueva_dist < dist[v]:
                         dist[v] = nueva_dist
                         pred[v] = u
@@ -124,21 +124,21 @@ class Grafo:
         visitados = set()
         resultado = []
         cola_actual = [vertice_inicial]
-        visitados.add(vertice_inicial.identificador)
+        visitados.add(vertice_inicial.identifier)
 
         while cola_actual:
             cola_siguiente_dict = {}  # id -> (peso, vertice)
 
             # Procesar todos los vértices del nivel actual
             for vertice in cola_actual:
-                resultado.append(vertice.identificador)
+                resultado.append(vertice.identifier)
 
                 # Recopila todos los vecinos del nivel actual
-                for arista in vertice.adyacencias:
-                    v_adyacente = arista.vertice_destino
-                    v_id = v_adyacente.identificador
+                for arista in vertice.adjacencies:
+                    v_adyacente = arista.destino
+                    v_id = v_adyacente.identifier
                     if v_id not in visitados:
-                        peso = arista.getPeso()
+                        peso = arista.get_Weight()
                         # Guardar solo el de menor peso si hay duplicados
                         if (
                             v_id not in cola_siguiente_dict
@@ -152,18 +152,18 @@ class Grafo:
             cola_actual = [v for _, v in cola_siguiente]
 
         return print(
-            f"Recorrido en anchura (por peso) iniciando en {vertice_inicial.identificador}: {' → '.join(resultado)}"
+            f"Recorrido en anchura (por peso) iniciando en {vertice_inicial.identifier}: {' → '.join(resultado)}"
         )
 
     def visualizar_con_ruta(self, path, titulo="Ruta más corta - Dijkstra"):
         G_nx = nx.DiGraph()
 
         for v in self.vertices:
-            for arista in v.adyacencias:
+            for arista in v.adjacencies:
                 G_nx.add_edge(
                     v.identificador,
-                    arista.vertice_destino.identificador,
-                    weight=arista.getPeso(),
+                    arista.destino.identifier,
+                    weight=arista.get_Weight(),
                 )
 
         aristas_ruta = set(zip(path[:-1], path[1:]))
@@ -236,3 +236,27 @@ class Grafo:
         plt.title(titulo, fontsize=14)
         plt.tight_layout()
         plt.show()
+
+
+""""
+grafo = Grafo()
+
+verticeA = Vertice("A")
+verticeB = Vertice("B")
+verticeC = Vertice("C")
+verticeD = Vertice("D")
+
+verticeA.add_adjacency(Arista(verticeA, verticeB, 2))
+verticeA.add_adjacency(Arista(verticeA, verticeC, 1))
+verticeB.add_adjacency(Arista(verticeB, verticeD, 1))
+verticeC.add_adjacency(Arista(verticeC, verticeD, 2))
+
+grafo.agregar_vertice(verticeA)
+grafo.agregar_vertice(verticeB)
+grafo.agregar_vertice(verticeC)
+grafo.agregar_vertice(verticeD)
+
+grafo.imprimir_grafo()
+grafo.visualizar("Grafo de prueba")
+
+"""
