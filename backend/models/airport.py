@@ -1,116 +1,145 @@
-from models.vertice import Vertice
+from .vertex import Vertex
 
 
-class Actividad:
-    """Representa una actividad disponible en un aeropuerto"""
-
-    def __init__(self, nombre, tipo, duracionMin, costoUSD):
-        self.nombre = nombre
-        self.tipo = tipo
-        self.duracionMin = duracionMin
-        self.costoUSD = costoUSD
-
-    def __repr__(self):
-        return f"Actividad({self.nombre}, {self.tipo}, {self.duracionMin}min, ${self.costoUSD})"
-
-    @classmethod
-    def from_dict(cls, data):
-        """Crea una Actividad a partir de un diccionario"""
-        return cls(
-            nombre=data.get("nombre"),
-            tipo=data.get("tipo"),
-            duracionMin=data.get("duracionMin"),
-            costoUSD=data.get("costoUSD"),
-        )
-
-
-class Trabajo:
-    """Representa un trabajo disponible en un aeropuerto"""
-
-    def __init__(self, nombre, tarifaHora, maxHoras):
-        self.nombre = nombre
-        self.tarifaHora = tarifaHora
-        self.maxHoras = maxHoras
-
-    def __repr__(self):
-        return f"Trabajo({self.nombre}, ${self.tarifaHora}/hr, max {self.maxHoras}hrs)"
-
-    @classmethod
-    def from_dict(cls, data):
-        """Crea un Trabajo a partir de un diccionario"""
-        return cls(
-            nombre=data.get("nombre"),
-            tarifaHora=data.get("tarifaHora"),
-            maxHoras=data.get("maxHoras"),
-        )
-
-
-class Aeropuerto(Vertice):
-    """Representa un aeropuerto con información completa para el sistema de rutas"""
+class Airport(Vertex):
+    """It represents an airport with complete information for the routing system"""
 
     def __init__(
         self,
         id,
-        nombre,
-        ciudad,
-        pais,
-        zonaHoraria,
-        esHub,
-        costoAlojamiento,
-        costoAlimentacion,
-        actividades=None,
-        trabajos=None,
+        name,
+        city,
+        country,
+        timeZone,
+        isHub,
+        accommodationCost,
+        alimentationCost,
+        activities=None,
+        jobs=None,
     ):
         super().__init__(id)
-        self.nombre = nombre
-        self.ciudad = ciudad
-        self.pais = pais
-        self.zonaHoraria = zonaHoraria
-        self.esHub = esHub
-        self.costoAlojamiento = costoAlojamiento
-        self.costoAlimentacion = costoAlimentacion
-        self.actividades = actividades if actividades is not None else []
-        self.trabajos = trabajos if trabajos is not None else []
+        self.name = name
+        self.city = city
+        self.country = country
+        self.timeZone = timeZone
+        self.isHub = isHub = isHub
+        self.accommodationCost = accommodationCost
+        self.alimentationCost = alimentationCost
+        self.activities = activities if activities is not None else []
+        self.jobs = jobs if jobs is not None else []
 
     @classmethod
     def from_dict(cls, data):
         """
-        Crea un Aeropuerto a partir de un diccionario (parsea JSON)
+        Create an Airport from a dictionary (parse JSON)
 
         Args:
-            data (dict): Diccionario con estructura del JSON
+            data (dict): Dictionary with JSON structure
 
         Returns:
-            Aeropuerto: Instancia con todos los atributos parseados
+            Airport: Instance with all attributes parsed
         """
-        actividades = [Actividad.from_dict(act) for act in data.get("actividades", [])]
-        trabajos = [Trabajo.from_dict(trab) for trab in data.get("trabajos", [])]
+        activities = [Activity.from_dict(act) for act in data.get("actividades", [])]
+        jobs = [Job.from_dict(trab) for trab in data.get("trabajos", [])]
 
         return cls(
             id=data.get("id"),
-            nombre=data.get("nombre"),
-            ciudad=data.get("ciudad"),
-            pais=data.get("pais"),
-            zonaHoraria=data.get("zonaHoraria"),
-            esHub=data.get("esHub"),
-            costoAlojamiento=data.get("costoAlojamiento"),
-            costoAlimentacion=data.get("costoAlimentacion"),
-            actividades=actividades,
-            trabajos=trabajos,
+            name=data.get("nombre"),
+            city=data.get("ciudad"),
+            country=data.get("pais"),
+            timeZone=data.get("zonaHoraria"),
+            isHub=data.get("esHub"),
+            accommodationCost=data.get("costoAlojamiento"),
+            alimentationCost=data.get("costoAlimentacion"),
+            activities=activities,
+            jobs=jobs,
         )
 
+    def to_dict(self):
+        return {
+            "AEROPUERTO": self.name,
+            "id": self.identifier,
+            "ciudad": self.city,
+            "pais": self.country,
+            "zonaHoraria": self.timeZone,
+            "esHub": self.isHub,
+            "costoAlojamiento": self.accommodationCost,
+            "costoAlimentacion": self.alimentationCost,
+            "actividades": [act.to_dict() for act in self.activities],
+            "trabajos": [job.to_dict() for job in self.jobs],
+        }
+
     def __str__(self):
-        hub_text = "Hub" if self.esHub else "No Hub"
+        hub_text = "Hub" if self.isHub else "No Hub"
         return f"""
-Aeropuerto: {self.nombre} ({self.identifier})
-  Ciudad: {self.ciudad}, {self.pais}
-  Zona Horaria: {self.zonaHoraria}
+Aeropuerto: {self.name} ({self.identifier})
+  Ciudad: {self.city}, {self.country}
+  Zona Horaria: {self.timeZone}
   Estado: {hub_text}
-  Costo Alojamiento: ${self.costoAlojamiento}
-  Costo Alimentación: ${self.costoAlimentacion}
-  Actividades ({len(self.actividades)}): {[str(a) for a in self.actividades]}
-  Trabajos ({len(self.trabajos)}): {[str(t) for t in self.trabajos]}
+  Costo Alojamiento: ${self.accommodationCost}
+  Costo Alimentación: ${self.alimentationCost}
+  Actividades ({len(self.activities)}): {[str(a) for a in self.activities]}
+  Trabajos ({len(self.jobs)}): {[str(t) for t in self.jobs]}
 """
 
     def __repr__(self):
-        return f"Aeropuerto({self.identifier}, {self.nombre})"
+        return f"Aeropuerto({self.identifier}, {self.name})"
+
+
+class Activity:
+    """It represents an activity available at an airport."""
+
+    def __init__(self, name, activityType, durationMin, usdCost):
+        self.name = name
+        self.activityType = activityType
+        self.durationMin = durationMin
+        self.usdCost = usdCost
+
+    def __repr__(self):
+        return f"Actividad({self.name}, {self.activityType}, {self.durationMin}min, ${self.usdCost})"
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create an Activity from a dictionary"""
+        return cls(
+            name=data.get("nombre"),
+            activityType=data.get("tipo"),
+            durationMin=data.get("duracionMin"),
+            usdCost=data.get("costoUSD"),
+        )
+
+    def to_dict(self):
+        return {
+            "nombre": self.name,
+            "tipo": self.activityType,
+            "duracionMin": self.durationMin,
+            "costoUSD": self.usdCost,
+        }
+
+
+class Job:
+    """It represents a job available at an airport."""
+
+    def __init__(self, name, hourlyRate, maxHours):
+        self.name = name
+        self.hourlyRate = hourlyRate
+        self.maxHours = maxHours
+
+    def __repr__(self):
+        return f"Trabajo({self.name}, ${self.hourlyRate}/hr, max {self.maxHours}hrs)"
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create a Job from a Dictionary"""
+        return cls(
+            name=data.get("nombre"),
+            hourlyRate=data.get("tarifaHora"),
+            maxHours=data.get("maxHoras"),
+        )
+
+    def to_dict(self):
+        return {
+            "nombre": self.name,
+            "tarifaHora": self.hourlyRate,
+            "maxHoras": self.maxHours,
+        }

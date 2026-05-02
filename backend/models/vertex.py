@@ -1,4 +1,4 @@
-class Vertice:
+class Vertex:
     def __init__(self, identifier):
         self.identifier = identifier
         self.adjacencies = []
