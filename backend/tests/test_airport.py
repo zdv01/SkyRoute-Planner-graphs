@@ -5,6 +5,7 @@ from backend.models.edge import Edge
 from backend.models.airport import Airport
 from pathlib import Path
 import json
+from backend.services.reportService import FinalReport
 
 ## ----------------------------------------------------------------
 ## ARCHIVO DE PRUEBA NO ES NECESARIO TRADUCRILO
@@ -71,9 +72,54 @@ print("=" * 70)
 grafo.visualize("Grafo de Rutas Aéreas")
 
 """
+# grafo.dijkstra_simple(grafo, "BOG", "SCL")
 
 print("\n" + "=" * 70)
 print("AEROPUERTOS")
 print("=" * 70)
 airports_list = [Airport.from_dict(nodo) for nodo in data["nodos"]]
 print(json.dumps([a.to_dict() for a in airports_list], indent=4, ensure_ascii=False))
+
+print("\n" + "=" * 70)
+print("REPORTES")
+print("=" * 70)
+reportefinal = [
+    {
+        "destinosVisitados": {
+            "nombreAeropuerto": "Aeropuerto Internacional Arturo Merino Benítez",
+            "ciudad": "Santiago",
+            "pais": "Chile",
+            "tiempoEstancia": 6,
+            "costoTotal": 4590,
+        },
+        "vuelosRecorridos": {
+            "origen": "BOG",
+            "destino": "SCL",
+            "distanciaKm": 1880,
+            "aeronaves": "Hélice",
+            "costoTotal": 2390,
+            "tiempoVuelo": 120,
+        },
+        "actividadesRealizadas": {
+            "nombre": "tour de la ciudad",
+            "tipo": "turismo",
+            "duracionMin": 180,
+            "costoUSD": 25,
+        },
+        "trabajosRealizados": {
+            "nombre": "guia turistico",
+            "horasTrabajadas": 6,
+            "ingresoObtenido": 300,
+        },
+        "totales": {
+            "presupuestiInicial": 10000,
+            "totalGastado": 1000,
+            "totalGanado": 345,
+            "saldoFinal": 10000,
+            "tiempoTotal": 6,
+        },
+    }
+]
+
+report = [FinalReport.from_dict(r) for r in reportefinal]
+print(json.dumps([r.to_dict() for r in report], indent=4, ensure_ascii=False))
