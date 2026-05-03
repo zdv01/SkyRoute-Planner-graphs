@@ -5,7 +5,8 @@ from backend.models.edge import Edge
 from backend.models.airport import Airport
 from pathlib import Path
 import json
-from backend.services.reportService import FinalReport
+
+# from backend.services.reportService import FinalReport
 
 ## ----------------------------------------------------------------
 ## ARCHIVO DE PRUEBA NO ES NECESARIO TRADUCRILO
@@ -41,11 +42,12 @@ for arista_data in data["aristas"]:
 
     # Obtener los vértices
     vertice_origen = vertices_map[origen_id]
+    vertice_destino = vertices_map[destino_id]
 
     # Crear la arista con todos los datos del JSON
     arista = Edge(
-        origin=origen_id,
-        destination=destino_id,
+        origin=vertice_origen,
+        destination=vertice_destino,
         distanceKm=arista_data.get("distanciaKm", 0),
         aircrafts=arista_data.get("aeronaves", []),
         baseCost=arista_data.get("costoBase", 0),
@@ -65,15 +67,18 @@ print("\n" + "=" * 70)
 print("INFORMACIÓN DEL GRAFO")
 print("=" * 70)
 grafo.print_graph()
-"""
+
 print("\n" + "=" * 70)
-print("VISUALIZANDO GRAFO")
+print("RECORRIDO EN ANCHURA")
 print("=" * 70)
-grafo.visualize("Grafo de Rutas Aéreas")
+grafo.breadthFirstSearch_traversal(grafo, "MEX")
 
-"""
-# grafo.dijkstra_simple(grafo, "BOG", "SCL")
-
+print("\n" + "=" * 70)
+print("RECORRIDO EN PROFUNDIDAD")
+print("=" * 70)
+grafo.depth_traversal(grafo, "MEX")
+grafo.dijkstra_simple(grafo, "BOG", "EZE")
+""""
 print("\n" + "=" * 70)
 print("AEROPUERTOS")
 print("=" * 70)
@@ -123,3 +128,5 @@ reportefinal = [
 
 report = [FinalReport.from_dict(r) for r in reportefinal]
 print(json.dumps([r.to_dict() for r in report], indent=4, ensure_ascii=False))
+
+"""

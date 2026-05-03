@@ -1,6 +1,4 @@
 import math
-import networkx as nx
-import matplotlib.pyplot as plt
 from .edge import Edge
 from .vertex import Vertex
 
@@ -17,42 +15,9 @@ class Graph:
             print("***************************")
             print(v.identifier)
             for a in v.adjacencies:
-                print(a.destination, a.get_Weight())
+                print(a.destination.identifier, a.get_Weight())
         print("-------------------------------------")
         print("-------------------------------------")
-
-    def visualize(self, title="Visualitation of Graph with NetworkX"):
-        G_nx = nx.DiGraph()
-
-        # Build the networkx graph from the existing structure
-        for v in self.vertexes:
-            for edge in v.adjacencies:
-                G_nx.add_edge(
-                    v.identifier,
-                    edge.destination,
-                    weight=edge.get_Weight(),
-                )
-
-        # Draw
-        pos = nx.spring_layout(G_nx, seed=42)
-        edge_labels = nx.get_edge_attributes(G_nx, "weight")
-
-        plt.figure(figsize=(10, 7))
-        nx.draw(
-            G_nx,
-            pos,
-            with_labels=True,
-            node_color="skyblue",
-            node_size=1500,
-            font_size=12,
-            font_weight="bold",
-            arrows=True,
-        )
-        nx.draw_networkx_edge_labels(
-            G_nx, pos, edge_labels=edge_labels, font_color="red"
-        )
-        plt.title(title, fontsize=14)
-        plt.show()
 
     def dijkstra_simple(self, graph, start_id, destination_id):
         # Get all the identifiers
@@ -88,7 +53,8 @@ class Graph:
             # Relax edges using the Edge structure
             current_vertex = map_vertexes[u]
             for edge in current_vertex.adjacencies:
-                v = edge.destination
+                v_vertex = edge.destination
+                v = v_vertex.identifier
                 if v in not_visited:
                     new_dist = dist[u] + edge.get_Weight()
                     if new_dist < dist[v]:
@@ -115,125 +81,65 @@ class Graph:
         print(f"Total distance: {dist[destination_id]}")
         return dist, pred, path
 
-    def recorrido_anchura(self, graph, initial_vertex):
-        if initial_vertex not in graph.vertexes:
-            return print("initial vertex not found")
+    def breadthFirstSearch_traversal(self, graph, initial_vertex_id):
+        get_id = [v.identifier for v in graph.vertexes]
 
+        if initial_vertex_id not in get_id:
+            return print("vertex not found")
+        return self._breadthFirstSearch(graph, initial_vertex_id)
+
+    def _breadthFirstSearch(self, graph, initial_vertex_id):
+        map_vertexes = {v.identifier: v for v in graph.vertexes}
         visited = set()
         result = []
+        # Convert initial vertex ID to vertex object
+        initial_vertex = map_vertexes[initial_vertex_id]
         current_queue = [initial_vertex]
-        visited.add(initial_vertex.identifier)
-
+        visited.add(initial_vertex_id)
         while current_queue:
+            next_queue = []
             next_queue_dict = {}  # id -> (weight, vertex)
-
             # Process all vertices in the current level
             for vertex in current_queue:
                 result.append(vertex.identifier)
-
+                sorted_edges = sorted(vertex.adjacencies, key=lambda e: e.get_Weight())
                 # Collect all the neighbors from the current level
-                for edge in vertex.adjacencies:
+                for edge in sorted_edges:
                     v_adyacent = edge.destination
                     v_id = v_adyacent.identifier
-                    if v_id not in visited:
-                        weight = edge.get_Weight()
-                        # Save only the smallest file if there are duplicates
-                        if (
-                            v_id not in next_queue_dict
-                            or weight < next_queue_dict[v_id][0]
-                        ):
-                            next_queue_dict[v_id] = (weight, v_adyacent)
-                        visited.add(v_id)
+                    if v_id not in visited and v_id not in next_queue_dict:
+                        next_queue_dict[v_id] = v_adyacent
+            # Sort the  level by weight
+            next_queue = list(next_queue_dict.values())
+            for v in next_queue:
+                visited.add(v.identifier)
+            current_queue = next_queue
+        return print(
+            f"Width range (by weight) starting at {initial_vertex_id}: {result}"
+        )
 
-            # Sort the next level by weight
-            next_queue = sorted(next_queue_dict.values(), key=lambda x: x[0])
-            current_queue = [v for _, v in next_queue]
+    def depth_traversal(self, graph, initial_vertex_id):
+        get_id = [v.identifier for v in graph.vertexes]
+        visited = set()
+        result = []
+        if initial_vertex_id not in get_id:
+            return print("vertex not found")
+        self._depth_traversal(graph, initial_vertex_id, visited, result)
 
         return print(
-            f"Width range (by weight) starting at {initial_vertex.identifier}: {' → '.join(result)}"
+            f"Depth range (by weight) starting at {initial_vertex_id}: {result}"
         )
 
-    def visualizar_con_ruta(self, path, title="Shortest route - Dijkstra"):
-        G_nx = nx.DiGraph()
-
-        for v in self.vertexes:
-            for edge in v.adjacencies:
-                G_nx.add_edge(
-                    v.identifier,
-                    edge.destination.identifier,
-                    weight=edge.get_Weight(),
-                )
-
-        rute_edges = set(zip(path[:-1], path[1:]))
-
-        edge_colors = [
-            "red" if (u, v) in rute_edges else "#cccccc" for u, v in G_nx.edges()
-        ]
-        edge_widths = [3.5 if (u, v) in rute_edges else 1.0 for u, v in G_nx.edges()]
-        node_colors = [
-            (
-                "orange"
-                if n == path[0]
-                else (
-                    "lightgreen"
-                    if n == path[-1]
-                    else "#ff6b6b" if n in path else "skyblue"
-                )
-            )
-            for n in G_nx.nodes()
-        ]
-
-        pos = nx.spring_layout(G_nx, seed=42)
-        edge_labels = nx.get_edge_attributes(G_nx, "weight")
-
-        plt.figure(figsize=(12, 8))
-
-        # Draw nodes and edges WITHOUT node labels yet
-        nx.draw(
-            G_nx,
-            pos,
-            with_labels=False,  # <-- deactivated here
-            node_color=node_colors,
-            node_size=2000,
-            arrows=True,
-            arrowsize=20,
-            edge_color=edge_colors,
-            width=edge_widths,
-            connectionstyle="arc3,rad=0.1",
-        )  # <-- separates bidirectional edges
-
-        # Separate node labels with white background
-        nx.draw_networkx_labels(
-            G_nx,
-            pos,
-            font_size=12,
-            font_weight="bold",
-            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.8),
-        )
-
-        # Separate edge labels with white background
-        nx.draw_networkx_edge_labels(
-            G_nx,
-            pos,
-            edge_labels=edge_labels,
-            font_size=9,
-            font_color="black",
-            bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.9),
-            label_pos=0.35,
-        )  # <-- Move the label away from the center
-
-        from matplotlib.patches import Patch
-
-        leyend = [
-            Patch(color="orange", label=f"Inicio ({path[0]})"),
-            Patch(color="lightgreen", label=f"Destino ({path[-1]})"),
-            Patch(color="#ff6b6b", label="Nodos en ruta"),
-            Patch(color="skyblue", label="Otros nodos"),
-        ]
-        plt.legend(handles=leyend, loc="upper left")
-        plt.title(title, fontsize=14)
-        plt.tight_layout()
-        plt.show()
+    def _depth_traversal(self, graph, initial_vertex_id, visited, result):
+        map_vertexes = {v.identifier: v for v in graph.vertexes}
+        vertex = map_vertexes[initial_vertex_id]
+        visited.add(initial_vertex_id)
+        result.append(vertex.identifier)
+        for edge in sorted(vertex.adjacencies, key=lambda e: e.get_Weight()):
+            v_adyacent = edge.destination
+            v_id = v_adyacent.identifier
+            if v_id not in visited:
+                self._depth_traversal(graph, v_id, visited, result)
 
 
 """
@@ -243,18 +149,42 @@ verticeA = Vertex("A")
 verticeB = Vertex("B")
 verticeC = Vertex("C")
 verticeD = Vertex("D")
+verticeE = Vertex("E")
+verticeF = Vertex("F")
+verticeG = Vertex("G")
+verticeH = Vertex("H")
+verticeI = Vertex("I")
 
 verticeA.add_adjacency(Edge(verticeA, verticeB, 2))
-verticeA.add_adjacency(Edge(verticeA, verticeC, 1))
-verticeB.add_adjacency(Edge(verticeB, verticeD, 1))
+verticeA.add_adjacency(Edge(verticeA, verticeD, 3))
+verticeA.add_adjacency(Edge(verticeA, verticeC, 4))
+verticeB.add_adjacency(Edge(verticeB, verticeC, 5))
+verticeB.add_adjacency(Edge(verticeB, verticeE, 11))
+verticeC.add_adjacency(Edge(verticeC, verticeA, 4))
 verticeC.add_adjacency(Edge(verticeC, verticeD, 2))
+verticeC.add_adjacency(Edge(verticeC, verticeH, 6))
+verticeC.add_adjacency(Edge(verticeC, verticeE, 5))
+verticeD.add_adjacency(Edge(verticeD, verticeH, 1))
+verticeE.add_adjacency(Edge(verticeE, verticeB, 11))
+verticeE.add_adjacency(Edge(verticeE, verticeI, 12))
+verticeF.add_adjacency(Edge(verticeF, verticeB, 9))
+verticeF.add_adjacency(Edge(verticeF, verticeG, 8))
+verticeG.add_adjacency(Edge(verticeG, verticeF, 8))
+verticeH.add_adjacency(Edge(verticeH, verticeC, 6))
+verticeI.add_adjacency(Edge(verticeI, verticeG, 9))
 
 graph.add_vertex(verticeA)
 graph.add_vertex(verticeB)
 graph.add_vertex(verticeC)
 graph.add_vertex(verticeD)
+graph.add_vertex(verticeE)
+graph.add_vertex(verticeF)
+graph.add_vertex(verticeG)
+graph.add_vertex(verticeH)
+graph.add_vertex(verticeI)
 
 graph.print_graph()
-graph.visualize("Grafo de prueba")
+graph.breadthFirstSearch_traversal(graph, "A")
+graph.depth_traversal(graph, "A")
 
 """

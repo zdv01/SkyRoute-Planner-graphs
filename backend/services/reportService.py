@@ -1,10 +1,10 @@
-from .dynamicTravelService import DynamicTravelService
-from .routePerformanceService import RoutePerformanceService
+# from .dynamicTravelService import DynamicTravelService
+# from .routePerformanceService import RoutePerformanceService
 
 # These services could be the ones used to generate the final report
 
 
-class FinalReport(DynamicTravelService, RoutePerformanceService):
+class FinalReport("DynamicTravelService, RoutePerformanceService"):
     """
     This class receives data from other services to generate a final report
     """
