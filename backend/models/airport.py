@@ -1,4 +1,6 @@
 from .vertex import Vertex
+from .Activity import Activity
+from .Job import Job
 
 
 class Airport(Vertex):
@@ -84,62 +86,3 @@ Aeropuerto: {self.name} ({self.identifier})
 
     def __repr__(self):
         return f"Aeropuerto({self.identifier}, {self.name})"
-
-
-class Activity:
-    """It represents an activity available at an airport."""
-
-    def __init__(self, name, activityType, durationMin, usdCost):
-        self.name = name
-        self.activityType = activityType
-        self.durationMin = durationMin
-        self.usdCost = usdCost
-
-    def __repr__(self):
-        return f"Actividad({self.name}, {self.activityType}, {self.durationMin}min, ${self.usdCost})"
-
-    @classmethod
-    def from_dict(cls, data):
-        """Create an Activity from a dictionary"""
-        return cls(
-            name=data.get("nombre"),
-            activityType=data.get("tipo"),
-            durationMin=data.get("duracionMin"),
-            usdCost=data.get("costoUSD"),
-        )
-
-    def to_dict(self):
-        return {
-            "nombre": self.name,
-            "tipo": self.activityType,
-            "duracionMin": self.durationMin,
-            "costoUSD": self.usdCost,
-        }
-
-
-class Job:
-    """It represents a job available at an airport."""
-
-    def __init__(self, name, hourlyRate, maxHours):
-        self.name = name
-        self.hourlyRate = hourlyRate
-        self.maxHours = maxHours
-
-    def __repr__(self):
-        return f"Trabajo({self.name}, ${self.hourlyRate}/hr, max {self.maxHours}hrs)"
-
-    @classmethod
-    def from_dict(cls, data):
-        """Create a Job from a Dictionary"""
-        return cls(
-            name=data.get("nombre"),
-            hourlyRate=data.get("tarifaHora"),
-            maxHours=data.get("maxHoras"),
-        )
-
-    def to_dict(self):
-        return {
-            "nombre": self.name,
-            "tarifaHora": self.hourlyRate,
-            "maxHoras": self.maxHours,
-        }
