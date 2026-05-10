@@ -141,8 +141,34 @@ class Graph:
             if v_id not in visited:
                 self._depth_traversal(graph, v_id, visited, result)
 
+    def bellmanFord(self, id_vInitial, graph):
+        # Get all the identifiers
+        all_vertex = [v.identifier for v in graph.vertexes]
+        # verify that exits "id_vInitial" in list[all_vertex]
+        if id_vInitial not in all_vertex:
+            raise Exception(f"el vértice {id_vInitial} no esta en el grafo")
+        dist = {v: math.inf for v in all_vertex}
+        pred = {v: None for v in all_vertex}
+        dist[id_vInitial] = 0
 
-"""
+        # Create list of tuples
+        list_tuples = []
+        # Add adjacencies in list of tuples
+        for vertex in graph.vertexes:
+            for edges in vertex.adjacencies:
+                origin = vertex.identifier
+                destination = edges.destination.identifier
+                weight = edges.get_Weight()
+                list_tuples.append((origin, destination, weight))
+
+        for _ in range(len(all_vertex) - 1):
+            for o, d, w in list_tuples:
+                if dist[o] + w < dist[d]:
+                    dist[d] = dist[o] + w
+                    pred[d] = o
+        return dist, pred
+
+
 graph = Graph()
 
 verticeA = Vertex("A")
@@ -186,5 +212,5 @@ graph.add_vertex(verticeI)
 graph.print_graph()
 graph.breadthFirstSearch_traversal(graph, "A")
 graph.depth_traversal(graph, "A")
-
-"""
+graph.bellmanFord("A", graph)
+print(graph.bellmanFord("A", graph))
