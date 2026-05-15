@@ -86,9 +86,9 @@ class Graph:
 
         if initial_vertex_id not in get_id:
             return print("vertex not found")
-        return self._breadthFirstSearch(graph, initial_vertex_id)
+        return self.__breadthFirstSearch(graph, initial_vertex_id)
 
-    def _breadthFirstSearch(self, graph, initial_vertex_id):
+    def __breadthFirstSearch(self, graph, initial_vertex_id):
         map_vertexes = {v.identifier: v for v in graph.vertexes}
         visited = set()
         result = []
@@ -124,13 +124,13 @@ class Graph:
         result = []
         if initial_vertex_id not in get_id:
             return print("vertex not found")
-        self._depth_traversal(graph, initial_vertex_id, visited, result)
+        self.__depth_traversal(graph, initial_vertex_id, visited, result)
 
         return print(
             f"Depth range (by weight) starting at {initial_vertex_id}: {result}"
         )
 
-    def _depth_traversal(self, graph, initial_vertex_id, visited, result):
+    def __depth_traversal(self, graph, initial_vertex_id, visited, result):
         map_vertexes = {v.identifier: v for v in graph.vertexes}
         vertex = map_vertexes[initial_vertex_id]
         visited.add(initial_vertex_id)
@@ -141,16 +141,20 @@ class Graph:
             if v_id not in visited:
                 self._depth_traversal(graph, v_id, visited, result)
 
-    def bellmanFord(self, id_vInitial, graph):
+    def bellmanFord(self, graph, id_vInitial):
         # Get all the identifiers
         all_vertex = [v.identifier for v in graph.vertexes]
         # verify that exits "id_vInitial" in list[all_vertex]
         if id_vInitial not in all_vertex:
-            raise Exception(f"el vértice {id_vInitial} no esta en el grafo")
+            return print(f"el vértice {id_vInitial} no esta en el grafo")
+        # call internal funtion
+        dist, pred = self.__bellmanFord(graph, id_vInitial, all_vertex)
+        return print(f"distance: {dist}, predecessor:{pred}")
+
+    def __bellmanFord(self, graph, id_vInitial, all_vertex):
         dist = {v: math.inf for v in all_vertex}
         pred = {v: None for v in all_vertex}
         dist[id_vInitial] = 0
-
         # Create list of tuples
         list_tuples = []
         # Add adjacencies in list of tuples
@@ -160,7 +164,6 @@ class Graph:
                 destination = edges.destination.identifier
                 weight = edges.get_Weight()
                 list_tuples.append((origin, destination, weight))
-
         for _ in range(len(all_vertex) - 1):
             for o, d, w in list_tuples:
                 if dist[o] + w < dist[d]:
@@ -179,25 +182,20 @@ verticeE = Vertex("E")
 verticeF = Vertex("F")
 verticeG = Vertex("G")
 verticeH = Vertex("H")
-verticeI = Vertex("I")
 
-verticeA.add_adjacency(Edge(verticeA, verticeB, 2))
-verticeA.add_adjacency(Edge(verticeA, verticeD, 3))
-verticeA.add_adjacency(Edge(verticeA, verticeC, 4))
-verticeB.add_adjacency(Edge(verticeB, verticeC, 5))
-verticeB.add_adjacency(Edge(verticeB, verticeE, 11))
-verticeC.add_adjacency(Edge(verticeC, verticeA, 4))
-verticeC.add_adjacency(Edge(verticeC, verticeD, 2))
-verticeC.add_adjacency(Edge(verticeC, verticeH, 6))
-verticeC.add_adjacency(Edge(verticeC, verticeE, 5))
-verticeD.add_adjacency(Edge(verticeD, verticeH, 1))
-verticeE.add_adjacency(Edge(verticeE, verticeB, 11))
-verticeE.add_adjacency(Edge(verticeE, verticeI, 12))
-verticeF.add_adjacency(Edge(verticeF, verticeB, 9))
-verticeF.add_adjacency(Edge(verticeF, verticeG, 8))
-verticeG.add_adjacency(Edge(verticeG, verticeF, 8))
-verticeH.add_adjacency(Edge(verticeH, verticeC, 6))
-verticeI.add_adjacency(Edge(verticeI, verticeG, 9))
+verticeA.add_adjacency(Edge(verticeA, verticeB, 5))
+verticeA.add_adjacency(Edge(verticeA, verticeC, 2))
+verticeB.add_adjacency(Edge(verticeB, verticeH, 1))
+verticeB.add_adjacency(Edge(verticeB, verticeE, 9))
+verticeC.add_adjacency(Edge(verticeC, verticeB, 3))
+verticeC.add_adjacency(Edge(verticeC, verticeD, 1))
+verticeD.add_adjacency(Edge(verticeD, verticeH, 5))
+verticeD.add_adjacency(Edge(verticeD, verticeG, 7))
+verticeH.add_adjacency(Edge(verticeH, verticeD, 6))
+verticeH.add_adjacency(Edge(verticeH, verticeF, 3))
+verticeF.add_adjacency(Edge(verticeF, verticeE, 9))
+verticeF.add_adjacency(Edge(verticeF, verticeG, 2))
+verticeG.add_adjacency(Edge(verticeG, verticeE, 19))
 
 graph.add_vertex(verticeA)
 graph.add_vertex(verticeB)
@@ -207,10 +205,10 @@ graph.add_vertex(verticeE)
 graph.add_vertex(verticeF)
 graph.add_vertex(verticeG)
 graph.add_vertex(verticeH)
-graph.add_vertex(verticeI)
 
-graph.print_graph()
-graph.breadthFirstSearch_traversal(graph, "A")
-graph.depth_traversal(graph, "A")
-graph.bellmanFord("A", graph)
-print(graph.bellmanFord("A", graph))
+
+# graph.print_graph()
+# graph.breadthFirstSearch_traversal(graph, "A")
+# graph.depth_traversal(graph, "C")
+# graph.dijkstra_simple(graph, "A", "G")
+graph.bellmanFord(graph, "A")
