@@ -139,7 +139,7 @@ class Graph:
             v_adyacent = edge.destination
             v_id = v_adyacent.identifier
             if v_id not in visited:
-                self._depth_traversal(graph, v_id, visited, result)
+                self.__depth_traversal(graph, v_id, visited, result)
 
     def bellmanFord(self, graph, id_vInitial):
         # Get all the identifiers
@@ -170,6 +170,160 @@ class Graph:
                     dist[d] = dist[o] + w
                     pred[d] = o
         return dist, pred
+
+        # for PRIM algorthm
+        """
+        convert a directed graph into an undirected or bidirectional one, 
+        so that the weight works in both directions in order to execute the MST (PRIM) algorithm
+        """
+
+    def __convert_to_undirected(self, graph):
+        undirected = {}
+        for vertex in graph.vertexes:
+            for edge in vertex.adjacencies:
+                origin = vertex.identifier
+                destination = edge.destination.identifier
+                weight = edge.get_Weight()
+                # unique key regardless of address
+                key = tuple(sorted([origin, destination]))
+                # keep min weight
+                if key not in undirected:
+                    undirected[key] = weight
+                else:
+                    undirected[key] = min(undirected[key], weight)
+        return undirected
+
+    def prim_traversal(self, graph, initial_vertex_id):
+        # get all the identifiera
+        ids = [v.identifier for v in graph.vertexes]
+        # validate
+        if initial_vertex_id not in ids:
+            print(f"el vértice {initial_vertex_id} no esta en el grafo")
+            return []
+        # convert graph into undirected
+        undirected_graph = self.__convert_to_undirected(graph)
+        # call internal funtion
+        result = self.__prim_traversal(undirected_graph, initial_vertex_id, ids)
+        return print(f"Traversal prim(MST): {result}")
+
+    def __prim_traversal(self, graph, id_vertex, ids):
+        visited = set()
+        visited.add(id_vertex)
+        mst = []
+        while len(visited) < len(ids):
+            min_edge = None
+            min_weight = float("inf")
+            # traversal all edges
+            for (u, v), weight in graph.items():
+                # case 1:
+                # u visited and v not visited
+                if u in visited and v not in visited:
+                    if weight < min_weight:
+                        min_weight = weight
+                        min_edge = (u, v, weight)
+                # case 2:
+                # v visited and u not visited
+                elif v in visited and u not in visited:
+                    if weight < min_weight:
+                        min_weight = weight
+                        min_edge = (v, u, weight)
+            # if there is no connection
+            if min_edge is None:
+                print("el grafo no esta conectado")
+                return mst
+            # add edge in mst
+            mst.append(min_edge)
+            # mark new vertex
+            visited.add(min_edge[1])
+        return mst
+
+    def ford_fulkerson(self, graph, initial_vertex_id, final_vertex_id):
+        get_id = [v.identifier for v in graph.vertexes]
+        if initial_vertex_id not in get_id:
+            return print(f"El vértice {initial_vertex_id} no está en el grafo")
+        if final_vertex_id not in get_id:
+            return print(f"El vértice {final_vertex_id} no está en el grafo")
+        max_flow = self.__ford_fulkerson(graph, initial_vertex_id, final_vertex_id)
+        return print(
+            f"ford fulkerson: Flujo máximo desde ({initial_vertex_id} ---> {final_vertex_id}): {max_flow}"
+        )
+
+    def __ford_fulkerson(self, graph, initial_vertex_id, final_vertex_id):
+        # Create residual graph with capacities
+        residual_graph = {}
+
+        # Initialize residual capacities with original capacities
+        for vertex in graph.vertexes:
+            for edge in vertex.adjacencies:
+                origin = vertex.identifier
+                destination = edge.destination.identifier
+                capacity = edge.get_Weight()
+
+                key = (origin, destination)
+                reverse_key = (destination, origin)
+
+                if key not in residual_graph:
+                    residual_graph[key] = capacity
+                else:
+                    residual_graph[key] = max(residual_graph[key], capacity)
+
+                # Initialize reverse edge with 0 capacity
+                if reverse_key not in residual_graph:
+                    residual_graph[reverse_key] = 0
+
+        max_flow = 0
+        iteration = 0
+        while True:
+            iteration += 1
+            visited = set()
+            path = []
+
+            # Search for augmenting path using DFS
+            found = self.__dfs_find_path_residual(
+                initial_vertex_id, final_vertex_id, visited, path, residual_graph
+            )
+
+            if not found:
+                break
+
+            # Find minimum capacity along the path (bottleneck)
+            min_capacity = min(
+                residual_graph[(path[i][0], path[i][1])] for i in range(len(path))
+            )
+
+            # Update residual capacities
+            for u, v in path:
+                residual_graph[(u, v)] -= min_capacity
+                residual_graph[(v, u)] += min_capacity
+
+            max_flow += min_capacity
+
+        return max_flow
+
+    def __dfs_find_path_residual(
+        self, current_id, final_id, visited, path, residual_graph
+    ):
+        visited.add(current_id)
+
+        if current_id == final_id:
+            return True
+
+        # Get all neighbors of current vertex
+        neighbors = set()
+        for (u, v), capacity in residual_graph.items():
+            if u == current_id and capacity > 0:
+                neighbors.add(v)
+
+        for next_id in neighbors:
+            if next_id not in visited:
+                path.append((current_id, next_id))
+                if self.__dfs_find_path_residual(
+                    next_id, final_id, visited, path, residual_graph
+                ):
+                    return True
+                path.pop()
+
+        return False
 
 
 graph = Graph()
@@ -211,4 +365,6 @@ graph.add_vertex(verticeH)
 # graph.breadthFirstSearch_traversal(graph, "A")
 # graph.depth_traversal(graph, "C")
 # graph.dijkstra_simple(graph, "A", "G")
-graph.bellmanFord(graph, "A")
+# graph.bellmanFord(graph, "A")
+# graph.prim_traversal(graph, "A")
+graph.ford_fulkerson(graph, "A", "E")
