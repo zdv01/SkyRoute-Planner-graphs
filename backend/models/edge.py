@@ -7,6 +7,7 @@ class Edge:
         aircrafts=None,
         baseCost=0,
         minimumStay=0,
+        is_blocked=False,
     ):
         self.origin = origin
         self.destination = destination
@@ -14,6 +15,7 @@ class Edge:
         self.aircrafts = aircrafts if aircrafts is not None else []
         self.baseCost = baseCost
         self.minimumStay = minimumStay
+        self.is_blocked = is_blocked
 
     def to_dict(self):
         """to turn an edge into a dictionary"""
@@ -24,6 +26,7 @@ class Edge:
             "aeronaves": self.aircrafts,
             "costoBase": self.baseCost,
             "estanciaMinima": self.minimumStay,
+            "estaBloqueada": self.is_blocked,
         }
 
     @staticmethod
@@ -36,10 +39,19 @@ class Edge:
             aircrafts=data.get("aeronaves", []),
             baseCost=data.get("costoBase", 0),
             minimumStay=data.get("estanciaMinima", 0),
+            is_blocked=data.get("estaBloqueada", False),
         )
 
     def get_Weight(self):
         return self.distanceKm
+
+    def block(self):
+        """Block this route due to interruption"""
+        self.is_blocked = True
+
+    def unblock(self):
+        """Unblock this route"""
+        self.is_blocked = False
 
     def __repr__(self):
         return f"Edge({self.origin} -> {self.destination}, {self.distanceKm}km)"
