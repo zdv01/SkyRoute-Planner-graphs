@@ -5,6 +5,7 @@ from controllers.graphLoadController import graph_load_bp
 from controllers.routePerformanceController import route_performance_bp
 from controllers.reportController import report_bp
 from controllers.interruptionController import interruption_bp
+from controllers.dynamicTravelController import dynamic_travel_bp
 
 def create_app():
     app = Flask(__name__)
@@ -17,6 +18,7 @@ def create_app():
     app.register_blueprint(route_performance_bp, url_prefix='/api/routes')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(interruption_bp, url_prefix='/api/interruptions')
+    app.register_blueprint(dynamic_travel_bp, url_prefix='/api/dynamic')
     return app
 
 if __name__ == '__main__':
