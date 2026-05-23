@@ -1,0 +1,14 @@
+# Python - Entornos Virtuales
+backend/venv/
+backend/.venv/
+env/
+__pycache__/
+*.py[cod]
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Frontend if we use node_modules
+frontend/node_modules/
