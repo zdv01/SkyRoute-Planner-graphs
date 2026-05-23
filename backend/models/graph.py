@@ -324,9 +324,121 @@ class Graph:
                 path.pop()
 
         return False
+    
+    def dijkstra_multi_criteria(self, graph, start_id, destination_id, weight_function, allowed_vertices=None):
+        all_vertex = [v.identifier for v in graph.vertexes]
+        
+        # 1. Filtro de vértices permitidos
+        if allowed_vertices is not None:
+            # CORRECCIÓN: Garantizar que origen y destino siempre estén en la lista, 
+            # de lo contrario dará KeyError en dist[start_id]
+            if start_id not in allowed_vertices:
+                allowed_vertices.add(start_id)
+            if destination_id not in allowed_vertices:
+                allowed_vertices.add(destination_id)
+                
+            all_vertex = [v for v in all_vertex if v in allowed_vertices]
 
+        # Si por alguna razón el origen o destino no existen en el grafo
+        if start_id not in all_vertex or destination_id not in all_vertex:
+            return math.inf, []
+
+        dist = {v: math.inf for v in all_vertex}
+        pred = {v: None for v in all_vertex}
+        dist[start_id] = 0
+
+        not_visited = set(all_vertex)
+        map_vertexes = {v.identifier: v for v in graph.vertexes if v.identifier in all_vertex}
+
+        while not_visited:
+            u = min(not_visited, key=lambda v: dist[v])
+            if dist[u] == math.inf:
+                break
+
+            not_visited.remove(u)
+            if u == destination_id:
+                break
+
+            current_vertex = map_vertexes[u]
+            for edge in current_vertex.adjacencies:
+                v = edge.destination.identifier
+                if v in not_visited:
+                    # Inyección de la función de peso
+                    weight = weight_function(edge)
+                    if weight == math.inf:  # Se descarta por transporte inválido
+                        continue
+                        
+                    new_dist = dist[u] + weight
+                    if new_dist < dist[v]:
+                        dist[v] = new_dist
+                        pred[v] = u
+
+        # CORRECCIÓN: Validar que realmente se llegó al destino
+        if dist[destination_id] == math.inf:
+            return math.inf, []
+
+        path = []
+        current = destination_id
+        while current is not None:
+            path.insert(0, current)
+            current = pred[current]
+
+        return dist[destination_id], path
+    
+    def find_itineraries_dfs(self, graph, start_id, initial_budget, available_time, preferred_transports):
+        all_paths = []
+        start_vertex = next((v for v in graph.vertexes if v.identifier == start_id), None)
+        
+        if not start_vertex:
+            return all_paths
+
+        def dfs(current_vertex, current_cost, current_time, visited_nodes, current_path, transports_seen):
+            all_paths.append({
+                "path": list(current_path),
+                "cost": current_cost,
+                "time": current_time,
+                "destinations_count": len(set(current_path)) - 1,
+                "transports": set(transports_seen)
+            })
+            
+            for edge in current_vertex.adjacencies:
+                next_node = edge.destination
+                next_id = next_node.identifier
+                
+                if next_id in visited_nodes:
+                    continue
+                    
+                edge_transports = getattr(edge, 'aircrafts', [])
+                if preferred_transports:
+                    if not any(t in edge_transports for t in preferred_transports):
+                        continue
+                
+                matched_transport = next((t for t in edge_transports if t in preferred_transports), edge_transports[0] if edge_transports else 'Aéreo')
+                
+                metadata = getattr(next_node, 'metadata', {})
+                edge_cost = getattr(edge, 'cost', getattr(edge, 'distance', 0) * 0.2)
+                accommodation = metadata.get('costoAlojamiento', 0)
+                alimentation = metadata.get('costoAlimentacion', 0)
+                
+                total_edge_cost = edge_cost + accommodation + alimentation
+                edge_time = getattr(edge, 'time', getattr(edge, 'distance', 0) * 0.1)
+                
+                if current_cost + total_edge_cost <= initial_budget and current_time + edge_time <= available_time:
+                    visited_nodes.add(next_id)
+                    current_path.append(next_id)
+                    transports_seen.append(matched_transport)
+                    
+                    dfs(next_node, current_cost + total_edge_cost, current_time + edge_time, visited_nodes, current_path, transports_seen)
+                    
+                    visited_nodes.remove(next_id)
+                    current_path.pop()
+                    transports_seen.pop()
+
+        dfs(start_vertex, 0, 0, {start_id}, [start_id], [])
+        return all_paths
 
 graph = Graph()
+
 
 verticeA = Vertex("A")
 verticeB = Vertex("B")

@@ -5,7 +5,7 @@
 # These services could be the ones used to generate the final report
 
 
-class FinalReport("DynamicTravelService, RoutePerformanceService"):
+class FinalReport:
     """
     This class receives data from other services to generate a final report
     """
