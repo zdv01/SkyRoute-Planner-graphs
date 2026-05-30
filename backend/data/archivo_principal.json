@@ -532,7 +532,68 @@
     "esHub": false,
     "costoAlojamiento": 70,
     "costoAlimentacion": 25,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Visitar el parque Xcaret",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 7
+        },
+        {
+          "nombre": "Xel-há",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Museo subacuático de arte",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Nadar con tiburones ballena",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Isla mujeres",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Chichén Itzá de noche",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Tulum y Cobá",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Isla Contoy",
+          "tipo": "turismo",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Tour de comida callejera",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Xoximilco",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -544,7 +605,68 @@
     "esHub": true,
     "costoAlojamiento": 50,
     "costoAlimentacion": 15,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "canal de Panamá",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Casco Viejo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Poin Panamá",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Miraflores Visitor Center",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Calzada de Amador",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Albrook Mall",
+          "tipo": "ocio",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Cinta Costera",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Multiplaza",
+          "tipo": "ocio",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Concolon Panamianian Street Food",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Saboroso Panamá",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -556,7 +678,68 @@
     "esHub": false,
     "costoAlojamiento": 35,
     "costoAlimentacion": 10,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Recorrer el Centro Histórico",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Subir los 4.000 m.s.n.m en el TeleferiQo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "poner a prueba la latitud exacta en la Ciudad Mitad del Mundo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "La Compañía de Jesús",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Basílica del Voto Nacional",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "El Panecillo",
+          "tipo": "ocio",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "La Ronda",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "De La Llama ",
+          "tipo": "gastronomia",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Chez Jérôme ",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Guatitas de La Colmena",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -568,7 +751,68 @@
     "esHub": false,
     "costoAlojamiento": 30,
     "costoAlimentacion": 9,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Cerro Santa Ana y Las Peñas",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Parque Seminario (Parque de las Iguanas)",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Plaza de la Administración",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Malecón 2000",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Parque Histórico Guayaquil",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Reserva Ecológica Cerro Blanco",
+          "tipo": "aventura",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Puerto Santa Ana",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Plaza Lagos",
+          "tipo": "gastronomia",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "La Perla",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Aerovía",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -580,7 +824,68 @@
     "esHub": false,
     "costoAlojamiento": 40,
     "costoAlimentacion": 12,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Parque Nacional Waraira Repano (El Ávila)",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Parque Generalísimo Francisco de Miranda (Parque del Este)",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Paseo Los Próceres",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Centro Histórico y Plaza Bolívar",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Panteón Nacional",
+          "tipo": "cultural",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Ciudad Universitaria de Caracas (UCV)",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Tour de comida callejera",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Centro de Arte Los Galpones",
+          "tipo": "turismo",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Hacienda La Trinidad Parque Cultural",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "El Hatillo",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -592,7 +897,68 @@
     "esHub": false,
     "costoAlojamiento": 45,
     "costoAlimentacion": 13,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Playa Balandra",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Isla Espíritu Santo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Playa El Tecolote",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Malecón de La Paz",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Todos Santos",
+          "tipo": "cultural",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Anzuelo Cocina del Mar",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Casamarte Oyster Bar & Grill",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Melt Brunch Café",
+          "tipo": "gastronomia",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Quemadero",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Mc Fisher",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -604,7 +970,68 @@
     "esHub": false,
     "costoAlojamiento": 30,
     "costoAlimentacion": 10,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Palacio de López",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Panteón Nacional de los Héroes",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Manzana de la Rivera",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Costanera de Asunción",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Cerro Lambaré",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Parque Ñu Guasu y Parque Guasu Metropolitano",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Museo del Barro",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Barrio Loma San Jerónimo",
+          "tipo": "turismo",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Chipá",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Sopa Paraguaya",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -616,7 +1043,68 @@
     "esHub": false,
     "costoAlojamiento": 45,
     "costoAlimentacion": 14,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Explorar la Zona Colonial",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Visitar el Parque Nacional Los Tres Ojos",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Recorrer el Malecón",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Visitar el Faro a Colón",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Jardín Botánico Nacional",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Parque Nacional Mirador del Norte",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Plaza de España y Atarazanas",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Maraca",
+          "tipo": "gastronomia",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Buche Perico",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Probar la gastronomía criolla",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -628,7 +1116,68 @@
     "esHub": false,
     "costoAlojamiento": 35,
     "costoAlimentacion": 11,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "La Habana Vieja",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Vida Nocturna y Bares",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Paseo en Coches Clásicos",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Historia y Monumentos",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Vistas al Mar",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Plaza de la Catedral",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Castillo de la Real Fuerza",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Ropa Vieja",
+          "tipo": "gastronomia",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Picadillo a la Habanera",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Tostones",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -640,7 +1189,68 @@
     "esHub": false,
     "costoAlojamiento": 50,
     "costoAlimentacion": 15,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Teatro Nacional de Costa Rica",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Museo del Oro Precolombino",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Museo del Jade",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Edificio de Correos",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Mercado Central",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Avenida Central",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Barrio Escalante",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Barrio Amón",
+          "tipo": "turismo",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Picadillo",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Volcán Poás",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -652,7 +1262,68 @@
   "esHub": false,
   "costoAlojamiento": 45,
   "costoAlimentacion": 15,
-  "actividades": [],
+  "actividades": [
+        {
+          "nombre": "La Casa Rosada y Plaza de Mayo",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "El Obelisco y la avenida 9 de Julio",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Palacio Barolo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Café Tortoni",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Teatro Colón",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Parque 3 de Febrero",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Galerías Pacífico",
+          "tipo": "cultural",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Disfruta un espectáculo de tango",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Experimenta un asado argentino",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Visita La Bombonera",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
   "trabajos": []
 },
 {
@@ -664,7 +1335,68 @@
   "esHub": false,
   "costoAlojamiento": 45,
   "costoAlimentacion": 15,
-  "actividades": [],
+  "actividades": [
+        {
+          "nombre": "Plaza Independencia",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Palacio Salvo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Teatro Solís",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Puerta de la Ciudadela",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Museo Andes 1972",
+          "tipo": "cultural",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Mercado Agrícola de Montevideo (MAM)",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Museo Blanes y el Rosedal",
+          "tipo": "cultural",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "El Mercado del Puerto",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "El Chivito",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Feria de Tristán Narvaja",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
   "trabajos": []
 },
 {
@@ -676,7 +1408,68 @@
   "esHub": true,
   "costoAlojamiento": 35,
   "costoAlimentacion": 12,
-  "actividades": [],
+  "actividades": [
+        {
+          "nombre": "Plaza 24 de Septiembre",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Parque Regional Lomas de Arena",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Biocentro Güembé",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Gastronomía cruceña",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Samaipata",
+          "tipo": "cultural",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Parque Nacional Amboró",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Ruta de las Misiones Jesuíticas",
+          "tipo": "cultural",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Majadito",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Keperí",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Rapi al Jugo",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
   "trabajos": []
 },
 {
