@@ -76,6 +76,26 @@
           "nombre": "Carga de equipaje",
           "tarifaHora": 8,
           "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
         }
       ]
     },
@@ -152,9 +172,29 @@
       ],
       "trabajos": [
         {
-          "nombre": "Guía turístico",
-          "tarifaHora": 10,
-          "maxHoras": 5
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
         }
       ]
     },
@@ -229,7 +269,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "SCL",
@@ -302,7 +368,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "EZE",
@@ -375,7 +467,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "GRU",
@@ -448,7 +566,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "MEX",
@@ -521,7 +665,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "CUN",
@@ -594,7 +764,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "PTY",
@@ -667,7 +863,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "UIO",
@@ -740,7 +962,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "GYE",
@@ -813,7 +1061,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "CCS",
@@ -886,7 +1160,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "LAP",
@@ -959,7 +1259,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "ASU",
@@ -1032,7 +1358,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "SDQ",
@@ -1105,7 +1457,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "HAV",
@@ -1178,7 +1556,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
     "id": "SJO",
@@ -1251,7 +1655,33 @@
           "costoUSD": 15
         }
     ],
-    "trabajos": []
+    "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+    ]
   },
   {
   "id": "AEP",
@@ -1324,7 +1754,33 @@
           "costoUSD": 15
         }
   ],
-  "trabajos": []
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "MVD",
@@ -1397,7 +1853,33 @@
           "costoUSD": 15
         }
   ],
-  "trabajos": []
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "VVI",
@@ -1470,7 +1952,33 @@
           "costoUSD": 15
         }
   ],
-  "trabajos": []
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "LPB",
@@ -1481,8 +1989,95 @@
   "esHub": false,
   "costoAlojamiento": 30,
   "costoAlimentacion": 10,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Centro Histórico",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Calle Jaén",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Mercado de las Brujas (Calle Sagarnaga)",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Mi Teleférico",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Mirador Killi Killi",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Valle de la Luna",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Tiahuanaco",
+          "tipo": "turismo",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Camino de la Muerte",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "El Chairo",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Salteñas",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "REC",
@@ -1493,8 +2088,95 @@
   "esHub": false,
   "costoAlojamiento": 40,
   "costoAlimentacion": 12,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Recife Antiguo",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Paço do Frevo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Casa da Cultura de Pernambuco",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Instituto Ricardo Brennand",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Playa de Boa Viagem",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Paseo en catamarán",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Bolo de Rolo",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Arrubacão",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Carne de Sol con Queijo Coalho",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Moqueca Pernambucana",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "BSB",
@@ -1505,8 +2187,95 @@
   "esHub": true,
   "costoAlojamiento": 50,
   "costoAlimentacion": 15,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Catedral Metropolitana",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Plaza de los Tres Poderes",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Palacio de Itamaraty",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Santuario Dom Bosco",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Lago Paranoá y Pontão do Lago Sul",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Torre de TV de Brasilia",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Carne de Sol con Macaxeira",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Frutos del Cerrado",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Feijoada",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Pastel de Feira",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "SSA",
@@ -1517,8 +2286,95 @@
   "esHub": false,
   "costoAlojamiento": 40,
   "costoAlimentacion": 12,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Pelourinho",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Iglesia y Convento de San Francisco",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Elevador Lacerda",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Mercado Modelo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Playa de Porto da Barra",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Farol da Barra",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Acarajé",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Moqueca Bahiana",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Vatapá",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Cocada",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "CUZ",
@@ -1529,8 +2385,95 @@
   "esHub": false,
   "costoAlojamiento": 35,
   "costoAlimentacion": 10,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Plaza de Armas",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Qorikancha y Convento de Santo Domingo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Barrio de San Blas",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Mercado de San Pedro",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Ruinas cercanas",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Montaña de 7 Colores (Vinicunca)",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Chiri Uchu",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Cuy al Horno",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Chicharrón a la Cusqueña",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Adobo Cusqueño",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "AQP",
@@ -1541,8 +2484,95 @@
   "esHub": false,
   "costoAlojamiento": 30,
   "costoAlimentacion": 9,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Monasterio de Santa Catalina",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Plaza de Armas y Catedral",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Mirador de Yanahuara",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Ruta del Sillar",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Cañón del Colca",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Museo Santuarios Andinos",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Picanterías Arequipeñas",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Mercado de San Camilo",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Chicharrón Arequipeño",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Adobo Arequiéño",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "GDL",
@@ -1553,8 +2583,95 @@
   "esHub": true,
   "costoAlojamiento": 45,
   "costoAlimentacion": 14,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Centro Histórico",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Instituto Cultural Cabañas",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Teatro Degollado",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Templo Expiatorio",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Tlaquepaque y Tonalá",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Tequila",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Mercado San Juan de Dios",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Plaza de los Mariachis",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Carne en su jugo",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Birria de chivo o borrego",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "SAL",
@@ -1565,8 +2682,95 @@
   "esHub": true,
   "costoAlojamiento": 35,
   "costoAlimentacion": 11,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Centro Histórico",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Palacio Nacional",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Museos",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Parque Nacional El Boquerón",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Puerta del Diablo",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Playas (La Libertad)",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "El Boquerón",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Pupusas en Olocuilta",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Distrito El Espino, Multiplaza o La Gran Vía",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Yuca Frita o Sancochada",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "GUA",
@@ -1577,8 +2781,95 @@
   "esHub": false,
   "costoAlojamiento": 35,
   "costoAlimentacion": 11,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Plaza de la Constitución",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Palacio Nacional de la Cultura",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Catedral Metropolitana",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Mercado Central",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Museo Ixchel del Traje Indígena",
+          "tipo": "cultural",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Museo Popol Vuh",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Pepián de Pollo",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Jocón",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Kak'ik",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Hilachas",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 },
 {
   "id": "SAP",
@@ -1589,8 +2880,95 @@
   "esHub": false,
   "costoAlojamiento": 30,
   "costoAlimentacion": 10,
-  "actividades": [],
-  "trabajos": []
+  "actividades": [
+        {
+          "nombre": "Parque Central y Catedral",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Mercado Guamilito",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "El Merendón",
+          "tipo": "aventura",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Parque Nacional Cusuco",
+          "tipo": "aventura",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Museo de Antropología e Historia",
+          "tipo": "cultural",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Ruinas de Copán",
+          "tipo": "aventura",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Zona Viva / Bulevar Morazán",
+          "tipo": "gastronomia",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Gastronomía local",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Chedrani Restaurant",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "La Campesina de las Riguas",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+  ],
+  "trabajos": [
+        {
+          "nombre": "Carga de equipaje",
+          "tarifaHora": 8,
+          "maxHoras": 6
+        },
+        {
+          "nombre":"Instructor turístico",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"guía de aeropuerto,",
+          "tarifaHora":15,
+          "maxHoras":5
+        },
+        {
+          "nombre":"Auxiliar de logística",
+          "tarifaHora":11,
+          "maxHoras":6
+        },
+        {
+          "nombre":"asistente de rampa",
+          "tarifaHora":8,
+          "maxHoras":8
+        }
+  ]
 }
   
   ],
