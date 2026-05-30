@@ -1,7 +1,8 @@
 import json
-from models.graph import Graph
-from models.Airport import Airport
-from models.edge import Edge
+from ..models.graph import Graph
+from ..models.airport import Airport
+from ..models.edge import Edge
+
 
 class GraphLoadService:
     def __init__(self):
@@ -14,7 +15,7 @@ class GraphLoadService:
         """
         # Reset the graph instance for new loads
         self.graph = Graph()
-        
+
         # Store global configuration (aircraft costs, time intervals, etc.)
         self.config = json_data.get("configuracion", {})
 
@@ -31,19 +32,19 @@ class GraphLoadService:
         for edge_data in json_data.get("aristas", []):
             origin_id = edge_data.get("origen")
             dest_id = edge_data.get("destino")
-            
+
             if origin_id in airport_map and dest_id in airport_map:
                 destination_vertex = airport_map[dest_id]
-                
+
                 new_edge = Edge(
                     origin=origin_id,
                     destination=destination_vertex,
                     distanceKm=edge_data.get("distanciaKm"),
                     aircrafts=edge_data.get("aeronaves"),
                     baseCost=edge_data.get("costoBase"),
-                    minimumStay=edge_data.get("estanciaMinima")
+                    minimumStay=edge_data.get("estanciaMinima"),
                 )
-                
+
                 # Link edge to the origin vertex (Adjacency List)
                 airport_map[origin_id].add_adjacency(new_edge)
 
@@ -58,25 +59,25 @@ class GraphLoadService:
 
         for vertex in self.graph.vertexes:
             # Prepare node data (Frontend needs isHub for styling)
-            nodes.append({
-                "id": vertex.identifier,
-                "label": f"{vertex.identifier} - {vertex.city}",
-                "isHub": vertex.isHub,
-                "metadata": vertex.to_dict()
-            })
+            nodes.append(
+                {
+                    "id": vertex.identifier,
+                    "label": f"{vertex.identifier} - {vertex.city}",
+                    "isHub": vertex.isHub,
+                    "metadata": vertex.to_dict(),
+                }
+            )
 
             # Prepare edge data
             for edge in vertex.adjacencies:
-                links.append({
-                    "source": vertex.identifier,
-                    "target": edge.destination.identifier,
-                    "distance": edge.distanceKm,
-                    "aircrafts": edge.aircrafts,
-                    "isBlocked": edge.is_blocked
-                })
+                links.append(
+                    {
+                        "source": vertex.identifier,
+                        "target": edge.destination.identifier,
+                        "distance": edge.distanceKm,
+                        "aircrafts": edge.aircrafts,
+                        "isBlocked": edge.is_blocked,
+                    }
+                )
 
-        return {
-            "nodes": nodes,
-            "links": links,
-            "config": self.config
-        }
+        return {"nodes": nodes, "links": links, "config": self.config}

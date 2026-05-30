@@ -17,10 +17,58 @@
           "costoUSD": 25
         },
         {
-          "nombre": "Visita a museo",
-          "tipo": "cultural",
+          "nombre": "Explora la Candelaria",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 45
+        },
+        {
+          "nombre": "Haz un recorrido gastronómico",
+          "tipo": "gastronomía",
+          "duracionMin": 300,
+          "costoUSD": 35
+        },
+        {
+          "nombre": "Visita la Catedral de Sal",
+          "tipo": "turismo",
           "duracionMin": 120,
-          "costoUSD": 10
+          "costoUSD": 18
+        },
+        {
+          "nombre": "Explora la favela El Paraíso",
+          "tipo": "turismo",
+          "duracionMin": 180,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Pasea a caballo por la Cordillera de los Andes",
+          "tipo": "aventura",
+          "duracionMin": 120,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Recorrido gastronómico",
+          "tipo": "gastronomia",
+          "duracionMin": 150,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Excursión natural",
+          "tipo": "aventura",
+          "duracionMin": 240,
+          "costoUSD": 35
+        },
+        {
+          "nombre": "Compras en zona comercial",
+          "tipo": "ocio",
+          "duracionMin": 120,
+          "costoUSD": 15
+        },
+        {
+          "nombre": "Visita una finca cafetalera local",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 17
         }
       ],
       "trabajos": [
@@ -46,6 +94,60 @@
           "tipo": "aventura",
           "duracionMin": 90,
           "costoUSD": 50
+        },
+        {
+          "nombre": "Visita el parque Arví",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 20
+        },
+        {
+          "nombre": "Museo de Antioquia y Plaza Botero",
+          "tipo": "turismo",
+          "duracionMin": 220,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Parque Explora",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 29
+        },
+        {
+          "nombre": "Comuna 13",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Museo El Castillo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 70
+        },
+        {
+          "nombre": "Visita Guatapé y Piedra del Peñol",
+          "tipo": "turismo",
+          "duracionMin": 420,
+          "costoUSD": 120
+        },
+        {
+          "nombre": " Visitar el Jardín Botánico de Medellín",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Degustar la famosa bandeja paisa",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 13
+        },
+        {
+          "nombre": "Recorrer una plantación de café colombiano",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 28
         }
       ],
       "trabajos": [
@@ -65,7 +167,68 @@
     "esHub": true,
     "costoAlojamiento": 45,
     "costoAlimentacion": 14,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Miraflores",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Museo Larco",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 95
+        },
+        {
+          "nombre": "Circuito Mágico Deal Agua",
+          "tipo": "turismo",
+          "duracionMin": 220,
+          "costoUSD": 36
+        },
+        {
+          "nombre": "Huaca Pucllana",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Zona Arqueológica Caral",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Jockey Plaza",
+          "tipo": "ocio",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Tour de las Catacumbas",
+          "tipo": "turismo",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Tour de comida callejera",
+          "tipo": "gastronomia",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Sabores de moda",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Taller de chocolate 'del grano a la barra'",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -77,7 +240,68 @@
     "esHub": true,
     "costoAlojamiento": 55,
     "costoAlimentacion": 18,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Centro histórico",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "Mirador Cerro Santa Lucia",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Vista del edificio Sky",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Teleféricos del cerro San Cristóbal",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Jardín japonés del cerro San Cristóbal",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Jardín Botánico Mapuleum ",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Museo de la memoria y los derechos humanos",
+          "tipo": "cultural",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Museo chileno de arte precolombino",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Museo de bellas artes",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "La Chascona 'la casa de Pablo Neruda en Santiago'",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -89,7 +313,68 @@
     "esHub": true,
     "costoAlojamiento": 50,
     "costoAlimentacion": 16,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "La Casa Rosada y Plaza de Mayo",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 40
+        },
+        {
+          "nombre": "El Obelisco y la avenida 9 de Julio",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Palacio Barolo",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Café Tortoni",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Teatro Colón",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Parque 3 de Febrero",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 60
+        },
+        {
+          "nombre": "Galerías Pacífico",
+          "tipo": "cultural",
+          "duracionMin": 420,
+          "costoUSD": 100
+        },
+        {
+          "nombre": "Disfruta un espectáculo de tango",
+          "tipo": "cultural",
+          "duracionMin": 240,
+          "costoUSD": 80
+        },
+        {
+          "nombre": "Experimenta un asado argentino",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Visita La Bombonera",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -101,7 +386,68 @@
     "esHub": true,
     "costoAlojamiento": 60,
     "costoAlimentacion": 20,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Avenida Paulista",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 7
+        },
+        {
+          "nombre": "Parque Ibirapuera",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Praia de Maresias",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Praia de Juquehy",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Ilhabela",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Museo de Arte de São Paulo (MASP)",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": " Museo de Arte Contemporáneo (MAC)",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Museo de la Lengua Portuguesa",
+          "tipo": "cultural",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Tour gastronómico por el Mercado Municipal",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Tour de arte callejero en Vila Madalena",
+          "tipo": "turismo",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -113,7 +459,68 @@
     "esHub": true,
     "costoAlojamiento": 55,
     "costoAlimentacion": 17,
-    "actividades": [],
+    "actividades": [
+        {
+          "nombre": "Museo de Antropología",
+          "tipo": "turismo",
+          "duracionMin": 240,
+          "costoUSD": 7
+        },
+        {
+          "nombre": "Recorrido por Castillo de Chapultepec",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 10
+        },
+        {
+          "nombre": "Caminata por las calles, edificios y plaza del Centro Histórico",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Catedral de la CDMX",
+          "tipo": "turismo",
+          "duracionMin": 120,
+          "costoUSD": 30
+        },
+        {
+          "nombre": "Palacio Nacional",
+          "tipo": "turismo",
+          "duracionMin": 300,
+          "costoUSD": 56
+        },
+        {
+          "nombre": "Plaza de la Constitución",
+          "tipo": "cultural",
+          "duracionMin": 120,
+          "costoUSD": 12
+        },
+        {
+          "nombre": "Palacio de Bellas Artes",
+          "tipo": "cultural",
+          "duracionMin": 90,
+          "costoUSD": 2
+        },
+        {
+          "nombre": "Museo Frida Kahlo ",
+          "tipo": "cultural",
+          "duracionMin": 60,
+          "costoUSD": 4
+        },
+        {
+          "nombre": "Tour gastronómico por Roma-Condesa",
+          "tipo": "gastronomia",
+          "duracionMin": 120,
+          "costoUSD": 25
+        },
+        {
+          "nombre": "Tour gastronómico por Coyoacán",
+          "tipo": "gastronomia",
+          "duracionMin": 90,
+          "costoUSD": 15
+        }
+    ],
     "trabajos": []
   },
   {
@@ -235,7 +642,163 @@
     "costoAlimentacion": 15,
     "actividades": [],
     "trabajos": []
-  }
+  },
+  {
+  "id": "AEP",
+  "nombre": "Aeroparque Jorge Newbery",
+  "ciudad": "Buenos Aires",
+  "pais": "Argentina",
+  "zonaHoraria": "GMT-3",
+  "esHub": false,
+  "costoAlojamiento": 45,
+  "costoAlimentacion": 15,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "MVD",
+  "nombre": "Aeropuerto Internacional de Carrasco",
+  "ciudad": "Montevideo",
+  "pais": "Uruguay",
+  "zonaHoraria": "GMT-3",
+  "esHub": false,
+  "costoAlojamiento": 45,
+  "costoAlimentacion": 15,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "VVI",
+  "nombre": "Aeropuerto Internacional Viru Viru",
+  "ciudad": "Santa Cruz de la Sierra",
+  "pais": "Bolivia",
+  "zonaHoraria": "GMT-4",
+  "esHub": true,
+  "costoAlojamiento": 35,
+  "costoAlimentacion": 12,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "LPB",
+  "nombre": "Aeropuerto Internacional El Alto",
+  "ciudad": "La Paz",
+  "pais": "Bolivia",
+  "zonaHoraria": "GMT-4",
+  "esHub": false,
+  "costoAlojamiento": 30,
+  "costoAlimentacion": 10,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "REC",
+  "nombre": "Aeropuerto Internacional de Recife",
+  "ciudad": "Recife",
+  "pais": "Brasil",
+  "zonaHoraria": "GMT-3",
+  "esHub": false,
+  "costoAlojamiento": 40,
+  "costoAlimentacion": 12,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "BSB",
+  "nombre": "Aeropuerto Internacional Presidente Juscelino Kubitschek",
+  "ciudad": "Brasilia",
+  "pais": "Brasil",
+  "zonaHoraria": "GMT-3",
+  "esHub": true,
+  "costoAlojamiento": 50,
+  "costoAlimentacion": 15,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "SSA",
+  "nombre": "Aeropuerto Internacional Deputado Luís Eduardo Magalhães",
+  "ciudad": "Salvador",
+  "pais": "Brasil",
+  "zonaHoraria": "GMT-3",
+  "esHub": false,
+  "costoAlojamiento": 40,
+  "costoAlimentacion": 12,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "CUZ",
+  "nombre": "Aeropuerto Internacional Alejandro Velasco Astete",
+  "ciudad": "Cusco",
+  "pais": "Perú",
+  "zonaHoraria": "GMT-5",
+  "esHub": false,
+  "costoAlojamiento": 35,
+  "costoAlimentacion": 10,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "AQP",
+  "nombre": "Aeropuerto Internacional Rodríguez Ballón",
+  "ciudad": "Arequipa",
+  "pais": "Perú",
+  "zonaHoraria": "GMT-5",
+  "esHub": false,
+  "costoAlojamiento": 30,
+  "costoAlimentacion": 9,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "GDL",
+  "nombre": "Aeropuerto Internacional Miguel Hidalgo y Costilla",
+  "ciudad": "Guadalajara",
+  "pais": "México",
+  "zonaHoraria": "GMT-6",
+  "esHub": true,
+  "costoAlojamiento": 45,
+  "costoAlimentacion": 14,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "SAL",
+  "nombre": "Aeropuerto Internacional de El Salvador",
+  "ciudad": "San Salvador",
+  "pais": "El Salvador",
+  "zonaHoraria": "GMT-6",
+  "esHub": true,
+  "costoAlojamiento": 35,
+  "costoAlimentacion": 11,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "GUA",
+  "nombre": "Aeropuerto Internacional La Aurora",
+  "ciudad": "Ciudad de Guatemala",
+  "pais": "Guatemala",
+  "zonaHoraria": "GMT-6",
+  "esHub": false,
+  "costoAlojamiento": 35,
+  "costoAlimentacion": 11,
+  "actividades": [],
+  "trabajos": []
+},
+{
+  "id": "SAP",
+  "nombre": "Aeropuerto Internacional Ramón Villeda Morales",
+  "ciudad": "San Pedro Sula",
+  "pais": "Honduras",
+  "zonaHoraria": "GMT-6",
+  "esHub": false,
+  "costoAlojamiento": 30,
+  "costoAlimentacion": 10,
+  "actividades": [],
+  "trabajos": []
+}
   
   ],
   "aristas": [
@@ -382,7 +945,167 @@
     "aeronaves": ["Avión Comercial", "Hélice"],
     "costoBase": 15,
     "estanciaMinima": 50
-  }
+  },
+  {
+  "origen": "BOG",
+  "destino": "UIO",
+  "distanciaKm": 720,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 40
+},
+{
+  "origen": "BOG",
+  "destino": "CCS",
+  "distanciaKm": 1030,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 5,
+  "estanciaMinima": 50
+},
+{
+  "origen": "BOG",
+  "destino": "GRU",
+  "distanciaKm": 4330,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 15,
+  "estanciaMinima": 90
+},
+{
+  "origen": "BOG",
+  "destino": "MEX",
+  "distanciaKm": 3160,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 20,
+  "estanciaMinima": 80
+},
+{
+  "origen": "PTY",
+  "destino": "SAL",
+  "distanciaKm": 1160,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 45
+},
+{
+  "origen": "SAL",
+  "destino": "MEX",
+  "distanciaKm": 1250,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 10,
+  "estanciaMinima": 50
+},
+{
+  "origen": "SAL",
+  "destino": "GUA",
+  "distanciaKm": 180,
+  "aeronaves": ["Hélice","Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 20
+},
+{
+  "origen": "GUA",
+  "destino": "SAP",
+  "distanciaKm": 290,
+  "aeronaves": ["Hélice","Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 20
+},
+{
+  "origen": "MEX",
+  "destino": "GDL",
+  "distanciaKm": 460,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 30
+},
+{
+  "origen": "LIM",
+  "destino": "CUZ",
+  "distanciaKm": 590,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "costoBase": 0,
+  "estanciaMinima": 30
+},
+{
+  "origen": "LIM",
+  "destino": "AQP",
+  "distanciaKm": 760,
+  "aeronaves": ["Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 35
+},
+{
+  "origen": "CUZ",
+  "destino": "LPB",
+  "distanciaKm": 530,
+  "aeronaves": ["Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 30
+},
+{
+  "origen": "LPB",
+  "destino": "VVI",
+  "distanciaKm": 550,
+  "aeronaves": ["Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 30
+},
+{
+  "origen": "VVI",
+  "destino": "ASU",
+  "distanciaKm": 620,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 35
+},
+{
+  "origen": "ASU",
+  "destino": "MVD",
+  "distanciaKm": 1070,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 5,
+  "estanciaMinima": 45
+},
+{
+  "origen": "MVD",
+  "destino": "EZE",
+  "distanciaKm": 230,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "costoBase": 0,
+  "estanciaMinima": 20
+},
+{
+  "origen": "GRU",
+  "destino": "BSB",
+  "distanciaKm": 870,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 0,
+  "estanciaMinima": 40
+},
+{
+  "origen": "BSB",
+  "destino": "SSA",
+  "distanciaKm": 1060,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 5,
+  "estanciaMinima": 45
+},
+{
+  "origen": "SSA",
+  "destino": "REC",
+  "distanciaKm": 680,
+  "aeronaves": ["Avión Regional"],
+  "costoBase": 0,
+  "estanciaMinima": 35
+},
+{
+  "origen": "REC",
+  "destino": "PTY",
+  "distanciaKm": 5050,
+  "aeronaves": ["Avión Comercial"],
+  "costoBase": 20,
+  "estanciaMinima": 90
+}
   ],
   "configuracion": {
     "aeronaves": {

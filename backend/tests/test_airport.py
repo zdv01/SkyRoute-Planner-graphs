@@ -3,7 +3,9 @@ from backend.models.graph import Graph
 from backend.models.vertex import Vertex
 from backend.models.edge import Edge
 from backend.models.airport import Airport
+from backend.services.reportService import FinalReport
 from pathlib import Path
+from backend.services.graphLoadService import GraphLoadService
 import json
 
 # from backend.services.reportService import FinalReport
@@ -14,6 +16,7 @@ import json
 # Cargar el JSON
 route = Path(__file__).resolve().parent.parent / "data" / "archivo_principal.json"
 data = readJson(route)
+
 
 # Paso 1: Crear vértices a partir de los nodos
 print("=" * 70)
@@ -61,7 +64,7 @@ for arista_data in data["aristas"]:
     )
 
 print(f"\nTotal de aristas creadas: {sum(len(v.adjacencies) for v in grafo.vertexes)}")
-
+"""
 # Paso 3: Visualizar y probar
 print("\n" + "=" * 70)
 print("INFORMACIÓN DEL GRAFO")
@@ -71,14 +74,18 @@ grafo.print_graph()
 print("\n" + "=" * 70)
 print("RECORRIDO EN ANCHURA")
 print("=" * 70)
-grafo.breadthFirstSearch_traversal(grafo, "MEX")
+# grafo.breadthFirstSearch_traversal(grafo, "MEX")
 
 print("\n" + "=" * 70)
 print("RECORRIDO EN PROFUNDIDAD")
 print("=" * 70)
-grafo.depth_traversal(grafo, "MEX")
-grafo.dijkstra_simple(grafo, "BOG", "EZE")
-""""
+# .depth_traversal(grafo, "MEX")
+# grafo.dijkstra_simple(grafo, "BOG", "EZE")
+print("\n" + "=" * 70)
+print("BELLMAN FORD")
+print("=" * 70)
+grafo.prim_traversal(grafo, "BOG")
+
 print("\n" + "=" * 70)
 print("AEROPUERTOS")
 print("=" * 70)
@@ -128,5 +135,4 @@ reportefinal = [
 
 report = [FinalReport.from_dict(r) for r in reportefinal]
 print(json.dumps([r.to_dict() for r in report], indent=4, ensure_ascii=False))
-
 """
