@@ -870,3 +870,88 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+.sky-toast-container {
+    position: fixed;
+    top: calc(var(--header-height) + var(--toolbar-height) + 12px);
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 380px;
+    pointer-events: none;      /* container is transparent to mouse */
+}
+
+.sky-toast {
+    background: var(--bg-primary, #ffffff);
+    border-radius: 10px;
+    padding: 0.875rem 1.125rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13);
+    border-left: 4px solid var(--border-dark, #cbd5e1);
+    pointer-events: all;
+    animation: skyToastIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sky-toast.success { border-left-color: var(--success-color,  #10b981); }
+.sky-toast.error   { border-left-color: var(--danger-color,   #ef4444); }
+.sky-toast.warning { border-left-color: var(--warning-color,  #f59e0b); }
+.sky-toast.info    { border-left-color: var(--info-color,     #3b82f6); }
+
+.sky-toast-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.sky-toast.success .sky-toast-icon { color: #10b981; }
+.sky-toast.error   .sky-toast-icon { color: #ef4444; }
+.sky-toast.warning .sky-toast-icon { color: #f59e0b; }
+.sky-toast.info    .sky-toast-icon { color: #3b82f6; }
+
+.sky-toast-message {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text-primary, #0f172a);
+    line-height: 1.45;
+}
+
+.sky-toast-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light, #94a3b8);
+    font-size: 1.15rem;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+    align-self: flex-start;
+    transition: color 0.15s;
+}
+.sky-toast-close:hover { color: var(--text-secondary, #64748b); }
+
+@keyframes skyToastIn {
+    from { transform: translateX(calc(100% + 24px)); opacity: 0; }
+    to   { transform: translateX(0);                opacity: 1; }
+}
+
+/* ─── Graph legend lines (blocked / selected) ───────────────── */
+
+.legend-line.active   { background: #94a3b8; }
+.legend-line.blocked  { background: #ef4444; }
+.legend-line.selected { background: #10b981; }
+
+/* ─── Panel section last-child spacing fix ──────────────────── */
+.panel-section:last-child {
+    border-bottom: none;
+}
+
+/* ─── Control button symbol sizing ──────────────────────────── */
+.control-btn {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+}

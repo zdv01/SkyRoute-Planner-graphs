@@ -1,8 +1,7 @@
 import json
-from ..models.graph import Graph
-from ..models.airport import Airport
-from ..models.edge import Edge
-
+from models.graph import Graph
+from models.airport import Airport
+from models.edge import Edge
 
 class GraphLoadService:
     def __init__(self):
