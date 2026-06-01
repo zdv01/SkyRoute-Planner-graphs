@@ -8,7 +8,7 @@
  *  - Render airport info panel on node click
  *  - Handle edge selection for route interruption
  *  - Populate airport selectors in all modals
- *  - Provide showToast / showLoading utilities used by all other modules
+ *  - Provide showToast2 / showLoading utilities used by all other modules
  *
  * Dependencies (must be loaded before this script):
  *   graphLoadService.js  → API functions
@@ -16,11 +16,15 @@
  *
  * @author  SkyRoute Team
  */
-
+import { GraphRenderer } from "../models/graphRenderer.js";
+import {
+  blockRoute,
+  loadGraphFromJson,
+} from "../services/graphLoadService.js";
+import {showToast2} from "../../utils/modals.js";
 // ════════════════════════════════════════════════════════════
 // MODULE STATE
 // ════════════════════════════════════════════════════════════
-
 /** @type {GraphRenderer|null} */
 let renderer = null;
 
@@ -159,19 +163,19 @@ async function _handleFileUpload(e) {
   try {
     jsonData = JSON.parse(await file.text());
   } catch {
-    showToast("El archivo seleccionado no es un JSON válido.", "error");
+    showToast2("El archivo seleccionado no es un JSON válido.", "error");
     return;
   }
 
   // Validate required keys
   if (!jsonData.nodos || !jsonData.aristas) {
-    showToast('El JSON debe contener "nodos" y "aristas".', "error");
+    showToast2('El JSON debe contener "nodos" y "aristas".', "error");
     return;
   }
 
   showLoading(true, "Construyendo la red aérea…");
   try {
-    const response = await loadGraphFromJSON(jsonData);
+    const response = await loadGraphFromJson(jsonData);
 
     if (response.status !== "success") {
       throw new Error(response.message || "Error desconocido en el servidor");
@@ -188,12 +192,12 @@ async function _handleFileUpload(e) {
     // Update toolbar counters
     _updateToolbarStats(networkData);
 
-    showToast(
+    showToast2(
       `Red cargada: ${networkData.nodes.length} aeropuertos · ${networkData.links.length} rutas.`,
       "success",
     );
   } catch (err) {
-    showToast(`Error al cargar: ${err.message}`, "error");
+    showToast2(`Error al cargar: ${err.message}`, "error");
   } finally {
     showLoading(false);
   }
@@ -211,7 +215,7 @@ function _onNodeSelected(node) {
   const modal = document.getElementById("modal-interrumpir-ruta");
   if (modal?.classList.contains("active") && _pendingBlockEdge === null) {
     // First selection: set as origin of edge to block (user must click another)
-    showToast(`Selecciona la arista que quieres bloquear en el mapa.`, "info");
+    showToast2(`Selecciona la arista que quieres bloquear en el mapa.`, "info");
   }
 }
 
@@ -351,11 +355,11 @@ async function _handleConfirmBlock() {
     // Update renderer so the edge turns red/dashed immediately
     renderer.updateEdgeState(source, target, true);
 
-    showToast(`Ruta ${source} → ${target} bloqueada.`, "success");
+    showToast2(`Ruta ${source} → ${target} bloqueada.`, "success");
     _closeAllModals();
     _resetInterruptModal();
   } catch (err) {
-    showToast(`Error al bloquear: ${err.message}`, "error");
+    showToast2(`Error al bloquear: ${err.message}`, "error");
   } finally {
     showLoading(false);
   }
@@ -380,7 +384,7 @@ function _handleSaveConfig() {
   // Read values — other modules (routePerformanceManager) will pick these up
   const config = _readConfigForm();
   window._skyRouteConfig = config;
-  showToast("Configuración guardada.", "success");
+  showToast2("Configuración guardada.", "success");
   _closeAllModals();
 }
 
@@ -394,7 +398,7 @@ function _handleRestoreDefaults() {
   document.getElementById("intervalo-alojamiento").value = "20";
   document.getElementById("intervalo-alimentacion").value = "8";
   document.getElementById("umbral-trabajo").value = "35";
-  showToast("Valores restaurados a los predeterminados.", "info");
+  showToast2("Valores restaurados a los predeterminados.", "info");
 }
 
 function _readConfigForm() {
@@ -520,7 +524,7 @@ function _handleReset() {
   document.getElementById("journey-summary").style.display = "none";
   document.getElementById("final-report").style.display = "none";
 
-  showToast("Sistema reiniciado.", "info");
+  showToast2("Sistema reiniciado.", "info");
 }
 
 // ════════════════════════════════════════════════════════════
@@ -532,41 +536,12 @@ function _handleReset() {
  * @param {boolean} visible
  * @param {string}  [text]
  */
-function showLoading(visible, text = "Procesando…") {
+export function showLoading(visible, text = "Procesando…") {
   const overlay = document.getElementById("loading-overlay");
   const label = document.getElementById("loading-text");
   if (!overlay) return;
   overlay.classList.toggle("active", visible);
   if (label && text) label.textContent = text;
-}
-
-/**
- * Display a temporary toast notification.
- * @param {string} message
- * @param {"success"|"error"|"warning"|"info"} [type]
- * @param {number} [duration]
- */
-function showToast(message, type = "info", duration = 3500) {
-  const icons = { success: "✓", error: "✗", warning: "⚠", info: "ℹ" };
-  const toast = document.createElement("div");
-  toast.className = `sky-toast ${type}`;
-  toast.innerHTML = `
-    <span class="sky-toast-icon">${icons[type] ?? "ℹ"}</span>
-    <span class="sky-toast-message">${message}</span>
-    <button class="sky-toast-close" onclick="this.parentElement.remove()">×</button>
-  `;
-
-  let container = document.getElementById("toast-container");
-  if (!container) {
-    container = document.createElement("div");
-    container.id = "toast-container";
-    container.style.cssText =
-      "position:fixed;top:90px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:10px;max-width:360px;";
-    document.body.appendChild(container);
-  }
-
-  container.appendChild(toast);
-  setTimeout(() => toast?.remove(), duration);
 }
 
 /**
@@ -599,8 +574,16 @@ function _setText(id, value) {
  */
 function _requireNetwork(fn) {
   if (!networkData) {
-    showToast("Primero carga una red aérea (JSON).", "warning");
+    showToast2("Primero carga una red aérea (JSON).", "warning");
     return;
   }
   fn();
+}
+
+export function getRenderer() {
+  return renderer;
+}
+
+export function getNetworkData() {
+  return networkData;
 }

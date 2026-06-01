@@ -12,7 +12,7 @@
  * @version 1.0
  */
 
-class GraphRenderer {
+export class GraphRenderer {
   /**
    * @param {string} canvasId - ID of the <canvas> element to draw on.
    */

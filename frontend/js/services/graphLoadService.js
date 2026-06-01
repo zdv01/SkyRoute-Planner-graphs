@@ -10,6 +10,7 @@
 
 const GRAPH_API_BASE = "http://localhost:5000/api";
 
+
 // ════════════════════════════════════════════════════════════
 // INTERNAL HELPER
 // ════════════════════════════════════════════════════════════
@@ -42,12 +43,14 @@ async function _apiFetch(url, options = {}) {
  * @param   {Object} jsonData - Parsed content of the .json file
  * @returns {Promise<{ status, message, data: { nodes, links, config } }>}
  */
-async function loadGraphFromJSON(jsonData) {
+export async function loadGraphFromJSON(jsonData) {
   return _apiFetch(`${GRAPH_API_BASE}/graph/load`, {
     method: "POST",
     body: JSON.stringify(jsonData),
   });
 }
+
+export const loadGraphFromJson = loadGraphFromJSON;
 
 /**
  * Fetch full airport detail for a single node (R1 — click on node).
@@ -56,7 +59,7 @@ async function loadGraphFromJSON(jsonData) {
  * @param   {string} iataCode - e.g. "BOG"
  * @returns {Promise<Object>} Airport dict (to_dict() output)
  */
-async function getAirportDetails(iataCode) {
+export async function getAirportDetails(iataCode) {
   return _apiFetch(`${GRAPH_API_BASE}/graph/airport/${iataCode}`);
 }
 
@@ -76,7 +79,7 @@ async function getAirportDetails(iataCode) {
  * @param {string[]} preferredTransports   - e.g. ["Avión Comercial"]
  * @returns {Promise<{ status, data: Object }>}
  */
-async function calculateOptimizedRoutes(
+export async function calculateOptimizedRoutes(
   origin,
   destination,
   criteria,
@@ -105,7 +108,7 @@ async function calculateOptimizedRoutes(
  * @param {string[]} preferredTransports
  * @returns {Promise<{ status, data: { alternative_a, alternative_b } }>}
  */
-async function generateItineraries(
+export async function generateItineraries(
   origin,
   budget,
   availableTime,
@@ -135,7 +138,7 @@ async function generateItineraries(
  * @param {string} [reason="Unknown"]
  * @returns {Promise<{ success, message, blocked_route }>}
  */
-async function blockRoute(origin, destination, reason = "Unknown") {
+export async function blockRoute(origin, destination, reason = "Unknown") {
   return _apiFetch(`${GRAPH_API_BASE}/interruptions/block`, {
     method: "POST",
     body: JSON.stringify({ origin, destination, reason }),
@@ -147,7 +150,7 @@ async function blockRoute(origin, destination, reason = "Unknown") {
  *
  * Endpoint: POST /api/interruptions/unblock
  */
-async function unblockRoute(origin, destination) {
+export async function unblockRoute(origin, destination) {
   return _apiFetch(`${GRAPH_API_BASE}/interruptions/unblock`, {
     method: "POST",
     body: JSON.stringify({ origin, destination }),
@@ -159,7 +162,7 @@ async function unblockRoute(origin, destination) {
  *
  * Endpoint: GET /api/interruptions/status
  */
-async function getNetworkStatus() {
+export async function getNetworkStatus() {
   return _apiFetch(`${GRAPH_API_BASE}/interruptions/status`);
 }
 
@@ -168,7 +171,7 @@ async function getNetworkStatus() {
  *
  * Endpoint: POST /api/interruptions/recalculate
  */
-async function recalculateRoute(origin, destination) {
+export async function recalculateRoute(origin, destination) {
   return _apiFetch(`${GRAPH_API_BASE}/interruptions/recalculate`, {
     method: "POST",
     body: JSON.stringify({ origin, destination }),
@@ -180,7 +183,7 @@ async function recalculateRoute(origin, destination) {
  *
  * Endpoint: POST /api/interruptions/transit
  */
-async function handleTransitInterruption(segmentOrigin, finalDestination) {
+export async function handleTransitInterruption(segmentOrigin, finalDestination) {
   return _apiFetch(`${GRAPH_API_BASE}/interruptions/transit`, {
     method: "POST",
     body: JSON.stringify({ origin: segmentOrigin, finalDestination }),
@@ -192,7 +195,7 @@ async function handleTransitInterruption(segmentOrigin, finalDestination) {
  *
  * Endpoint: POST /api/interruptions/clear
  */
-async function clearAllBlocks() {
+export async function clearAllBlocks() {
   return _apiFetch(`${GRAPH_API_BASE}/interruptions/clear`, { method: "POST" });
 }
 
@@ -206,7 +209,7 @@ async function clearAllBlocks() {
  * Endpoint: POST /api/dynamic/next-options
  * @param {Object} currentState - { current_node, initial_budget, current_budget, ... }
  */
-async function getNextStepOptions(currentState) {
+export async function getNextStepOptions(currentState) {
   return _apiFetch(`${GRAPH_API_BASE}/dynamic/next-options`, {
     method: "POST",
     body: JSON.stringify(currentState),
@@ -219,7 +222,7 @@ async function getNextStepOptions(currentState) {
  * Endpoint: POST /api/dynamic/process-action
  * @param {Object} actionPayload - { action_type, action_details, current_state }
  */
-async function processTravelAction(actionPayload) {
+export async function processTravelAction(actionPayload) {
   return _apiFetch(`${GRAPH_API_BASE}/dynamic/process-action`, {
     method: "POST",
     body: JSON.stringify(actionPayload),
@@ -236,7 +239,7 @@ async function processTravelAction(actionPayload) {
  * Endpoint: POST /api/report/generate
  * @param {Object} reportPayload - { destinosVisitados, vuelosRecorridos, ... }
  */
-async function generateReport(reportPayload) {
+export async function generateReport(reportPayload) {
   return _apiFetch(`${GRAPH_API_BASE}/report/generate`, {
     method: "POST",
     body: JSON.stringify(reportPayload),

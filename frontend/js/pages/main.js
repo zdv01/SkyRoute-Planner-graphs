@@ -22,7 +22,10 @@
  *
  * @author  SkyRoute Team
  */
-
+import { GraphRenderer } from "../models/graphRenderer.js";
+import { loadGraphFromJson } from "../services/graphLoadService.js";
+import { getRenderer, showLoading } from "./graphLoadManager.js";
+import {showToast2} from "../../utils/modals.js";
 // ════════════════════════════════════════════════════════════
 // STARTUP CHECK
 // ════════════════════════════════════════════════════════════
@@ -30,8 +33,8 @@
 (function bootstrap() {
   const required = [
     { name: "GraphRenderer",  ref: typeof GraphRenderer  !== "undefined" },
-    { name: "loadGraphFromJSON", ref: typeof loadGraphFromJSON !== "undefined" },
-    { name: "showToast",      ref: typeof showToast      !== "undefined" },
+    { name: "loadGraphFromJson", ref: typeof loadGraphFromJson !== "undefined" },
+    { name: "showToast2",      ref: typeof showToast2      !== "undefined" },
     { name: "showLoading",    ref: typeof showLoading    !== "undefined" },
   ];
 
@@ -62,17 +65,17 @@ document.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === "0") {
     e.preventDefault();
     // renderer is initialized inside graphLoadManager — reference via window
-    if (typeof renderer !== "undefined" && renderer) renderer.resetView();
+    getRenderer()?.resetView();
   }
 
   // Ctrl + +/-: zoom in/out
   if ((e.ctrlKey || e.metaKey) && (e.key === "+" || e.key === "=")) {
     e.preventDefault();
-    if (typeof renderer !== "undefined" && renderer) renderer.zoomIn();
+    getRenderer()?.zoomIn();
   }
   if ((e.ctrlKey || e.metaKey) && e.key === "-") {
     e.preventDefault();
-    if (typeof renderer !== "undefined" && renderer) renderer.zoomOut();
+    getRenderer()?.zoomOut();
   }
 });
 
