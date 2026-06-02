@@ -25,7 +25,7 @@
 import { GraphRenderer } from "../models/graphRenderer.js";
 import { loadGraphFromJson } from "../services/graphLoadService.js";
 import { getRenderer, showLoading } from "./graphLoadManager.js";
-import {showToast2} from "../../utils/modals.js";
+import {showToast2} from "../../utils/utils.js";
 // ════════════════════════════════════════════════════════════
 // STARTUP CHECK
 // ════════════════════════════════════════════════════════════

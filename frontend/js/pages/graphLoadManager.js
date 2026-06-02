@@ -25,7 +25,7 @@ import {
   showToast2,
   showLoading,
   initModalBehavior,
-} from "../../utils/modals.js";
+} from "../../utils/utils.js";
 
 // ════════════════════════════════════════════════════════════
 // Module state
@@ -299,4 +299,4 @@ export function requireNetwork(fn) {
   fn();
 }
 
-export { showLoading } from "../../utils/modals.js";
+export { showLoading } from "../../utils/utils.js";

@@ -1,8 +1,10 @@
 /**
- * modals.js — Shared UI utilities
- * Import from here in any manager that needs modals, toasts or the loading overlay.
+ * utils.js — Shared utility functions
+ * Import from here in any manager that needs common utilities.
  * No manager should define these functions locally.
  */
+
+export const GRAPH_API_BASE = "http://localhost:5000/api"; //base url (dont fuck off)
 
 // ── Toasts ────────────────────────────────────────────────
 
@@ -86,4 +88,20 @@ export function initModalBehavior() {
       if (e.target === modal) closeAllModals();
     });
   });
+}
+
+/**
+ * Minimal fetch wrapper — throws a descriptive Error on HTTP failures.
+ * @param {string} url
+ * @param {RequestInit} [options]
+ * @returns {Promise<any>} Parsed JSON body
+ */
+export async function _apiFetch(url, options = {}) {
+  const defaults = { headers: { "Content-Type": "application/json" } };
+  const response = await fetch(url, { ...defaults, ...options });
+  const body = await response.json();
+  if (!response.ok) {
+    throw new Error(body.message || body.error || `HTTP ${response.status}`);
+  }
+  return body;
 }
