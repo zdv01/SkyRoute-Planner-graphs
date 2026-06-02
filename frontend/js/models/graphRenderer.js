@@ -276,7 +276,6 @@ export class GraphRenderer {
       t.vy -= (dy / d) * f;
     }
 
-
     // 3. Weak gravity toward canvas center
     for (const n of nodes) {
       n.vx += (W / 2 - n.x) * 0.012 * alpha;

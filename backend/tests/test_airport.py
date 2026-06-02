@@ -2,7 +2,7 @@ from backend.utils.utils import readJson
 from backend.models.graph import Graph
 from backend.models.vertex import Vertex
 from backend.models.edge import Edge
-from backend.models.airport import Airport
+from backend.models.Airport import Airport
 from backend.services.reportService import FinalReport
 from pathlib import Path
 from backend.services.graphLoadService import GraphLoadService
@@ -38,7 +38,7 @@ print(f"\nTotal de vértices creados: {len(grafo.vertexes)}")
 print("\n" + "=" * 70)
 print("PASO 2: CREANDO Y CONECTANDO ARISTAS")
 print("=" * 70)
-
+cont1, cont2, cont3 = 0, 0, 0
 for arista_data in data["aristas"]:
     origen_id = arista_data["origen"]
     destino_id = arista_data["destino"]
@@ -53,6 +53,8 @@ for arista_data in data["aristas"]:
         destination=vertice_destino,
         distanceKm=arista_data.get("distanciaKm", 0),
         aircrafts=arista_data.get("aeronaves", []),
+        routeSubsidized=arista_data.get("rutaSubsidiada", False),
+        flightTime=arista_data.get("tiempoVuelo", 0),
         baseCost=arista_data.get("costoBase", 0),
         minimumStay=arista_data.get("estanciaMinima", 0),
     )
@@ -60,7 +62,9 @@ for arista_data in data["aristas"]:
     # Agregar la arista al vértice de origen
     vertice_origen.add_adjacency(arista)
     print(
-        f"✓ Arista conectada: {origen_id} -> {destino_id} ({arista_data['distanciaKm']}km)"
+        f"✓ Arista conectada: {origen_id} -> {destino_id} ({arista_data['distanciaKm']}km)\n"
+        f"ruta subsidiada: {arista_data["rutaSubsidiada"]}\n"
+        f"tiempo de vuelo: {arista_data["tiempoVuelo"]}"
     )
 
 print(f"\nTotal de aristas creadas: {sum(len(v.adjacencies) for v in grafo.vertexes)}")

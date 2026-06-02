@@ -19,13 +19,13 @@
         {
           "nombre": "Explora la Candelaria",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 120,
           "costoUSD": 45
         },
         {
           "nombre": "Haz un recorrido gastronómico",
           "tipo": "gastronomía",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 35
         },
         {
@@ -55,7 +55,7 @@
         {
           "nombre": "Excursión natural",
           "tipo": "aventura",
-          "duracionMin": 240,
+          "duracionMin": 180,
           "costoUSD": 35
         },
         {
@@ -67,7 +67,7 @@
         {
           "nombre": "Visita una finca cafetalera local",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 180,
           "costoUSD": 17
         }
       ],
@@ -124,7 +124,7 @@
         {
           "nombre": "Museo de Antioquia y Plaza Botero",
           "tipo": "turismo",
-          "duracionMin": 220,
+          "duracionMin": 60,
           "costoUSD": 60
         },
         {
@@ -148,13 +148,13 @@
         {
           "nombre": "Visita Guatapé y Piedra del Peñol",
           "tipo": "turismo",
-          "duracionMin": 420,
+          "duracionMin": 180,
           "costoUSD": 120
         },
         {
           "nombre": " Visitar el Jardín Botánico de Medellín",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 80
         },
         {
@@ -223,7 +223,7 @@
         {
           "nombre": "Circuito Mágico Deal Agua",
           "tipo": "turismo",
-          "duracionMin": 220,
+          "duracionMin": 120,
           "costoUSD": 36
         },
         {
@@ -235,7 +235,7 @@
         {
           "nombre": "Zona Arqueológica Caral",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 30,
           "costoUSD": 56
         },
         {
@@ -247,13 +247,13 @@
         {
           "nombre": "Tour de las Catacumbas",
           "tipo": "turismo",
-          "duracionMin": 420,
+          "duracionMin": 120,
           "costoUSD": 100
         },
         {
           "nombre": "Tour de comida callejera",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 40,
           "costoUSD": 80
         },
         {
@@ -310,7 +310,7 @@
         {
           "nombre": "Centro histórico",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 40,
           "costoUSD": 40
         },
         {
@@ -334,7 +334,7 @@
         {
           "nombre": "Jardín japonés del cerro San Cristóbal",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -346,13 +346,13 @@
         {
           "nombre": "Museo de la memoria y los derechos humanos",
           "tipo": "cultural",
-          "duracionMin": 420,
+          "duracionMin": 50,
           "costoUSD": 100
         },
         {
           "nombre": "Museo chileno de arte precolombino",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 80
         },
         {
@@ -409,7 +409,7 @@
         {
           "nombre": "La Casa Rosada y Plaza de Mayo",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -445,13 +445,13 @@
         {
           "nombre": "Galerías Pacífico",
           "tipo": "cultural",
-          "duracionMin": 420,
+          "duracionMin": 50,
           "costoUSD": 100
         },
         {
           "nombre": "Disfruta un espectáculo de tango",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 40,
           "costoUSD": 80
         },
         {
@@ -508,7 +508,7 @@
         {
           "nombre": "Avenida Paulista",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 120,
           "costoUSD": 7
         },
         {
@@ -532,7 +532,7 @@
         {
           "nombre": "Ilhabela",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 45,
           "costoUSD": 56
         },
         {
@@ -607,7 +607,7 @@
         {
           "nombre": "Museo de Antropología",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 100,
           "costoUSD": 7
         },
         {
@@ -631,7 +631,7 @@
         {
           "nombre": "Palacio Nacional",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -706,7 +706,7 @@
         {
           "nombre": "Visitar el parque Xcaret",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 7
         },
         {
@@ -730,7 +730,7 @@
         {
           "nombre": "Isla mujeres",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 90,
           "costoUSD": 56
         },
         {
@@ -805,7 +805,7 @@
         {
           "nombre": "canal de Panamá",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 20
         },
         {
@@ -829,7 +829,7 @@
         {
           "nombre": "Calzada de Amador",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -904,7 +904,7 @@
         {
           "nombre": "Recorrer el Centro Histórico",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 20
         },
         {
@@ -928,7 +928,7 @@
         {
           "nombre": "Basílica del Voto Nacional",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 40,
           "costoUSD": 56
         },
         {
@@ -1003,7 +1003,7 @@
         {
           "nombre": "Cerro Santa Ana y Las Peñas",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 20
         },
         {
@@ -1102,7 +1102,7 @@
         {
           "nombre": "Parque Nacional Waraira Repano (El Ávila)",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 20
         },
         {
@@ -1126,7 +1126,7 @@
         {
           "nombre": "Panteón Nacional",
           "tipo": "cultural",
-          "duracionMin": 300,
+          "duracionMin": 50,
           "costoUSD": 56
         },
         {
@@ -1225,7 +1225,7 @@
         {
           "nombre": "Todos Santos",
           "tipo": "cultural",
-          "duracionMin": 300,
+          "duracionMin": 50,
           "costoUSD": 56
         },
         {
@@ -1300,7 +1300,7 @@
         {
           "nombre": "Palacio de López",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 20
         },
         {
@@ -1324,7 +1324,7 @@
         {
           "nombre": "Cerro Lambaré",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 90,
           "costoUSD": 56
         },
         {
@@ -1399,7 +1399,7 @@
         {
           "nombre": "Explorar la Zona Colonial",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 20
         },
         {
@@ -1423,7 +1423,7 @@
         {
           "nombre": "Jardín Botánico Nacional",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -1498,7 +1498,7 @@
         {
           "nombre": "La Habana Vieja",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 20
         },
         {
@@ -1522,7 +1522,7 @@
         {
           "nombre": "Vistas al Mar",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 100,
           "costoUSD": 56
         },
         {
@@ -1597,7 +1597,7 @@
         {
           "nombre": "Teatro Nacional de Costa Rica",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 20
         },
         {
@@ -1621,7 +1621,7 @@
         {
           "nombre": "Mercado Central",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -1696,7 +1696,7 @@
         {
           "nombre": "La Casa Rosada y Plaza de Mayo",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -1720,7 +1720,7 @@
         {
           "nombre": "Teatro Colón",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 120,
           "costoUSD": 56
         },
         {
@@ -1732,13 +1732,13 @@
         {
           "nombre": "Galerías Pacífico",
           "tipo": "cultural",
-          "duracionMin": 420,
+          "duracionMin": 60,
           "costoUSD": 100
         },
         {
           "nombre": "Disfruta un espectáculo de tango",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 80
         },
         {
@@ -1795,7 +1795,7 @@
         {
           "nombre": "Plaza Independencia",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 30,
           "costoUSD": 40
         },
         {
@@ -1819,7 +1819,7 @@
         {
           "nombre": "Museo Andes 1972",
           "tipo": "cultural",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -1831,13 +1831,13 @@
         {
           "nombre": "Museo Blanes y el Rosedal",
           "tipo": "cultural",
-          "duracionMin": 420,
+          "duracionMin": 60,
           "costoUSD": 100
         },
         {
           "nombre": "El Mercado del Puerto",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 80
         },
         {
@@ -1894,7 +1894,7 @@
         {
           "nombre": "Plaza 24 de Septiembre",
           "tipo": "cultural",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -1918,7 +1918,7 @@
         {
           "nombre": "Samaipata",
           "tipo": "cultural",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -1930,13 +1930,13 @@
         {
           "nombre": "Ruta de las Misiones Jesuíticas",
           "tipo": "cultural",
-          "duracionMin": 420,
+          "duracionMin": 60,
           "costoUSD": 100
         },
         {
           "nombre": "Majadito",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 80
         },
         {
@@ -1993,7 +1993,7 @@
         {
           "nombre": "Centro Histórico",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 900,
           "costoUSD": 40
         },
         {
@@ -2017,7 +2017,7 @@
         {
           "nombre": "Mirador Killi Killi",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -2029,13 +2029,13 @@
         {
           "nombre": "Tiahuanaco",
           "tipo": "turismo",
-          "duracionMin": 420,
+          "duracionMin": 60,
           "costoUSD": 100
         },
         {
           "nombre": "Camino de la Muerte",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 80
         },
         {
@@ -2092,7 +2092,7 @@
         {
           "nombre": "Recife Antiguo",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 40
         },
         {
@@ -2116,7 +2116,7 @@
         {
           "nombre": "Playa de Boa Viagem",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 90,
           "costoUSD": 56
         },
         {
@@ -2128,7 +2128,7 @@
         {
           "nombre": "Bolo de Rolo",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 90,
           "costoUSD": 100
         },
         {
@@ -2191,7 +2191,7 @@
         {
           "nombre": "Catedral Metropolitana",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2215,7 +2215,7 @@
         {
           "nombre": "Lago Paranoá y Pontão do Lago Sul",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -2227,19 +2227,19 @@
         {
           "nombre": "Carne de Sol con Macaxeira",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 20,
           "costoUSD": 100
         },
         {
           "nombre": "Frutos del Cerrado",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 24,
           "costoUSD": 80
         },
         {
           "nombre": "Feijoada",
           "tipo": "gastronomia",
-          "duracionMin": 120,
+          "duracionMin": 12,
           "costoUSD": 25
         },
         {
@@ -2290,7 +2290,7 @@
         {
           "nombre": "Pelourinho",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 90,
           "costoUSD": 40
         },
         {
@@ -2314,7 +2314,7 @@
         {
           "nombre": "Playa de Porto da Barra",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 120,
           "costoUSD": 56
         },
         {
@@ -2326,25 +2326,25 @@
         {
           "nombre": "Acarajé",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 20,
           "costoUSD": 100
         },
         {
           "nombre": "Moqueca Bahiana",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 24,
           "costoUSD": 80
         },
         {
           "nombre": "Vatapá",
           "tipo": "gastronomia",
-          "duracionMin": 120,
+          "duracionMin": 30,
           "costoUSD": 25
         },
         {
           "nombre": "Cocada",
           "tipo": "gastronomia",
-          "duracionMin": 90,
+          "duracionMin": 30,
           "costoUSD": 15
         }
   ],
@@ -2389,7 +2389,7 @@
         {
           "nombre": "Plaza de Armas",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2413,7 +2413,7 @@
         {
           "nombre": "Ruinas cercanas",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -2425,19 +2425,19 @@
         {
           "nombre": "Chiri Uchu",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 25,
           "costoUSD": 100
         },
         {
           "nombre": "Cuy al Horno",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 24,
           "costoUSD": 80
         },
         {
           "nombre": "Chicharrón a la Cusqueña",
           "tipo": "gastronomia",
-          "duracionMin": 120,
+          "duracionMin": 20,
           "costoUSD": 25
         },
         {
@@ -2488,7 +2488,7 @@
         {
           "nombre": "Monasterio de Santa Catalina",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2512,7 +2512,7 @@
         {
           "nombre": "Cañón del Colca",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 90,
           "costoUSD": 56
         },
         {
@@ -2524,19 +2524,19 @@
         {
           "nombre": "Picanterías Arequipeñas",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 20,
           "costoUSD": 100
         },
         {
           "nombre": "Mercado de San Camilo",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 40,
           "costoUSD": 80
         },
         {
           "nombre": "Chicharrón Arequipeño",
           "tipo": "gastronomia",
-          "duracionMin": 120,
+          "duracionMin": 20,
           "costoUSD": 25
         },
         {
@@ -2587,7 +2587,7 @@
         {
           "nombre": "Centro Histórico",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2611,7 +2611,7 @@
         {
           "nombre": "Tlaquepaque y Tonalá",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -2623,13 +2623,13 @@
         {
           "nombre": "Mercado San Juan de Dios",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 20,
           "costoUSD": 100
         },
         {
           "nombre": "Plaza de los Mariachis",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 40,
           "costoUSD": 80
         },
         {
@@ -2686,7 +2686,7 @@
         {
           "nombre": "Centro Histórico",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2710,7 +2710,7 @@
         {
           "nombre": "Puerta del Diablo",
           "tipo": "turismo",
-          "duracionMin": 300,
+          "duracionMin": 90,
           "costoUSD": 56
         },
         {
@@ -2722,19 +2722,19 @@
         {
           "nombre": "El Boquerón",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 42,
           "costoUSD": 100
         },
         {
           "nombre": "Pupusas en Olocuilta",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 40,
           "costoUSD": 80
         },
         {
           "nombre": "Distrito El Espino, Multiplaza o La Gran Vía",
           "tipo": "gastronomia",
-          "duracionMin": 120,
+          "duracionMin": 60,
           "costoUSD": 25
         },
         {
@@ -2785,7 +2785,7 @@
         {
           "nombre": "Plaza de la Constitución",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2809,7 +2809,7 @@
         {
           "nombre": "Museo Ixchel del Traje Indígena",
           "tipo": "cultural",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -2821,19 +2821,19 @@
         {
           "nombre": "Pepián de Pollo",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 42,
           "costoUSD": 100
         },
         {
           "nombre": "Jocón",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 24,
           "costoUSD": 80
         },
         {
           "nombre": "Kak'ik",
           "tipo": "gastronomia",
-          "duracionMin": 120,
+          "duracionMin": 20,
           "costoUSD": 25
         },
         {
@@ -2884,7 +2884,7 @@
         {
           "nombre": "Parque Central y Catedral",
           "tipo": "turismo",
-          "duracionMin": 240,
+          "duracionMin": 60,
           "costoUSD": 40
         },
         {
@@ -2908,7 +2908,7 @@
         {
           "nombre": "Museo de Antropología e Historia",
           "tipo": "cultural",
-          "duracionMin": 300,
+          "duracionMin": 60,
           "costoUSD": 56
         },
         {
@@ -2920,13 +2920,13 @@
         {
           "nombre": "Zona Viva / Bulevar Morazán",
           "tipo": "gastronomia",
-          "duracionMin": 420,
+          "duracionMin": 42,
           "costoUSD": 100
         },
         {
           "nombre": "Gastronomía local",
           "tipo": "gastronomia",
-          "duracionMin": 240,
+          "duracionMin": 24,
           "costoUSD": 80
         },
         {
@@ -2978,304 +2978,860 @@
       "destino": "MDE",
       "distanciaKm": 250,
       "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+      "rutaSubsidiada": false,
+      "tiempoVuelo": 0,
       "costoBase": 0,
-      "estanciaMinima": 60
+      "estanciaMinima": 1440
     },
     {
       "origen": "BOG",
       "destino": "LIM",
       "distanciaKm": 1880,
       "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+      "rutaSubsidiada": false,
+      "tiempoVuelo": 0,
       "costoBase": 0,
-      "estanciaMinima": 60
+      "estanciaMinima": 2880
     },
     {
       "origen": "MDE",
       "destino": "BOG",
       "distanciaKm": 250,
       "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
-      "costoBase": 20,
-      "estanciaMinima": 45
+      "rutaSubsidiada": false,
+      "tiempoVuelo": 0,
+      "costoBase": 0,
+      "estanciaMinima": 4320
     },
       {
     "origen": "LIM",
     "destino": "SCL",
     "distanciaKm": 2450,
     "aeronaves": ["Avión Comercial"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 60
+    "estanciaMinima": 1440
+  },
+        {
+    "origen": "SCL",
+    "destino": "LIM",
+    "distanciaKm": 2450,
+    "aeronaves": ["Avión Comercial"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
   },
   {
     "origen": "LIM",
     "destino": "BOG",
     "distanciaKm": 1880,
     "aeronaves": ["Avión Comercial", "Avión Regional"],
-    "costoBase": 10,
-    "estanciaMinima": 50
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
   },
   {
     "origen": "SCL",
     "destino": "EZE",
     "distanciaKm": 1130,
     "aeronaves": ["Avión Comercial", "Avión Regional"],
-    "costoBase": 5,
-    "estanciaMinima": 45
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
+  },
+    {
+    "origen": "EZE",
+    "destino": "SCL",
+    "distanciaKm": 1130,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
   },
   {
     "origen": "GRU",
     "destino": "EZE",
     "distanciaKm": 1670,
     "aeronaves": ["Avión Comercial"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 60
+    "estanciaMinima": 2880
+  },
+    {
+    "origen": "EZE",
+    "destino": "GRU",
+    "distanciaKm": 1670,
+    "aeronaves": ["Avión Comercial"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
   },
   {
     "origen": "GRU",
     "destino": "SCL",
     "distanciaKm": 2610,
     "aeronaves": ["Avión Comercial", "Avión Regional"],
-    "costoBase": 15,
-    "estanciaMinima": 70
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "SCL",
+    "destino": "GRU",
+    "distanciaKm": 2610,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
   },
   {
     "origen": "MEX",
     "destino": "CUN",
     "distanciaKm": 1290,
     "aeronaves": ["Avión Comercial", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 40
+    "estanciaMinima": 4320
+  },
+    {
+    "origen": "CUN",
+    "destino": "MEX",
+    "distanciaKm": 1290,
+    "aeronaves": ["Avión Comercial", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "MEX",
+    "destino": "LAP",
+    "distanciaKm": 1270,
+    "aeronaves": ["Avión Comercial", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
+  },
+      {
+    "origen": "LAP",
+    "destino": "MEX",
+    "distanciaKm": 1270,
+    "aeronaves": ["Avión Comercial", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
   },
   {
     "origen": "MEX",
     "destino": "PTY",
     "distanciaKm": 2400,
     "aeronaves": ["Avión Comercial"],
-    "costoBase": 20,
-    "estanciaMinima": 80
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "MEX",
+    "destino": "BSB",
+    "distanciaKm": 6830,
+    "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
+  },
+      {
+    "origen": "BSB",
+    "destino": "MEX",
+    "distanciaKm": 6830,
+    "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "PTY",
+    "destino": "MEX",
+    "distanciaKm": 2400,
+    "aeronaves": ["Avión Comercial"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
   },
   {
     "origen": "PTY",
     "destino": "BOG",
     "distanciaKm": 760,
     "aeronaves": ["Avión Regional", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 30
+    "estanciaMinima": 2880
+  },
+    {
+    "origen": "BOG",
+    "destino": "PTY",
+    "distanciaKm": 760,
+    "aeronaves": ["Avión Regional", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
   },
   {
     "origen": "UIO",
     "destino": "GYE",
     "distanciaKm": 270,
     "aeronaves": ["Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 20
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "GYE",
+    "destino": "UIO",
+    "distanciaKm": 270,
+    "aeronaves": ["Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
   },
   {
     "origen": "CCS",
     "destino": "PTY",
     "distanciaKm": 1050,
     "aeronaves": ["Avión Comercial", "Avión Regional"],
-    "costoBase": 10,
-    "estanciaMinima": 50
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
+  },
+    {
+    "origen": "PTY",
+    "destino": "CCS",
+    "distanciaKm": 1050,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
   },
   {
     "origen": "ASU",
     "destino": "GRU",
     "distanciaKm": 1130,
     "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 45
+    "estanciaMinima": 4320
+  },
+    {
+    "origen": "GRU",
+    "destino": "ASU",
+    "distanciaKm": 1130,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
   },
   {
     "origen": "SDQ",
     "destino": "HAV",
     "distanciaKm": 1400,
     "aeronaves": ["Avión Comercial"],
-    "costoBase": 5,
-    "estanciaMinima": 60
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "HAV",
+    "destino": "SDQ",
+    "distanciaKm": 1400,
+    "aeronaves": ["Avión Comercial"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
   },
   {
     "origen": "HAV",
     "destino": "MEX",
     "distanciaKm": 1800,
     "aeronaves": ["Avión Comercial", "Avión Regional"],
-    "costoBase": 10,
-    "estanciaMinima": 70
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
+  },
+    {
+    "origen": "MEX",
+    "destino": "HAV",
+    "distanciaKm": 1800,
+    "aeronaves": ["Avión Comercial", "Avión Regional"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
   },
   {
     "origen": "SJO",
     "destino": "PTY",
     "distanciaKm": 800,
     "aeronaves": ["Avión Regional", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
     "costoBase": 0,
-    "estanciaMinima": 30
+    "estanciaMinima": 4320
+  },
+    {
+    "origen": "PTY",
+    "destino": "SJO",
+    "distanciaKm": 800,
+    "aeronaves": ["Avión Regional", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 4320
   },
   {
     "origen": "CUN",
     "destino": "SJO",
     "distanciaKm": 1250,
     "aeronaves": ["Avión Comercial", "Hélice"],
-    "costoBase": 15,
-    "estanciaMinima": 50
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 1440
+  },
+    {
+    "origen": "SJO",
+    "destino": "CUN",
+    "distanciaKm": 1250,
+    "aeronaves": ["Avión Comercial", "Hélice"],
+    "rutaSubsidiada": false,
+    "tiempoVuelo": 0,
+    "costoBase": 0,
+    "estanciaMinima": 2880
   },
   {
   "origen": "BOG",
   "destino": "UIO",
   "distanciaKm": 720,
   "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 40
+  "estanciaMinima": 4320
+},
+  {
+  "origen": "UIO",
+  "destino": "BOG",
+  "distanciaKm": 720,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "BOG",
   "destino": "CCS",
   "distanciaKm": 1030,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 5,
-  "estanciaMinima": 50
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
+},
+{
+  "origen": "CCS",
+  "destino": "BOG",
+  "distanciaKm": 1030,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "BOG",
   "destino": "GRU",
   "distanciaKm": 4330,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 15,
-  "estanciaMinima": 90
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "GRU",
+  "destino": "BOG",
+  "distanciaKm": 4330,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "BOG",
   "destino": "MEX",
   "distanciaKm": 3160,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 20,
-  "estanciaMinima": 80
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
+},
+{
+  "origen": "MEX",
+  "destino": "BOG",
+  "distanciaKm": 3160,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
 },
 {
   "origen": "PTY",
   "destino": "SAL",
   "distanciaKm": 1160,
   "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 45
+  "estanciaMinima": 2880
+},
+{
+  "origen": "SAL",
+  "destino": "PTY",
+  "distanciaKm": 1160,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
 },
 {
   "origen": "SAL",
   "destino": "MEX",
   "distanciaKm": 1250,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 10,
-  "estanciaMinima": 50
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "MEX",
+  "destino": "SAL",
+  "distanciaKm": 1250,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
 },
 {
   "origen": "SAL",
   "destino": "GUA",
   "distanciaKm": 180,
   "aeronaves": ["Hélice","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 20
+  "estanciaMinima": 4320
+},
+{
+  "origen": "GUA",
+  "destino": "SAL",
+  "distanciaKm": 180,
+  "aeronaves": ["Hélice","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "GUA",
   "destino": "SAP",
   "distanciaKm": 290,
   "aeronaves": ["Hélice","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 20
+  "estanciaMinima": 1440
+},
+{
+  "origen": "SAP",
+  "destino": "GUA",
+  "distanciaKm": 290,
+  "aeronaves": ["Hélice","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
 },
 {
   "origen": "MEX",
   "destino": "GDL",
   "distanciaKm": 460,
   "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 30
+  "estanciaMinima": 4320
+},
+{
+  "origen": "GDL",
+  "destino": "MEX",
+  "distanciaKm": 460,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "GDL",
+  "destino": "SAL",
+  "distanciaKm": 1780,
+  "aeronaves": ["Avión Comercial","Avión Regional","Hélice"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "SAL",
+  "destino": "GDL",
+  "distanciaKm": 1780,
+  "aeronaves": ["Avión Comercial","Avión Regional","Hélice"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "LIM",
   "destino": "CUZ",
   "distanciaKm": 590,
   "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 30
+  "estanciaMinima": 4320
+},
+{
+  "origen": "CUZ",
+  "destino": "LIM",
+  "distanciaKm": 590,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "LIM",
   "destino": "AQP",
   "distanciaKm": 760,
   "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 35
+  "estanciaMinima": 2880
+},
+{
+  "origen": "AQP",
+  "destino": "LIM",
+  "distanciaKm": 760,
+  "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
 },
 {
   "origen": "CUZ",
   "destino": "LPB",
   "distanciaKm": 530,
   "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 30
+  "estanciaMinima": 4320
+},
+{
+  "origen": "LPB",
+  "destino": "CUZ",
+  "distanciaKm": 530,
+  "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
 },
 {
   "origen": "LPB",
   "destino": "VVI",
   "distanciaKm": 550,
   "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 30
+  "estanciaMinima": 1440
+},
+{
+  "origen": "VVI",
+  "destino": "LPB",
+  "distanciaKm": 550,
+  "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "GRU",
+  "destino": "VVI",
+  "distanciaKm": 1850,
+  "aeronaves": ["Avión Regional", "Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "VVI",
+  "destino": "GRU",
+  "distanciaKm": 1850,
+  "aeronaves": ["Avión Regional", "Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "VVI",
   "destino": "ASU",
   "distanciaKm": 620,
   "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 35
+  "estanciaMinima": 1440
+},
+{
+  "origen": "ASU",
+  "destino": "VVI",
+  "distanciaKm": 620,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "VVI",
+  "destino": "AEP",
+  "distanciaKm": 1930,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
+},
+{
+  "origen": "AEP",
+  "destino": "VVI",
+  "distanciaKm": 1930,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "VVI",
+  "destino": "EZE",
+  "distanciaKm": 1970,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "EZE",
+  "destino": "VVI",
+  "distanciaKm": 1970,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
 },
 {
   "origen": "ASU",
   "destino": "MVD",
   "distanciaKm": 1070,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 5,
-  "estanciaMinima": 45
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "MVD",
+  "destino": "ASU",
+  "distanciaKm": 1070,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "MVD",
   "destino": "EZE",
   "distanciaKm": 230,
   "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 20
+  "estanciaMinima": 4320
+},
+{
+  "origen": "EZE",
+  "destino": "MVD",
+  "distanciaKm": 230,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
 },
 {
   "origen": "GRU",
   "destino": "BSB",
   "distanciaKm": 870,
   "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 40
+  "estanciaMinima": 1440
+},
+{
+  "origen": "BSB",
+  "destino": "GRU",
+  "distanciaKm": 870,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
 },
 {
   "origen": "BSB",
   "destino": "SSA",
   "distanciaKm": 1060,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 5,
-  "estanciaMinima": 45
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "SSA",
+  "destino": "BSB",
+  "distanciaKm": 1060,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "BOG",
+  "destino": "BSB",
+  "distanciaKm": 3700,
+  "aeronaves": ["Avión Comercial","Avión Regional","Hélice"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
+},
+{
+  "origen": "BSB",
+  "destino": "BOG",
+  "distanciaKm": 3700,
+  "aeronaves": ["Avión Comercial","Avión Regional","Hélice"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 },
 {
   "origen": "SSA",
   "destino": "REC",
   "distanciaKm": 680,
   "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
   "costoBase": 0,
-  "estanciaMinima": 35
+  "estanciaMinima": 2880
+},
+{
+  "origen": "REC",
+  "destino": "SSA",
+  "distanciaKm": 680,
+  "aeronaves": ["Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 4320
 },
 {
   "origen": "REC",
   "destino": "PTY",
   "distanciaKm": 5050,
   "aeronaves": ["Avión Comercial"],
-  "costoBase": 20,
-  "estanciaMinima": 90
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "PTY",
+  "destino": "REC",
+  "distanciaKm": 5050,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
 }
   ],
   "configuracion": {

@@ -1,7 +1,8 @@
 import json
 from models.graph import Graph
-from models.airport import Airport
+from models.Airport import Airport
 from models.edge import Edge
+
 
 class GraphLoadService:
     def __init__(self):
@@ -40,6 +41,8 @@ class GraphLoadService:
                     destination=destination_vertex,
                     distanceKm=edge_data.get("distanciaKm"),
                     aircrafts=edge_data.get("aeronaves"),
+                    routeSubsidized=edge_data.get("rutaSubsidiada"),
+                    flightTime=edge_data.get("tiempoVuelo"),
                     baseCost=edge_data.get("costoBase"),
                     minimumStay=edge_data.get("estanciaMinima"),
                 )

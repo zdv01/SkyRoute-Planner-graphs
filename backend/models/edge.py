@@ -5,6 +5,8 @@ class Edge:
         destination,
         distanceKm=0,
         aircrafts=None,
+        routeSubsidized=False,
+        flightTime=0,
         baseCost=0,
         minimumStay=0,
         is_blocked=False,
@@ -13,6 +15,8 @@ class Edge:
         self.destination = destination
         self.distanceKm = distanceKm
         self.aircrafts = aircrafts if aircrafts is not None else []
+        self.routeSubsidized = routeSubsidized
+        self.flightTime = flightTime
         self.baseCost = baseCost
         self.minimumStay = minimumStay
         self.is_blocked = is_blocked
@@ -24,6 +28,8 @@ class Edge:
             "destino": self.destination,
             "distanciaKm": self.distanceKm,
             "aeronaves": self.aircrafts,
+            "rutaSubsidiada": self.routeSubsidized,
+            "tiempoVuelo": self.flightTime,
             "costoBase": self.baseCost,
             "estanciaMinima": self.minimumStay,
             "estaBloqueada": self.is_blocked,
@@ -37,6 +43,8 @@ class Edge:
             destination=data.get("destino"),
             distanceKm=data.get("distanciaKm", 0),
             aircrafts=data.get("aeronaves", []),
+            routeSubsidized=data.get("rutaSubsidiada", False),
+            flightTime=data.get("tiempoVuelo", 0),
             baseCost=data.get("costoBase", 0),
             minimumStay=data.get("estanciaMinima", 0),
             is_blocked=data.get("estaBloqueada", False),
