@@ -390,8 +390,13 @@ class Graph:
         return dist[destination_id], path
 
     def find_itineraries_dfs(
-        self, graph, start_id, initial_budget, available_time, preferred_transports
+        self, graph, start_id, budget_limit, time_limit_minutes, preferred_transports, constraint="both"
     ):
+        """
+        constraint='budget' → only budget pruning (for Alt A)
+        constraint='time'   → only time pruning   (for Alt B)
+        constraint='both'   → both constraints simultaneously
+        """
         all_paths = []
         start_vertex = next(
             (v for v in graph.vertexes if v.identifier == start_id), None
@@ -407,14 +412,16 @@ class Graph:
             visited_nodes,
             current_path,
             transports_seen,
+            segments,
         ):
             all_paths.append(
                 {
                     "path": list(current_path),
                     "cost": current_cost,
-                    "time": current_time,
+                    "time": current_time,          # stored in minutes
                     "destinations_count": len(set(current_path)) - 1,
                     "transports": set(transports_seen),
+                    "segments": list(segments),
                 }
             )
 
@@ -426,43 +433,64 @@ class Graph:
                     continue
 
                 edge_transports = getattr(edge, "aircrafts", [])
+
+                # Each edge must expose at least one preferred transport to be traversable
                 if preferred_transports:
                     if not any(t in edge_transports for t in preferred_transports):
                         continue
+                    matched_transport = next(t for t in edge_transports if t in preferred_transports)
+                else:
+                    # No preference: use the first declared transport; skip edge if none
+                    if not edge_transports:
+                        continue
+                    matched_transport = edge_transports[0]
 
-                matched_transport = next(
-                    (t for t in edge_transports if t in preferred_transports),
-                    edge_transports[0] if edge_transports else "Aéreo",
+                edge_cost = getattr(edge, "baseCost", getattr(edge, "distanceKm", 0) * 0.2)
+                accommodation = getattr(next_node, "accommodationCost", 0) or 0
+                alimentation = getattr(next_node, "alimentationCost", 0) or 0
+                total_edge_cost = edge_cost + accommodation + alimentation
+                # flightTime is in minutes
+                edge_time = getattr(edge, "flightTime", getattr(edge, "distanceKm", 0) * 0.1)
+
+                # Prune only according to the active constraint
+                if constraint == "budget":
+                    if current_cost + total_edge_cost > budget_limit:
+                        continue
+                elif constraint == "time":
+                    if current_time + edge_time > time_limit_minutes:
+                        continue
+                else:  # both
+                    if (current_cost + total_edge_cost > budget_limit
+                            or current_time + edge_time > time_limit_minutes):
+                        continue
+
+                segment = {
+                    "from": current_vertex.identifier,
+                    "to": next_id,
+                    "transport": matched_transport,
+                    "cost": total_edge_cost,
+                    "time_minutes": edge_time,
+                }
+
+                visited_nodes.add(next_id)
+                current_path.append(next_id)
+                transports_seen.append(matched_transport)
+                segments.append(segment)
+
+                dfs(
+                    next_node,
+                    current_cost + total_edge_cost,
+                    current_time + edge_time,
+                    visited_nodes,
+                    current_path,
+                    transports_seen,
+                    segments,
                 )
 
-                metadata = getattr(next_node, "metadata", {})
-                edge_cost = getattr(edge, "cost", getattr(edge, "distance", 0) * 0.2)
-                accommodation = metadata.get("costoAlojamiento", 0)
-                alimentation = metadata.get("costoAlimentacion", 0)
+                visited_nodes.remove(next_id)
+                current_path.pop()
+                transports_seen.pop()
+                segments.pop()
 
-                total_edge_cost = edge_cost + accommodation + alimentation
-                edge_time = getattr(edge, "time", getattr(edge, "distance", 0) * 0.1)
-
-                if (
-                    current_cost + total_edge_cost <= initial_budget
-                    and current_time + edge_time <= available_time
-                ):
-                    visited_nodes.add(next_id)
-                    current_path.append(next_id)
-                    transports_seen.append(matched_transport)
-
-                    dfs(
-                        next_node,
-                        current_cost + total_edge_cost,
-                        current_time + edge_time,
-                        visited_nodes,
-                        current_path,
-                        transports_seen,
-                    )
-
-                    visited_nodes.remove(next_id)
-                    current_path.pop()
-                    transports_seen.pop()
-
-        dfs(start_vertex, 0, 0, {start_id}, [start_id], [])
+        dfs(start_vertex, 0, 0, {start_id}, [start_id], [], [])
         return all_paths

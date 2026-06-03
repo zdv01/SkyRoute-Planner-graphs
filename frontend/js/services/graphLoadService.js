@@ -7,8 +7,7 @@
  *
  * @author  SkyRoute Team
  */
-import { _apiFetch, GRAPH_API_BASE } from '../../utils/utils.js';
-
+import { _apiFetch, GRAPH_API_BASE } from "../../utils/utils.js";
 
 /**
  * Send the raw JSON file content to the backend so it builds the

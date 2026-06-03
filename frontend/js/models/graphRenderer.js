@@ -35,8 +35,8 @@ export class GraphRenderer {
     this.ctx = this.canvas.getContext("2d");
 
     // ── Node visual config ────────────────────────────────────
-    this.HUB_RADIUS = 30;
-    this.SECONDARY_RADIUS = 20;
+    this.HUB_RADIUS = 42;
+    this.SECONDARY_RADIUS = 32;
 
     // ── Color palette (mirrors app.css CSS vars semantically) ─
     this.colors = {
@@ -81,6 +81,12 @@ export class GraphRenderer {
     this.selectedEdge = null;
     this.hoveredNode = null;
     this.highlightedPath = []; // Array<string> of IATA codes
+
+    // ── Angular-spread cache (recomputed each frame) ──────────
+    // Maps `${src}|${tgt}` → { srcOff, tgtOff } in radians.
+    // Ensures edges leaving/entering a node are distributed
+    // around its perimeter instead of clustering at one point.
+    this._spreadAngles = null;
 
     // ── Force-directed simulation ─────────────────────────────
     this.simRunning = false;
@@ -332,6 +338,9 @@ export class GraphRenderer {
     ctx.fillStyle = this.colors.background;
     ctx.fillRect(0, 0, W, H);
 
+    // Recompute perimeter-spread offsets every frame (nodes may have moved)
+    this._spreadAngles = this._computeSpreadAngles();
+
     // Draw a subtle grid for context
     this._drawGrid(W, H);
 
@@ -561,21 +570,43 @@ export class GraphRenderer {
     ctx.fill();
   }
 
+  /**
+   * Compute start/end points and control point for a quadratic edge curve.
+   *
+   * Connection points on each node's circle are determined by the edge's
+   * natural direction PLUS a small angular offset from _computeSpreadAngles(),
+   * so edges that would converge at the same spot on the perimeter are
+   * fanned out and remain individually legible.
+   */
   _edgeCurve(s, t, link, arrowSize = 13) {
     const dx = t.x - s.x;
     const dy = t.y - s.y;
     const d = Math.sqrt(dx * dx + dy * dy);
     if (d < 1) return null;
 
-    const nx = dx / d;
-    const ny = dy / d;
-    const offset = this._edgeCurveOffset(link);
-    const sx = s.x + nx * s.radius;
-    const sy = s.y + ny * s.radius;
-    const ex = t.x - nx * (t.radius + arrowSize - 2);
-    const ey = t.y - ny * (t.radius + arrowSize - 2);
+    // Look up pre-computed angular spread offsets for this edge
+    const key = `${link.source}|${link.target}`;
+    const spread = this._spreadAngles?.get(key);
+    const srcOff = spread?.srcOff ?? 0;
+    const tgtOff = spread?.tgtOff ?? 0;
+
+    const baseAngle = Math.atan2(dy, dx);
+    const nx = Math.cos(baseAngle);
+    const ny = Math.sin(baseAngle);
+
+    // Source connection point — rotated by srcOff around s
+    const srcAngle = baseAngle + srcOff;
+    const sx = s.x + Math.cos(srcAngle) * s.radius;
+    const sy = s.y + Math.sin(srcAngle) * s.radius;
+
+    // Target connection point — opposite side, rotated by tgtOff around t
+    const tgtAngle = baseAngle + Math.PI + tgtOff;
+    const ex = t.x + Math.cos(tgtAngle) * (t.radius + arrowSize - 2);
+    const ey = t.y + Math.sin(tgtAngle) * (t.radius + arrowSize - 2);
+
     const mx = (sx + ex) / 2;
     const my = (sy + ey) / 2;
+    const offset = this._edgeCurveOffset(link);
 
     return {
       sx,
@@ -711,19 +742,19 @@ export class GraphRenderer {
     ctx.stroke();
 
     // ── IATA code ──────────────────────────────────────────
-    const textY = isHub ? y - 6 : y - 4;
+    const textY = isHub ? y - 7 : y - 5;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = this.colors.nodeText;
-    ctx.font = `bold ${isHub ? 13 : 11}px 'Segoe UI', sans-serif`;
+    ctx.font = `bold ${isHub ? 15 : 12}px 'Segoe UI', sans-serif`;
     ctx.fillText(id, x, textY);
 
     // ── City name (small, below IATA) ──────────────────────
     const city = metadata?.ciudad || "";
     if (city) {
-      ctx.font = `${isHub ? 8 : 7}px 'Segoe UI', sans-serif`;
+      ctx.font = `${isHub ? 9 : 8}px 'Segoe UI', sans-serif`;
       ctx.fillStyle = "rgba(255,255,255,0.82)";
-      ctx.fillText(city.slice(0, 10), x, textY + (isHub ? 11 : 9));
+      ctx.fillText(city.slice(0, 10), x, textY + (isHub ? 13 : 10));
     }
 
     // ── Aircraft-type dots (once per node, below the circle) ──
@@ -936,6 +967,92 @@ export class GraphRenderer {
   // ════════════════════════════════════════════════════════════
   // UTILITIES
   // ════════════════════════════════════════════════════════════
+
+  /**
+   * For every visual edge compute small angular offsets (srcOff, tgtOff) so
+   * that edges sharing a node are fanned evenly around its perimeter instead
+   * of all exiting/entering at the same point.
+   *
+   * Returns a Map keyed by `${source}|${target}` → { srcOff, tgtOff }.
+   */
+  _computeSpreadAngles() {
+    const map = new Map();
+    const MIN_SEP = 0.35; // ~20° minimum gap between connection points
+    const visualEdges = this._visualEdges();
+
+    for (const node of this.nodes) {
+      // Outgoing edges: this node is the visual-edge source
+      const srcGroup = visualEdges
+        .filter((ve) => ve.source === node.id)
+        .map((ve) => {
+          const t = this.nodeMap[ve.target];
+          return t
+            ? {
+                key: `${ve.source}|${ve.target}`,
+                nat: Math.atan2(t.y - node.y, t.x - node.x),
+              }
+            : null;
+        })
+        .filter(Boolean);
+
+      // Incoming edges: this node is the visual-edge target
+      const tgtGroup = visualEdges
+        .filter((ve) => ve.target === node.id)
+        .map((ve) => {
+          const s = this.nodeMap[ve.source];
+          return s
+            ? {
+                key: `${ve.source}|${ve.target}`,
+                nat: Math.atan2(s.y - node.y, s.x - node.x),
+              }
+            : null;
+        })
+        .filter(Boolean);
+
+      this._applyFan(srcGroup, MIN_SEP, map, "srcOff");
+      this._applyFan(tgtGroup, MIN_SEP, map, "tgtOff");
+    }
+
+    return map;
+  }
+
+  /**
+   * Spread a group of edges so no two adjacent angles are closer than minSep.
+   * Uses iterative spring relaxation (push-apart) on sorted angles.
+   * Writes `field` (srcOff or tgtOff) into `map` for each edge key.
+   *
+   * @param {{ key: string, nat: number }[]} group
+   * @param {number} minSep  Minimum angular separation in radians
+   * @param {Map}    map     Accumulator: key → { srcOff, tgtOff }
+   * @param {string} field   'srcOff' or 'tgtOff'
+   */
+  _applyFan(group, minSep, map, field) {
+    if (!group.length) return;
+
+    // Sort by natural angle
+    group = [...group].sort((a, b) => a.nat - b.nat);
+    const angles = group.map((e) => e.nat);
+
+    // Push adjacent pairs apart until all gaps ≥ minSep (max 60 passes)
+    for (let pass = 0; pass < 60; pass++) {
+      let changed = false;
+      for (let i = 0; i < angles.length - 1; i++) {
+        const gap = angles[i + 1] - angles[i];
+        if (gap < minSep) {
+          const push = (minSep - gap) / 2;
+          angles[i] -= push;
+          angles[i + 1] += push;
+          changed = true;
+        }
+      }
+      if (!changed) break;
+    }
+
+    group.forEach((e, i) => {
+      const existing = map.get(e.key) ?? { srcOff: 0, tgtOff: 0 };
+      map.set(e.key, { ...existing, [field]: angles[i] - e.nat });
+    });
+  }
 
   _pointToSegmentDistanceSq(px, py, x1, y1, x2, y2) {
     const dx = x2 - x1;
