@@ -8,8 +8,20 @@
  * Inspired by the project's TreeVisualizer but adapted for general directed graphs
  * using a force-directed layout simulation.
  *
+ * CHANGES v1.1:
+ *   - Bidirectional pairs now render as ONE line with arrowheads at BOTH ends,
+ *     reducing visual edge count from ~172 to ~86.
+ *   - Aircraft-type dots moved from the middle of the edge to a cluster
+ *     beside the source vertex (perpendicular offset from edge direction).
+ *
+ * CHANGES v1.2:
+ *   - Aircraft-type dots moved from per-edge to per-NODE: each airport now
+ *     shows a centered row of dots below its circle, one dot per unique
+ *     aircraft type across ALL its outgoing routes. Eliminates the pile-up
+ *     of duplicate dots when a hub has many connections.
+ *
  * @author  SkyRoute Team
- * @version 1.0
+ * @version 1.2
  */
 
 export class GraphRenderer {
@@ -56,6 +68,8 @@ export class GraphRenderer {
     this.zoom = 1.0;
     this.panX = 0;
     this.panY = 20;
+    this.worldWidth = 1200;
+    this.worldHeight = 800;
 
     // ── Graph data ────────────────────────────────────────────
     /** @type {Array<GraphNode>}  */ this.nodes = [];
@@ -72,7 +86,7 @@ export class GraphRenderer {
     this.simRunning = false;
     this.simTick = 0;
     this.SIM_MAX_TICKS = 500;
-    this.SIM_IDEAL_DIST = 350; // Ideal spring length (px)
+    this.SIM_IDEAL_DIST = 420; // Ideal spring length (px)
 
     // ── Public callbacks ──────────────────────────────────────
     /** Called when user clicks a node. @type {(node: GraphNode) => void} */
@@ -85,7 +99,10 @@ export class GraphRenderer {
     this._resize();
     window.addEventListener("resize", () => {
       this._resize();
-      if (this.nodes.length) this._draw();
+      if (this.nodes.length) {
+        this._fitWorldToView();
+        this._draw();
+      }
     });
     this._initMouseEvents();
   }
@@ -102,22 +119,29 @@ export class GraphRenderer {
    */
   loadGraph(graphData) {
     const { nodes, links } = graphData;
+    this._configureWorld(nodes.length, links.length);
+    this._fitWorldToView();
 
-    const cx = this.canvas.width / 2;
-    const cy = this.canvas.height / 2;
+    const cx = this.worldWidth / 2;
+    const cy = this.worldHeight / 2;
 
-    // Build internal node objects with random starting positions
-    this.nodes = nodes.map((n) => ({
-      id: n.id,
-      label: n.label || n.id,
-      isHub: !!n.isHub,
-      metadata: n.metadata || {},
-      x: cx + (Math.random() - 0.5) * Math.min(this.canvas.width * 0.8, 600),
-      y: cy + (Math.random() - 0.5) * Math.min(this.canvas.height * 0.8, 400),
-      vx: 0,
-      vy: 0,
-      radius: n.isHub ? this.HUB_RADIUS : this.SECONDARY_RADIUS,
-    }));
+    // Build internal node objects with spread-out starting positions.
+    this.nodes = nodes.map((n, i) => {
+      const angle = (Math.PI * 2 * i) / Math.max(nodes.length, 1);
+      const hubFactor = n.isHub ? 0.72 : 0.98;
+      const jitter = ((i % 5) - 2) * 18;
+      return {
+        id: n.id,
+        label: n.label || n.id,
+        isHub: !!n.isHub,
+        metadata: n.metadata || {},
+        x: cx + Math.cos(angle) * this.worldWidth * 0.36 * hubFactor + jitter,
+        y: cy + Math.sin(angle) * this.worldHeight * 0.34 * hubFactor - jitter,
+        vx: 0,
+        vy: 0,
+        radius: n.isHub ? this.HUB_RADIUS : this.SECONDARY_RADIUS,
+      };
+    });
 
     this.nodeMap = {};
     this.nodes.forEach((n) => {
@@ -186,9 +210,7 @@ export class GraphRenderer {
 
   /** Reset viewport to default. */
   resetView() {
-    this.zoom = 1.0;
-    this.panX = 0;
-    this.panY = 20;
+    this._fitWorldToView();
     this._draw();
   }
 
@@ -197,7 +219,7 @@ export class GraphRenderer {
     this._draw();
   }
   zoomOut() {
-    this.zoom = Math.max(this.zoom / 1.2, 0.12);
+    this.zoom = Math.max(this.zoom / 1.2, 0.08);
     this._draw();
   }
 
@@ -241,9 +263,9 @@ export class GraphRenderer {
    * @param {number} alpha - Current cooling factor (0…0.25)
    */
   _applyForces(alpha) {
-    const { nodes, links, nodeMap, canvas, SIM_IDEAL_DIST } = this;
-    const W = canvas.width;
-    const H = canvas.height;
+    const { nodes, links, nodeMap, SIM_IDEAL_DIST } = this;
+    const W = this.worldWidth;
+    const H = this.worldHeight;
 
     // 1. Coulomb repulsion (O(n²) – acceptable for ≤60 nodes)
     for (let i = 0; i < nodes.length; i++) {
@@ -253,7 +275,8 @@ export class GraphRenderer {
         const dx = b.x - a.x;
         const dy = b.y - a.y;
         const d = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-        const rep = (50000 / (d * d)) * alpha;
+        const repulsion = a.isHub && b.isHub ? 110000 : 76000;
+        const rep = (repulsion / (d * d)) * alpha;
         a.vx -= (dx / d) * rep;
         a.vy -= (dy / d) * rep;
         b.vx += (dx / d) * rep;
@@ -269,7 +292,8 @@ export class GraphRenderer {
       const dx = t.x - s.x,
         dy = t.y - s.y;
       const d = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-      const f = (d - SIM_IDEAL_DIST) * 0.045 * alpha;
+      const idealDist = SIM_IDEAL_DIST + (s.isHub || t.isHub ? 40 : 0);
+      const f = (d - idealDist) * 0.04 * alpha;
       s.vx += (dx / d) * f;
       s.vy += (dy / d) * f;
       t.vx -= (dx / d) * f;
@@ -278,8 +302,8 @@ export class GraphRenderer {
 
     // 3. Weak gravity toward canvas center
     for (const n of nodes) {
-      n.vx += (W / 2 - n.x) * 0.012 * alpha;
-      n.vy += (H / 2 - n.y) * 0.012 * alpha;
+      n.vx += (W / 2 - n.x) * 0.009 * alpha;
+      n.vy += (H / 2 - n.y) * 0.009 * alpha;
     }
 
     // 4. Integrate + damp + hard boundary clamp
@@ -289,7 +313,7 @@ export class GraphRenderer {
       n.vy *= DAMP;
       n.x += n.vx;
       n.y += n.vy;
-      const pad = n.radius + 24;
+      const pad = n.radius + 48;
       n.x = Math.max(pad, Math.min(W - pad, n.x));
       n.y = Math.max(pad, Math.min(H - pad, n.y));
     }
@@ -344,132 +368,279 @@ export class GraphRenderer {
   // ── EDGES ────────────────────────────────────────────────────
 
   _drawAllEdges() {
-    // Pre-compute which edges are bidirectional so we can offset them
-    const bidirSet = new Set();
-    for (const l of this.links) {
-      if (
-        this.links.some((r) => r.source === l.target && r.target === l.source)
-      ) {
-        bidirSet.add(`${l.source}→${l.target}`);
-      }
-    }
-
-    for (const link of this.links) {
+    for (const visualEdge of this._visualEdges()) {
+      const { link, reverseLink, isBidirectional } = visualEdge;
       const s = this.nodeMap[link.source];
       const t = this.nodeMap[link.target];
       if (!s || !t) continue;
 
-      const isBidir = bidirSet.has(`${link.source}→${link.target}`);
-      const isBlocked = !!link.isBlocked;
-      const isInPath = this._edgeIsInPath(link.source, link.target);
+      const isBlocked = !!link.isBlocked || !!reverseLink?.isBlocked;
+      const isInPath =
+        this._edgeIsInPath(link.source, link.target) ||
+        (reverseLink &&
+          this._edgeIsInPath(reverseLink.source, reverseLink.target));
       const isSelected =
         this.selectedEdge &&
-        this.selectedEdge.source === link.source &&
-        this.selectedEdge.target === link.target;
+        ((this.selectedEdge.source === link.source &&
+          this.selectedEdge.target === link.target) ||
+          (reverseLink &&
+            this.selectedEdge.source === reverseLink.source &&
+            this.selectedEdge.target === reverseLink.target));
 
       let color;
       if (isBlocked) color = this.colors.edgeBlocked;
       else if (isInPath || isSelected) color = this.colors.edgeHighlight;
       else color = this.colors.edgeActive;
 
-      this._drawEdge(s, t, color, link, isBidir, isBlocked);
+      this._drawEdge(
+        s,
+        t,
+        color,
+        visualEdge,
+        isBlocked,
+        isInPath || isSelected,
+        isBidirectional,
+      );
     }
   }
 
   /**
-   * Draw a single directed edge: line + arrowhead + distance label + aircraft dots.
+   * Draw a single directed edge: line + arrowhead(s) + distance label + aircraft dots.
    *
-   * @param {GraphNode} s         - Source node
-   * @param {GraphNode} t         - Target node
-   * @param {string}    color     - Stroke color
-   * @param {GraphEdge} link      - Edge data
-   * @param {boolean}   bidir     - Is this part of a bidirectional pair?
-   * @param {boolean}   isBlocked - Should show dashed blocked style?
+   * Bidirectional pairs → ONE straight line with arrowheads at BOTH ends.
+   * Unidirectional      → curved line with arrowhead at target end only.
+   *
+   * Aircraft-type dots are drawn as a cluster BESIDE the source vertex,
+   * offset perpendicularly to the edge so they sit next to the node circle
+   * without overlapping the line itself.
+   *
+   * @param {GraphNode} s           - Source node
+   * @param {GraphNode} t           - Target node
+   * @param {string}    color       - Stroke color
+   * @param {Object}    visualEdge  - Render-ready edge data
+   * @param {boolean}   isBlocked   - Should show dashed blocked style?
+   * @param {boolean}   isEmphasis  - Is selected or part of a highlighted path?
+   * @param {boolean}   isBidirectional - Arrowheads at both ends?
    */
-  _drawEdge(s, t, color, link, bidir, isBlocked) {
+  _drawEdge(
+    s,
+    t,
+    color,
+    visualEdge,
+    isBlocked,
+    isEmphasis = false,
+    isBidirectional = false,
+  ) {
     const ctx = this.ctx;
-    const dx = t.x - s.x;
-    const dy = t.y - s.y;
-    const d = Math.sqrt(dx * dx + dy * dy);
-    if (d < 1) return;
-
-    const nx = dx / d,
-      ny = dy / d; // Unit direction vector
-    const PERP_OFFSET = bidir ? 10 : 0; // Perpendicular shift for bidirectional edges
-    const px = -ny * PERP_OFFSET;
-    const py = nx * PERP_OFFSET;
-
-    // Edge starts at the circle boundary of the source node
     const ARROW = 13;
-    const sx = s.x + nx * s.radius + px;
-    const sy = s.y + ny * s.radius + py;
-    const ex = t.x - nx * (t.radius + ARROW - 2) + px;
-    const ey = t.y - ny * (t.radius + ARROW - 2) + py;
+    const curve = this._edgeCurve(s, t, visualEdge, ARROW);
+    if (!curve) return;
+    const { sx, sy, cx, cy, ex, ey, nx, ny } = curve;
 
     // ── Line ──────────────────────────────────────────────────
     ctx.beginPath();
     ctx.strokeStyle = color;
-    ctx.lineWidth = isBlocked ? 2.5 : 2;
+    ctx.lineWidth = isBlocked || isEmphasis ? 2.6 : 1.9;
     ctx.globalAlpha = isBlocked ? 0.85 : 1;
     if (isBlocked) ctx.setLineDash([8, 5]);
     else ctx.setLineDash([]);
     ctx.moveTo(sx, sy);
-    ctx.lineTo(ex, ey);
+    ctx.quadraticCurveTo(cx, cy, ex, ey);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.globalAlpha = 1;
 
-    // ── Arrow head ────────────────────────────────────────────
-    const angle = Math.atan2(ey - sy, ex - sx);
+    // ── Arrowhead at TARGET end ───────────────────────────────
+    const tip = this._quadraticPoint(curve, 0.995);
+    const tangent = this._quadraticTangent(curve, 0.995);
+    const angle = Math.atan2(tangent.y, tangent.x);
+    this._drawArrowHead(tip.x, tip.y, angle, ARROW, color);
+
+    // ── Arrowhead at SOURCE end (bidirectional only) ──────────
+    if (isBidirectional) {
+      const startTip = this._quadraticPoint(curve, 0.005);
+      const startTangent = this._quadraticTangent(curve, 0.005);
+      // Reverse the angle so the arrowhead points AWAY from the source node
+      const startAngle = Math.atan2(startTangent.y, startTangent.x) + Math.PI;
+      this._drawArrowHead(startTip.x, startTip.y, startAngle, ARROW, color);
+    }
+
+    // ── Distance label (centered on edge) ────────────────────
+    const labelText = this._visualEdgeLabel(visualEdge);
+    if (this.zoom >= 0.42 || isBlocked || isEmphasis) {
+      const label = this._quadraticPoint(curve, 0.54);
+      const labelShift = Math.sign(curve.offset || 1) * 8;
+      const labelX = label.x - ny * labelShift;
+      const labelY = label.y + nx * labelShift;
+
+      ctx.font = "bold 10px 'Segoe UI', sans-serif";
+      const tw = ctx.measureText(labelText).width;
+
+      // Pill background
+      ctx.fillStyle = this.colors.edgeLabelBg;
+      this._roundRect(ctx, labelX - tw / 2 - 5, labelY - 9, tw + 10, 18, 4);
+      ctx.fill();
+
+      // Label text
+      ctx.fillStyle = isBlocked
+        ? this.colors.edgeBlocked
+        : this.colors.edgeLabelText;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(labelText, labelX, labelY);
+    }
+
+    // Aircraft-type dots are drawn once per NODE (see _drawNodeAircraftDots),
+    // not per edge, to avoid accumulation when a node has many connections.
+  }
+
+  _visualEdges() {
+    const drawn = new Set();
+    const visualEdges = [];
+
+    for (const link of this.links) {
+      const pairKey = this._edgePairKey(link.source, link.target);
+      if (drawn.has(pairKey)) continue;
+
+      const reverseLink = this.links.find(
+        (other) => other.source === link.target && other.target === link.source,
+      );
+      const isBidirectional = !!reverseLink;
+      const baseLink =
+        isBidirectional && link.source > link.target ? reverseLink : link;
+      const pairedReverse =
+        isBidirectional && baseLink === link ? reverseLink : link;
+
+      drawn.add(pairKey);
+      visualEdges.push({
+        ...baseLink,
+        link: baseLink,
+        reverseLink: isBidirectional ? pairedReverse : null,
+        isBidirectional,
+        aircrafts: this._mergeAircrafts(baseLink, pairedReverse),
+      });
+    }
+
+    return visualEdges;
+  }
+
+  _edgePairKey(source, target) {
+    return source < target ? `${source}|${target}` : `${target}|${source}`;
+  }
+
+  _mergeAircrafts(link, reverseLink) {
+    const aircrafts = new Set(link.aircrafts || []);
+    if (reverseLink) {
+      (reverseLink.aircrafts || []).forEach((type) => aircrafts.add(type));
+    }
+    return [...aircrafts];
+  }
+
+  _visualEdgeLabel(visualEdge) {
+    const reverse = visualEdge.reverseLink;
+    if (!reverse || reverse.distance === visualEdge.distance) {
+      return `${visualEdge.distance} km`;
+    }
+    return `${visualEdge.distance}/${reverse.distance} km`;
+  }
+
+  _drawArrowHead(x, y, angle, size, color) {
+    const ctx = this.ctx;
     ctx.beginPath();
     ctx.fillStyle = color;
-    ctx.moveTo(ex, ey);
+    ctx.moveTo(x, y);
     ctx.lineTo(
-      ex - ARROW * Math.cos(angle - 0.42),
-      ey - ARROW * Math.sin(angle - 0.42),
+      x - size * Math.cos(angle - 0.42),
+      y - size * Math.sin(angle - 0.42),
     );
     ctx.lineTo(
-      ex - ARROW * Math.cos(angle + 0.42),
-      ey - ARROW * Math.sin(angle + 0.42),
+      x - size * Math.cos(angle + 0.42),
+      y - size * Math.sin(angle + 0.42),
     );
     ctx.closePath();
     ctx.fill();
+  }
 
-    // ── Distance label (centered on edge) ────────────────────
-    const midX = (sx + ex) / 2 + px * 0.5;
-    const midY = (sy + ey) / 2 + py * 0.5;
-    const labelText = `${link.distance} km`;
+  _edgeCurve(s, t, link, arrowSize = 13) {
+    const dx = t.x - s.x;
+    const dy = t.y - s.y;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d < 1) return null;
 
-    ctx.font = "bold 10px 'Segoe UI', sans-serif";
-    const tw = ctx.measureText(labelText).width;
+    const nx = dx / d;
+    const ny = dy / d;
+    const offset = this._edgeCurveOffset(link);
+    const sx = s.x + nx * s.radius;
+    const sy = s.y + ny * s.radius;
+    const ex = t.x - nx * (t.radius + arrowSize - 2);
+    const ey = t.y - ny * (t.radius + arrowSize - 2);
+    const mx = (sx + ex) / 2;
+    const my = (sy + ey) / 2;
 
-    // Pill background
-    ctx.fillStyle = this.colors.edgeLabelBg;
-    this._roundRect(ctx, midX - tw / 2 - 5, midY - 9, tw + 10, 18, 4);
-    ctx.fill();
+    return {
+      sx,
+      sy,
+      cx: mx - ny * offset,
+      cy: my + nx * offset,
+      ex,
+      ey,
+      nx,
+      ny,
+      offset,
+    };
+  }
 
-    // Label text
-    ctx.fillStyle = isBlocked
-      ? this.colors.edgeBlocked
-      : this.colors.edgeLabelText;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(labelText, midX, midY);
+  /**
+   * Compute the quadratic-curve bend offset for an edge.
+   *
+   * KEY CHANGE (v1.1): bidirectional visual edges use offset = 0 so they
+   * render as a single straight line (no parallel double-curve).  The two
+   * arrowheads at both ends make the direction unambiguous.
+   *
+   * Unidirectional edges keep a small stable curve to distinguish them
+   * from bidirectional ones at a glance.
+   */
+  _edgeCurveOffset(link) {
+    // ── Bidirectional pair → straight line, arrows at both ends ──
+    if (link.isBidirectional) return 0;
 
-    // ── Aircraft type dots (near source end of edge) ──────────
-    const aircrafts = link.aircrafts || [];
-    aircrafts.slice(0, 3).forEach((type, i) => {
-      const dotT = 0.22 + i * 0.06; // Position along edge (0=source, 1=target)
-      const dotX = sx + (ex - sx) * dotT;
-      const dotY = sy + (ey - sy) * dotT;
-      ctx.beginPath();
-      ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
-      ctx.fillStyle = this._aircraftColor(type);
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    });
+    // ── Unidirectional → small stable curve ──────────────────────
+    const pairLinks = this.links.filter(
+      (l) =>
+        (l.source === link.source && l.target === link.target) ||
+        (l.source === link.target && l.target === link.source),
+    );
+    const sameDirection = pairLinks.filter(
+      (l) => l.source === link.source && l.target === link.target,
+    );
+    const index = Math.max(0, sameDirection.indexOf(link));
+    const directionSign = this._stableSign(`${link.source}->${link.target}`);
+    const base = 18;
+    const parallelOffset = index * 18;
+    return directionSign * (base + parallelOffset);
+  }
+
+  _stableSign(value) {
+    let hash = 0;
+    for (let i = 0; i < value.length; i++) {
+      hash = (hash * 31 + value.charCodeAt(i)) | 0;
+    }
+    return hash < 0 ? -1 : 1;
+  }
+
+  _quadraticPoint(curve, t) {
+    const mt = 1 - t;
+    return {
+      x: mt * mt * curve.sx + 2 * mt * t * curve.cx + t * t * curve.ex,
+      y: mt * mt * curve.sy + 2 * mt * t * curve.cy + t * t * curve.ey,
+    };
+  }
+
+  _quadraticTangent(curve, t) {
+    return {
+      x: 2 * (1 - t) * (curve.cx - curve.sx) + 2 * t * (curve.ex - curve.cx),
+      y: 2 * (1 - t) * (curve.cy - curve.sy) + 2 * t * (curve.ey - curve.cy),
+    };
   }
 
   /** Returns a color associated with a given aircraft type string. */
@@ -554,6 +725,53 @@ export class GraphRenderer {
       ctx.fillStyle = "rgba(255,255,255,0.82)";
       ctx.fillText(city.slice(0, 10), x, textY + (isHub ? 11 : 9));
     }
+
+    // ── Aircraft-type dots (once per node, below the circle) ──
+    this._drawNodeAircraftDots(node);
+  }
+
+  /**
+   * Draw aircraft-type indicator dots centered just below a node circle.
+   *
+   * Collects the UNIQUE aircraft types across ALL outgoing edges from this
+   * node and renders one dot per type, so the indicator appears exactly
+   * once per airport regardless of how many routes it has.
+   *
+   * Dot color legend:
+   *   Purple → Comercial  |  Cyan → Regional  |  Amber → Hélice
+   *
+   * @param {GraphNode} node
+   */
+  _drawNodeAircraftDots(node) {
+    const ctx = this.ctx;
+
+    // Collect unique aircraft types from all outgoing links of this node
+    const typeSet = new Set();
+    for (const link of this.links) {
+      if (link.source === node.id && Array.isArray(link.aircrafts)) {
+        link.aircrafts.forEach((t) => typeSet.add(t));
+      }
+    }
+    if (typeSet.size === 0) return;
+
+    const types = [...typeSet]; // unique, stable order
+    const DOT_R = 4;
+    const GAP = 10; // center-to-center spacing
+
+    // Center the row of dots below the node circle
+    const totalW = (types.length - 1) * GAP;
+    const startX = node.x - totalW / 2;
+    const startY = node.y + node.radius + DOT_R + 5;
+
+    types.forEach((type, i) => {
+      ctx.beginPath();
+      ctx.arc(startX + i * GAP, startY, DOT_R, 0, Math.PI * 2);
+      ctx.fillStyle = this._aircraftColor(type);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
   }
 
   // ════════════════════════════════════════════════════════════
@@ -645,7 +863,7 @@ export class GraphRenderer {
       (e) => {
         e.preventDefault();
         const factor = e.deltaY < 0 ? 1.12 : 0.89;
-        this.zoom = Math.max(0.12, Math.min(8, this.zoom * factor));
+        this.zoom = Math.max(0.08, Math.min(8, this.zoom * factor));
         this._draw();
       },
       { passive: false },
@@ -680,27 +898,37 @@ export class GraphRenderer {
   }
 
   /**
-   * Return the edge whose line segment is within `threshold` px of (gx, gy).
-   * Uses point-to-segment distance formula.
+   * Return the edge whose curve is within `threshold` px of (gx, gy).
+   * Samples the quadratic curve so hit testing matches rendered routes.
    */
   _edgeAt(gx, gy, threshold = 9) {
-    for (const link of this.links) {
+    for (const visualEdge of this._visualEdges()) {
+      const link = visualEdge.link || visualEdge;
       const s = this.nodeMap[link.source];
       const t = this.nodeMap[link.target];
       if (!s || !t) continue;
-      const dx = t.x - s.x,
-        dy = t.y - s.y;
-      const len2 = dx * dx + dy * dy;
-      if (len2 === 0) continue;
-      const tParam = Math.max(
-        0,
-        Math.min(1, ((gx - s.x) * dx + (gy - s.y) * dy) / len2),
-      );
-      const cx = s.x + tParam * dx,
-        cy = s.y + tParam * dy;
-      const edx = gx - cx,
-        edy = gy - cy;
-      if (edx * edx + edy * edy <= threshold * threshold) return link;
+
+      const curve = this._edgeCurve(s, t, visualEdge);
+      if (!curve) continue;
+
+      let prev = this._quadraticPoint(curve, 0);
+      for (let i = 1; i <= 18; i++) {
+        const curr = this._quadraticPoint(curve, i / 18);
+        if (
+          this._pointToSegmentDistanceSq(
+            gx,
+            gy,
+            prev.x,
+            prev.y,
+            curr.x,
+            curr.y,
+          ) <=
+          threshold * threshold
+        ) {
+          return link;
+        }
+        prev = curr;
+      }
     }
     return null;
   }
@@ -708,6 +936,54 @@ export class GraphRenderer {
   // ════════════════════════════════════════════════════════════
   // UTILITIES
   // ════════════════════════════════════════════════════════════
+
+  _pointToSegmentDistanceSq(px, py, x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len2 = dx * dx + dy * dy;
+    if (len2 === 0) {
+      const ox = px - x1,
+        oy = py - y1;
+      return ox * ox + oy * oy;
+    }
+    const t = Math.max(
+      0,
+      Math.min(1, ((px - x1) * dx + (py - y1) * dy) / len2),
+    );
+    const cx = x1 + t * dx,
+      cy = y1 + t * dy;
+    const ox = px - cx,
+      oy = py - cy;
+    return ox * ox + oy * oy;
+  }
+
+  _configureWorld(nodeCount, linkCount) {
+    const visibleW = this.canvas.width || 800;
+    const visibleH = this.canvas.height || 600;
+    const densityBoost = Math.min(
+      1.3,
+      Math.max(1, linkCount / Math.max(nodeCount * 1.8, 1)),
+    );
+    this.worldWidth = Math.max(
+      visibleW * 2.6,
+      nodeCount * 64 * densityBoost,
+      2400,
+    );
+    this.worldHeight = Math.max(
+      visibleH * 2.3,
+      nodeCount * 40 * densityBoost,
+      1400,
+    );
+  }
+
+  _fitWorldToView() {
+    const margin = 80;
+    const zx = this.canvas.width / (this.worldWidth + margin);
+    const zy = this.canvas.height / (this.worldHeight + margin);
+    this.zoom = Math.max(0.16, Math.min(1, Math.min(zx, zy) * 0.96));
+    this.panX = (this.canvas.width - this.worldWidth * this.zoom) / 2;
+    this.panY = (this.canvas.height - this.worldHeight * this.zoom) / 2;
+  }
 
   /** Resize canvas to fill its parent container. */
   _resize() {
