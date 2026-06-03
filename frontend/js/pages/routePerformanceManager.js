@@ -32,10 +32,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ?.addEventListener("click", () =>
       requireNetwork(() => openModal("modal-planificacion-basica")),
     );
+  document
+    .getElementById("btn-mejor-ruta")
+    ?.addEventListener("click", () => openModal("modal-mejor-ruta"));
+  document
+    .getElementById("btn-itinerario-basico")
+    ?.addEventListener("click", () => openModal("modal-itinerario-basico"));
 
   // ── Calculate button ─────────────────────────────────────
   document
     .getElementById("btn-calcular-basico")
+    ?.addEventListener("click", _handleCalcular);
+  document
+    .getElementById("btn-calcular-mejor-ruta")
     ?.addEventListener("click", _handleCalcular);
 
   // ── Populate selects when network loads ──────────────────

@@ -4,6 +4,7 @@
     --primary-dark: #83bd4d;
     --secondary-color: #abb358;
     --success-color: #10b981;
+    --basic-color: #09dbe2fa;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
     --info-color: #3b82f6;
@@ -565,6 +566,13 @@ body {
 
 .btn-danger:hover {
     background: #dc2626;
+}
+.btn-basic {
+    background: var(--basic-color);
+    color: white;
+}
+.btn-basic:hover {
+    background: #09dbe2fa;
 }
 
 .btn-icon-small {
