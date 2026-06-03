@@ -1,4 +1,5 @@
 import math
+import random
 from .edge import Edge
 from .vertex import Vertex
 
@@ -390,8 +391,17 @@ class Graph:
         return dist[destination_id], path
 
     def find_itineraries_dfs(
-        self, graph, start_id, budget_limit, time_limit_minutes, preferred_transports, constraint="both"
+        self,
+        graph,
+        start_id,
+        budget_limit,
+        time_limit_minutes,
+        preferred_transports,
+        constraint="both",
+        aircraft_config=None,
+        flight_overhead_min=0,
     ):
+        _ac = aircraft_config or {}
         """
         constraint='budget' → only budget pruning (for Alt A)
         constraint='time'   → only time pruning   (for Alt B)
@@ -418,7 +428,7 @@ class Graph:
                 {
                     "path": list(current_path),
                     "cost": current_cost,
-                    "time": current_time,          # stored in minutes
+                    "time": current_time,  # stored in minutes
                     "destinations_count": len(set(current_path)) - 1,
                     "transports": set(transports_seen),
                     "segments": list(segments),
@@ -434,23 +444,34 @@ class Graph:
 
                 edge_transports = getattr(edge, "aircrafts", [])
 
-                # Each edge must expose at least one preferred transport to be traversable
+                # Determine candidate transports for this edge
                 if preferred_transports:
-                    if not any(t in edge_transports for t in preferred_transports):
-                        continue
-                    matched_transport = next(t for t in edge_transports if t in preferred_transports)
+                    candidate_transports = [
+                        t for t in edge_transports if t in preferred_transports
+                    ]
                 else:
-                    # No preference: use the first declared transport; skip edge if none
-                    if not edge_transports:
-                        continue
-                    matched_transport = edge_transports[0]
+                    candidate_transports = list(edge_transports)
 
-                edge_cost = getattr(edge, "baseCost", getattr(edge, "distanceKm", 0) * 0.2)
+                if not candidate_transports:
+                    continue
+
+                # Greedy: prefer a transport not yet used in the current path
+                unseen = [t for t in candidate_transports if t not in transports_seen]
+                matched_transport = unseen[0] if unseen else candidate_transports[0]
+
+                dist_km = getattr(edge, "distanceKm", 0) or 0
+                ac_cfg = _ac.get(matched_transport, {})
+                flight_cost = 0 if getattr(edge, "routeSubsidized", False) else dist_km * ac_cfg.get("costoKm", 0)
                 accommodation = getattr(next_node, "accommodationCost", 0) or 0
                 alimentation = getattr(next_node, "alimentationCost", 0) or 0
-                total_edge_cost = edge_cost + accommodation + alimentation
-                # flightTime is in minutes
-                edge_time = getattr(edge, "flightTime", getattr(edge, "distanceKm", 0) * 0.1)
+                node_activities = getattr(next_node, "activities", []) or []
+                sample = random.sample(node_activities, min(3, len(node_activities)))
+                activities_cost = sum(getattr(a, "usdCost", 0) for a in sample)
+                total_edge_cost = flight_cost + accommodation + alimentation + activities_cost
+                # flight time: aircraft speed + fixed takeoff/landing overhead; then add minimum stay
+                flight_time_min = dist_km * ac_cfg.get("tiempoKm", 0.1) + flight_overhead_min
+                min_stay_min = getattr(edge, "minimumStay", 0) or 0
+                edge_time = flight_time_min + min_stay_min
 
                 # Prune only according to the active constraint
                 if constraint == "budget":
@@ -460,15 +481,23 @@ class Graph:
                     if current_time + edge_time > time_limit_minutes:
                         continue
                 else:  # both
-                    if (current_cost + total_edge_cost > budget_limit
-                            or current_time + edge_time > time_limit_minutes):
+                    if (
+                        current_cost + total_edge_cost > budget_limit
+                        or current_time + edge_time > time_limit_minutes
+                    ):
                         continue
 
                 segment = {
                     "from": current_vertex.identifier,
                     "to": next_id,
                     "transport": matched_transport,
+                    "flight_cost": flight_cost,
+                    "accommodation_cost": accommodation,
+                    "alimentation_cost": alimentation,
+                    "activities_cost": activities_cost,
                     "cost": total_edge_cost,
+                    "flight_time_minutes": flight_time_min,
+                    "min_stay_minutes": min_stay_min,
                     "time_minutes": edge_time,
                 }
 

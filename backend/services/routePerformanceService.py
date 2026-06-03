@@ -77,45 +77,42 @@ class RoutePerformanceService:
         # Frontend sends hours; graph works internally in minutes
         available_time_minutes = available_time_hours * 60
 
+        aircraft_config = self.graph_service.config.get("aeronaves", {})
+        flight_overhead_min = self.graph_service.config.get("overheadVueloMin", 0)
+
         try:
             # Alt A: explore unconstrained by time → finds every budget-feasible path
             paths_a = graph.find_itineraries_dfs(
-                graph, origin_id, initial_budget, None, preferred_transports, constraint="budget"
+                graph, origin_id, initial_budget, None, preferred_transports, constraint="budget",
+                aircraft_config=aircraft_config, flight_overhead_min=flight_overhead_min,
             )
             # Alt B: explore unconstrained by cost → finds every time-feasible path
             paths_b = graph.find_itineraries_dfs(
-                graph, origin_id, None, available_time_minutes, preferred_transports, constraint="time"
+                graph, origin_id, None, available_time_minutes, preferred_transports, constraint="time",
+                aircraft_config=aircraft_config, flight_overhead_min=flight_overhead_min,
             )
         except AttributeError:
             raise Exception("El método 'find_itineraries_dfs' no se encontró en la clase Graph.")
 
-        def uses_all_transports(path_data):
-            """Requirement: each preferred transport type must appear at least once."""
-            if not preferred_transports:
-                return True
-            return all(t in path_data["transports"] for t in preferred_transports)
-
-        # Alternativa A: maximize destinations, then minimize cost; all transports used
+        # Alt A: maximize destinations → maximize transport diversity → minimize cost
         alt_a = max(
             (
                 p for p in paths_a
                 if p["destinations_count"] > 0
                 and p["cost"] <= initial_budget
-                and uses_all_transports(p)
             ),
-            key=lambda x: (x["destinations_count"], -x["cost"]),
+            key=lambda x: (x["destinations_count"], len(x["transports"]), -x["cost"]),
             default=None,
         )
 
-        # Alternativa B: maximize destinations, then minimize time; all transports used
+        # Alt B: maximize destinations → maximize transport diversity → minimize time
         alt_b = max(
             (
                 p for p in paths_b
                 if p["destinations_count"] > 0
                 and p["time"] <= available_time_minutes
-                and uses_all_transports(p)
             ),
-            key=lambda x: (x["destinations_count"], -x["time"]),
+            key=lambda x: (x["destinations_count"], len(x["transports"]), -x["time"]),
             default=None,
         )
 
@@ -137,10 +134,14 @@ class RoutePerformanceService:
         segments_output = []
         for seg in path_data["segments"]:
             accumulated_cost += seg["cost"]
+            stay_cost = seg.get("accommodation_cost", 0) + seg.get("alimentation_cost", 0)
             segments_output.append({
                 "from": seg["from"],
                 "to": seg["to"],
                 "transport": seg["transport"],
+                "flight_cost_usd": round(seg.get("flight_cost", 0), 2),
+                "stay_cost_usd": round(stay_cost, 2),
+                "activities_cost_usd": round(seg.get("activities_cost", 0), 2),
                 "segment_cost_usd": round(seg["cost"], 2),
                 "accumulated_cost_usd": round(accumulated_cost, 2),
             })
@@ -154,19 +155,24 @@ class RoutePerformanceService:
 
     def _format_alt_b(self, path_data):
         """Alternative B: maximize destinations in least time.
-        Shows duration per segment and accumulated time in hours."""
+        Shows flight duration, minimum stay, and totals per segment in hours."""
         if not path_data:
             return None
 
         accumulated_minutes = 0
         segments_output = []
         for seg in path_data["segments"]:
-            accumulated_minutes += seg["time_minutes"]
+            flight_min = seg.get("flight_time_minutes", seg["time_minutes"])
+            stay_min = seg.get("min_stay_minutes", 0)
+            total_min = flight_min + stay_min
+            accumulated_minutes += total_min
             segments_output.append({
                 "from": seg["from"],
                 "to": seg["to"],
                 "transport": seg["transport"],
-                "segment_duration_hours": round(seg["time_minutes"] / 60, 2),
+                "flight_duration_hours": round(flight_min / 60, 2),
+                "min_stay_hours": round(stay_min / 60, 2),
+                "segment_total_hours": round(total_min / 60, 2),
                 "accumulated_time_hours": round(accumulated_minutes / 60, 2),
             })
 

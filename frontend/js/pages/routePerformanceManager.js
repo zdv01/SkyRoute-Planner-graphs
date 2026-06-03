@@ -9,24 +9,33 @@
  *  - Highlight path on canvas via GraphRenderer
  */
 
-import { calculateOptimizedRoutes, generateItineraries } from '../services/routePerformanceService.js';
-import { getRenderer, requireNetwork } from './graphLoadManager.js';
-import { showToast2, showLoading, openModal, closeAllModals } from '../../utils/utils.js';
+import {
+  calculateOptimizedRoutes,
+  generateItineraries,
+} from "../services/routePerformanceService.js";
+import { getRenderer, requireNetwork } from "./graphLoadManager.js";
+import {
+  showToast2,
+  showLoading,
+  openModal,
+  closeAllModals,
+} from "../../utils/utils.js";
 
 // ════════════════════════════════════════════════════════════
 // Initialisation
 // ════════════════════════════════════════════════════════════
 
 document.addEventListener("DOMContentLoaded", () => {
-
   // ── Toolbar button ───────────────────────────────────────
-  document.getElementById("btn-planificacion-basica")
+  document
+    .getElementById("btn-planificacion-basica")
     ?.addEventListener("click", () =>
-      requireNetwork(() => openModal("modal-planificacion-basica"))
+      requireNetwork(() => openModal("modal-planificacion-basica")),
     );
 
   // ── Calculate button ─────────────────────────────────────
-  document.getElementById("btn-calcular-basico")
+  document
+    .getElementById("btn-calcular-basico")
     ?.addEventListener("click", _handleCalcular);
 
   // ── Populate selects when network loads ──────────────────
@@ -37,7 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Clear selects and panel on reset ─────────────────────
   document.addEventListener("skyroute:networkReset", () => {
     _clearSelects();
-    _setItineraryPanel('<div class="empty-state"><p>No hay itinerario calculado</p></div>');
+    _setItineraryPanel(
+      '<div class="empty-state"><p>No hay itinerario calculado</p></div>',
+    );
   });
 });
 
@@ -46,13 +57,20 @@ document.addEventListener("DOMContentLoaded", () => {
 // ════════════════════════════════════════════════════════════
 
 async function _handleCalcular() {
-  const origin           = document.getElementById("origen-basico")?.value || "";
-  const destination      = document.getElementById("destino-basico")?.value || "";
-  const budget           = parseFloat(document.getElementById("presupuesto-basico")?.value) || 0;
-  const availableTime    = parseFloat(document.getElementById("tiempo-basico")?.value) || 0;
-  const criteria         = [...document.querySelectorAll('input[name="criterio-basico"]:checked')].map(el => el.value);
-  const excludeSecondary = document.getElementById("excluir-secundarios")?.checked ?? false;
-  const preferredTransports = [...document.querySelectorAll('input[name="transporte-basico"]:checked')].map(el => el.value);
+  const origin = document.getElementById("origen-basico")?.value || "";
+  const destination = document.getElementById("destino-basico")?.value || "";
+  const budget =
+    parseFloat(document.getElementById("presupuesto-basico")?.value) || 0;
+  const availableTime =
+    parseFloat(document.getElementById("tiempo-basico")?.value) || 0;
+  const criteria = [
+    ...document.querySelectorAll('input[name="criterio-basico"]:checked'),
+  ].map((el) => el.value);
+  const excludeSecondary =
+    document.getElementById("excluir-secundarios")?.checked ?? false;
+  const preferredTransports = [
+    ...document.querySelectorAll('input[name="transporte-basico"]:checked'),
+  ].map((el) => el.value);
 
   // ── Validation ───────────────────────────────────────────
   if (!origin) {
@@ -60,11 +78,14 @@ async function _handleCalcular() {
     return;
   }
 
-  const canOptimize  = Boolean(destination && criteria.length > 0);
+  const canOptimize = Boolean(destination && criteria.length > 0);
   const canItinerary = budget > 0 && availableTime > 0;
 
   if (!canOptimize && !canItinerary) {
-    showToast2("Completa al menos: (destino + criterio) o (presupuesto + tiempo disponible).", "warning");
+    showToast2(
+      "Completa al menos: (destino + criterio) o (presupuesto + tiempo disponible).",
+      "warning",
+    );
     return;
   }
 
@@ -72,24 +93,39 @@ async function _handleCalcular() {
   closeAllModals();
   showLoading(true, "Calculando rutas…");
 
-  const optimizeCall  = canOptimize
-    ? calculateOptimizedRoutes(origin, destination, criteria, excludeSecondary, preferredTransports)
+  const optimizeCall = canOptimize
+    ? calculateOptimizedRoutes(
+        origin,
+        destination,
+        criteria,
+        excludeSecondary,
+        preferredTransports,
+      )
     : Promise.resolve(null);
 
   const itineraryCall = canItinerary
     ? generateItineraries(origin, budget, availableTime, preferredTransports)
     : Promise.resolve(null);
 
-  const [optimizeSettled, itinerarySettled] = await Promise.allSettled([optimizeCall, itineraryCall]);
+  const [optimizeSettled, itinerarySettled] = await Promise.allSettled([
+    optimizeCall,
+    itineraryCall,
+  ]);
 
   showLoading(false);
 
   // ── Extract results / surface errors ─────────────────────
-  const optimizeResult  = optimizeSettled.status  === "fulfilled" ? optimizeSettled.value?.data  : null;
-  const itineraryResult = itinerarySettled.status === "fulfilled" ? itinerarySettled.value?.data : null;
+  const optimizeResult =
+    optimizeSettled.status === "fulfilled" ? optimizeSettled.value?.data : null;
+  const itineraryResult =
+    itinerarySettled.status === "fulfilled"
+      ? itinerarySettled.value?.data
+      : null;
 
-  if (optimizeSettled.status  === "rejected") showToast2(`Optimización: ${optimizeSettled.reason?.message}`,  "error");
-  if (itinerarySettled.status === "rejected") showToast2(`Itinerario: ${itinerarySettled.reason?.message}`, "error");
+  if (optimizeSettled.status === "rejected")
+    showToast2(`Optimización: ${optimizeSettled.reason?.message}`, "error");
+  if (itinerarySettled.status === "rejected")
+    showToast2(`Itinerario: ${itinerarySettled.reason?.message}`, "error");
 
   if (!optimizeResult && !itineraryResult) return;
 
@@ -110,20 +146,34 @@ function _renderResults(optimizeResult, itineraryResult) {
     const { alternative_a, alternative_b } = itineraryResult;
 
     if (!alternative_a && !alternative_b) {
-      html += _emptyAlt("No se encontraron itinerarios con los parámetros indicados.");
+      html += _emptyAlt(
+        "No se encontraron itinerarios con los parámetros indicados.",
+      );
     } else {
       if (alternative_a) {
         pathToHighlight = alternative_a.sequence;
-        html += _buildItineraryHTML(alternative_a, "Alternativa A — Más destinos por presupuesto", "cost");
+        html += _buildItineraryHTML(
+          alternative_a,
+          "Alternativa A — Más destinos por presupuesto",
+          "cost",
+        );
       } else {
-        html += _emptyAlt("Alt A: sin alternativa disponible con el presupuesto indicado.");
+        html += _emptyAlt(
+          "Alt A: sin alternativa disponible con el presupuesto indicado.",
+        );
       }
 
       if (alternative_b) {
         if (!pathToHighlight) pathToHighlight = alternative_b.sequence;
-        html += _buildItineraryHTML(alternative_b, "Alternativa B — Más destinos en menor tiempo", "time");
+        html += _buildItineraryHTML(
+          alternative_b,
+          "Alternativa B — Más destinos en menor tiempo",
+          "time",
+        );
       } else {
-        html += _emptyAlt("Alt B: sin alternativa disponible con el tiempo indicado.");
+        html += _emptyAlt(
+          "Alt B: sin alternativa disponible con el tiempo indicado.",
+        );
       }
     }
   }
@@ -138,7 +188,8 @@ function _renderResults(optimizeResult, itineraryResult) {
   }
 
   if (!html) {
-    html = '<div class="empty-state"><p>No se encontraron rutas con los parámetros indicados.</p></div>';
+    html =
+      '<div class="empty-state"><p>No se encontraron rutas con los parámetros indicados.</p></div>';
   }
 
   _setItineraryPanel(html);
@@ -159,14 +210,24 @@ function _buildItineraryHTML(altData, label, type) {
     ? `${altData.total_destinations} destino(s) &nbsp;·&nbsp; <strong>$${altData.total_cost_usd} USD</strong> total`
     : `${altData.total_destinations} destino(s) &nbsp;·&nbsp; <strong>${altData.total_time_hours}h</strong> total`;
 
-  const segmentsHTML = (altData.segments || []).map((seg, i) => {
-    const metricRows = isCost
-      ? `<div class="step-detail-row"><span>Costo tramo:</span><span>$${seg.segment_cost_usd}</span></div>
-         <div class="step-detail-row"><span>Acumulado:</span><span>$${seg.accumulated_cost_usd}</span></div>`
-      : `<div class="step-detail-row"><span>Duración:</span><span>${seg.segment_duration_hours}h</span></div>
-         <div class="step-detail-row"><span>Tiempo acumulado:</span><span>${seg.accumulated_time_hours}h</span></div>`;
+  const segmentsHTML = (altData.segments || [])
+    .map((seg, i) => {
+      const flightLabel =
+        seg.flight_cost_usd === 0
+          ? "Ruta subsidiada ($0)"
+          : `$${seg.flight_cost_usd}`;
+      const metricRows = isCost
+        ? `<div class="step-detail-row"><span>Vuelo:</span><span>${flightLabel}</span></div>
+           <div class="step-detail-row"><span>Alojamiento y alimentación:</span><span>$${seg.stay_cost_usd}</span></div>
+           <div class="step-detail-row"><span>Actividades (prom. 3):</span><span>$${seg.activities_cost_usd}</span></div>
+           <div class="step-detail-row"><span>Total tramo:</span><span>$${seg.segment_cost_usd}</span></div>
+           <div class="step-detail-row"><span>Acumulado:</span><span>$${seg.accumulated_cost_usd}</span></div>`
+        : `<div class="step-detail-row"><span>Tiempo vuelo:</span><span>${seg.flight_duration_hours}h</span></div>
+           <div class="step-detail-row"><span>Tiempo estancia (minima):</span><span>${seg.min_stay_hours}h</span></div>
+           <div class="step-detail-row"><span>Tiempo total:</span><span>${seg.segment_total_hours}h</span></div>
+           <div class="step-detail-row"><span>Tiempo acumulado:</span><span>${seg.accumulated_time_hours}h</span></div>`;
 
-    return `
+      return `
       <div class="itinerary-step">
         <div class="step-header">
           <div class="step-number">${i + 1}</div>
@@ -177,7 +238,8 @@ function _buildItineraryHTML(altData, label, type) {
           ${metricRows}
         </div>
       </div>`;
-  }).join("");
+    })
+    .join("");
 
   return `
     <div style="margin-bottom:1.5rem">
@@ -190,18 +252,24 @@ function _buildItineraryHTML(altData, label, type) {
 }
 
 function _buildOptimizeHTML(data) {
-  const units  = { distance: "km", time: "h", cost: "USD" };
-  const labels = { distance: "Distancia mínima", time: "Tiempo mínimo", cost: "Costo mínimo" };
+  const units = { distance: "km", time: "h", cost: "USD" };
+  const labels = {
+    distance: "Distancia mínima",
+    time: "Tiempo mínimo",
+    cost: "Costo mínimo",
+  };
 
-  return Object.entries(data).map(([criterion, result]) => {
-    const pathStr = (result.path || []).join(" → ");
-    const unit    = units[criterion]  || "";
-    const label   = labels[criterion] || criterion;
-    const metric  = typeof result.total_metric === "number"
-      ? result.total_metric.toFixed(2)
-      : result.total_metric;
+  return Object.entries(data)
+    .map(([criterion, result]) => {
+      const pathStr = (result.path || []).join(" → ");
+      const unit = units[criterion] || "";
+      const label = labels[criterion] || criterion;
+      const metric =
+        typeof result.total_metric === "number"
+          ? result.total_metric.toFixed(2)
+          : result.total_metric;
 
-    return `
+      return `
       <div style="margin-bottom:1.5rem">
         <div style="padding:0.75rem 0 0.25rem;border-bottom:2px solid var(--secondary-color);margin-bottom:0.75rem">
           <h4 style="margin:0;font-size:0.875rem;color:var(--secondary-color)">Ruta óptima — ${label}</h4>
@@ -218,7 +286,8 @@ function _buildOptimizeHTML(data) {
           </div>
         </div>
       </div>`;
-  }).join("");
+    })
+    .join("");
 }
 
 function _emptyAlt(message) {
@@ -231,7 +300,7 @@ function _emptyAlt(message) {
 
 function _populateSelects(nodes) {
   const options = nodes
-    .map(n => {
+    .map((n) => {
       const name = n.metadata?.AEROPUERTO || n.label || n.id;
       return `<option value="${n.id}">${n.id} — ${name}</option>`;
     })
@@ -239,7 +308,7 @@ function _populateSelects(nodes) {
 
   const defaultOpt = '<option value="">Seleccione aeropuerto...</option>';
 
-  ["origen-basico", "destino-basico"].forEach(id => {
+  ["origen-basico", "destino-basico"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = defaultOpt + options;
   });
@@ -247,7 +316,7 @@ function _populateSelects(nodes) {
 
 function _clearSelects() {
   const defaultOpt = '<option value="">Seleccione aeropuerto...</option>';
-  ["origen-basico", "destino-basico"].forEach(id => {
+  ["origen-basico", "destino-basico"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = defaultOpt;
   });

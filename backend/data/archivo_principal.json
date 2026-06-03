@@ -3838,19 +3838,20 @@
     "aeronaves": {
       "Avión Comercial": {
         "costoKm": 0.18,
-        "tiempoKm": 0.7
+        "tiempoKm": 0.07
       },
       "Avión Regional": {
         "costoKm": 0.25,
-        "tiempoKm": 1.1
+        "tiempoKm": 0.15
       },
       "Hélice": {
         "costoKm": 0.12,
-        "tiempoKm": 2.5
+        "tiempoKm": 0.40
       }
     },
     "presupuestoMinimoPorc": 35,
     "intervaloAlojamiento": 20,
-    "intervaloAlimentacion": 8
+    "intervaloAlimentacion": 8,
+    "overheadVueloMin": 20
   }
 }
