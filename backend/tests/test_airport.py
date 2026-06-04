@@ -5,7 +5,8 @@ from backend.models.edge import Edge
 from backend.models.Airport import Airport
 from backend.services.reportService import FinalReport
 from pathlib import Path
-from backend.services.graphLoadService import GraphLoadService
+
+# from backend.services.graphLoadService import GraphLoadService
 import json
 
 # from backend.services.reportService import FinalReport
@@ -28,9 +29,11 @@ vertices_map = {}  # Mapeo de id → Vertice para rápido acceso
 
 for nodo in data["nodos"]:
     vertice = Vertex(nodo["id"])
+    isHub = nodo["esHub"]
     vertices_map[nodo["id"]] = vertice
+
     grafo.add_vertex(vertice)
-    print(f"✓ Vértice creado: {nodo['id']} ({nodo['nombre']})")
+    print(f"{nodo['id']} es hub: {isHub}")
 
 print(f"\nTotal de vértices creados: {len(grafo.vertexes)}")
 
@@ -62,9 +65,7 @@ for arista_data in data["aristas"]:
     # Agregar la arista al vértice de origen
     vertice_origen.add_adjacency(arista)
     print(
-        f"✓ Arista conectada: {origen_id} -> {destino_id} ({arista_data['distanciaKm']}km)\n"
-        f"ruta subsidiada: {arista_data["rutaSubsidiada"]}\n"
-        f"tiempo de vuelo: {arista_data["tiempoVuelo"]}"
+        f"✓ Arista conectada: {origen_id} -> {destino_id} ({arista_data['distanciaKm']}km)"
     )
 
 print(f"\nTotal de aristas creadas: {sum(len(v.adjacencies) for v in grafo.vertexes)}")

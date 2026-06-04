@@ -1,4 +1,3 @@
-# DE JAVI
 # from .dynamicTravelService import DynamicTravelService
 # from .routePerformanceService import RoutePerformanceService
 

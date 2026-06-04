@@ -162,6 +162,7 @@ export class GraphRenderer {
     this.selectedEdge = null;
     this.hoveredNode = null;
     this.highlightedPath = [];
+    this.highlightedSegments = [];
 
     this._startSimulation();
   }
@@ -170,14 +171,16 @@ export class GraphRenderer {
    * Highlight a sequence of IATA codes forming a route on the graph.
    * @param {string[]} nodeIds
    */
-  highlightPath(nodeIds) {
+  highlightPath(nodeIds, segments = []) {
     this.highlightedPath = Array.isArray(nodeIds) ? nodeIds : [];
+    this.highlightedSegments = Array.isArray(segments) ? segments : [];
     this._draw();
   }
 
   /** Clear all highlights and selections. */
   clearHighlight() {
     this.highlightedPath = [];
+    this.highlightedSegments = [];
     this.selectedNode = null;
     this.selectedEdge = null;
     this._draw();
@@ -352,6 +355,8 @@ export class GraphRenderer {
     this._drawAllEdges();
     // Nodes on top
     this._drawAllNodes();
+    // Flight animation ball (on top of everything, inside world transform)
+    if (this._flightAnim?.active) this._drawFlightBall();
 
     ctx.restore();
   }
@@ -690,6 +695,26 @@ export class GraphRenderer {
     return false;
   }
 
+  /**
+   * Returns the transport-based color for a node in the highlighted path.
+   * Uses the outgoing segment color; for the last node, falls back to the incoming segment.
+   * Returns null if no segment data is available.
+   */
+  _nodeTransportColor(nodeId) {
+    const path = this.highlightedPath;
+    const segments = this.highlightedSegments;
+    if (!segments.length) return null;
+
+    const idx = path.indexOf(nodeId);
+    if (idx === -1) return null;
+
+    const seg =
+      segments.find((s) => s.from === path[idx] && s.to === path[idx + 1]) ||
+      segments.find((s) => s.from === path[idx - 1] && s.to === path[idx]);
+
+    return seg?.transport ? this._aircraftColor(seg.transport) : null;
+  }
+
   // ── NODES ────────────────────────────────────────────────────
 
   _drawAllNodes() {
@@ -708,7 +733,8 @@ export class GraphRenderer {
     // Choose fill color by priority: selected > path > hovered > type
     let fill;
     if (isSelected) fill = this.colors.nodeSelected;
-    else if (isInPath) fill = this.colors.nodeInPath;
+    else if (isInPath)
+      fill = this._nodeTransportColor(id) ?? this.colors.nodeInPath;
     else if (isHovered) fill = this.colors.nodeHover;
     else if (isHub) fill = this.colors.hub;
     else fill = this.colors.secondary;
@@ -1115,6 +1141,165 @@ export class GraphRenderer {
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} x @param {number} y @param {number} w @param {number} h @param {number} r
    */
+  // ── FLIGHT ANIMATION ─────────────────────────────────────
+
+  /**
+   * Public entry point. Highlights the path and starts the animated ball
+   * travelling segment by segment. preferredTransports is used to pick the
+   * right aircraft colour when the optimize result doesn't carry per-segment
+   * transport data.
+   */
+  animateFlight(path, preferredTransports = []) {
+    // Cancel any in-progress animation first
+    if (this._flightAnim) this._flightAnim.active = false;
+
+    // Build highlight segments (for node/edge colouring)
+    const segsForHighlight = [];
+    for (let i = 0; i < path.length - 1; i++) {
+      const link = this.links.find(
+        (l) => l.source === path[i] && l.target === path[i + 1],
+      );
+      if (!link) continue;
+      const aircrafts = link.aircrafts || [];
+      const candidates = preferredTransports.length
+        ? aircrafts.filter((t) => preferredTransports.includes(t))
+        : aircrafts;
+      segsForHighlight.push({
+        from: path[i],
+        to: path[i + 1],
+        transport: candidates[0] || aircrafts[0] || "",
+      });
+    }
+    this.highlightPath(path, segsForHighlight);
+
+    const segments = this._buildAnimationSegments(path, preferredTransports);
+    if (!segments.length) return;
+
+    this._flightAnim = {
+      segments,
+      currentSeg: 0,
+      segStartTime: null,
+      currentT: 0,
+      active: true,
+    };
+    requestAnimationFrame((ts) => this._flightStep(ts));
+  }
+
+  _buildAnimationSegments(path, preferredTransports) {
+    const segments = [];
+    for (let i = 0; i < path.length - 1; i++) {
+      const from = path[i];
+      const to = path[i + 1];
+      const link = this.links.find((l) => l.source === from && l.target === to);
+      if (!link) continue;
+
+      const aircrafts = link.aircrafts || [];
+      const candidates = preferredTransports.length
+        ? aircrafts.filter((t) => preferredTransports.includes(t))
+        : aircrafts;
+      const transport = candidates[0] || aircrafts[0] || "Avión Comercial";
+
+      // flightTime is stored in minutes; 1 simulated minute = 1 real second → × 1000 ms
+      const flightMin =
+        link.flightTime > 0 ? link.flightTime : (link.distance || 0) * 0.07;
+      const durationMs = Math.max(flightMin * 1000, 500); // minimum 0.5 s for very short segments
+
+      segments.push({ from, to, transport, durationMs });
+    }
+    return segments;
+  }
+
+  _flightStep(timestamp) {
+    const anim = this._flightAnim;
+    if (!anim?.active) return;
+
+    if (anim.segStartTime === null) anim.segStartTime = timestamp;
+
+    const seg = anim.segments[anim.currentSeg];
+    anim.currentT = Math.min(
+      (timestamp - anim.segStartTime) / seg.durationMs,
+      1,
+    );
+
+    this._draw(); // _drawFlightBall() is called inside _draw()
+
+    if (anim.currentT >= 1) {
+      anim.currentSeg++;
+      anim.segStartTime = null;
+      anim.currentT = 0;
+      if (anim.currentSeg >= anim.segments.length) {
+        anim.active = false;
+        this._draw(); // final draw without ball
+        return;
+      }
+    }
+    requestAnimationFrame((ts) => this._flightStep(ts));
+  }
+
+  _drawFlightBall() {
+    const anim = this._flightAnim;
+    if (!anim?.active) return;
+
+    const seg = anim.segments[anim.currentSeg];
+    const t = anim.currentT;
+
+    const sourceNode = this.nodeMap[seg.from];
+    const targetNode = this.nodeMap[seg.to];
+    const link = this.links.find(
+      (l) => l.source === seg.from && l.target === seg.to,
+    );
+    if (!sourceNode || !targetNode || !link) return;
+
+    // Recompute the curve each frame so it stays consistent with spread angles
+    const curve = this._edgeCurve(sourceNode, targetNode, link);
+    if (!curve) return;
+
+    const pos = this._quadraticPoint(curve, t);
+    const tan = this._quadraticTangent(curve, t);
+    const angle = Math.atan2(tan.y, tan.x);
+    const color = this._aircraftColor(seg.transport);
+
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.translate(pos.x, pos.y);
+    ctx.rotate(angle);
+
+    // ── Ball ────────────────────────────────────────────────
+    ctx.beginPath();
+    ctx.arc(0, 0, 10, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // ── Directional arrow above the ball ────────────────────
+    // Arrow shaft + head drawn in local (rotated) coordinates.
+    // After ctx.rotate(angle) the positive-X axis points in the travel direction,
+    // so we draw the arrow pointing right and it will face the correct way.
+    const arrowY = -20; // above the ball centre
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    // Shaft
+    ctx.beginPath();
+    ctx.moveTo(-7, arrowY);
+    ctx.lineTo(7, arrowY);
+    ctx.stroke();
+
+    // Head
+    ctx.beginPath();
+    ctx.moveTo(7, arrowY);
+    ctx.lineTo(2, arrowY - 5);
+    ctx.moveTo(7, arrowY);
+    ctx.lineTo(2, arrowY + 5);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
   _roundRect(ctx, x, y, w, h, r) {
     r = Math.min(r, w / 2, h / 2);
     ctx.beginPath();

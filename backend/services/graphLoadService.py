@@ -79,6 +79,7 @@ class GraphLoadService:
                         "distance": edge.distanceKm,
                         "aircrafts": edge.aircrafts,
                         "isBlocked": edge.is_blocked,
+                        "flightTime": edge.flightTime,
                     }
                 )
 

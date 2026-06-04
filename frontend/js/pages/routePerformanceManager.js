@@ -42,14 +42,40 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Calculate button ─────────────────────────────────────
   document
     .getElementById("btn-calcular-basico")
-    ?.addEventListener("click", _handleCalcular);
+    ?.addEventListener("click", _handleCalcularItinerario);
   document
     .getElementById("btn-calcular-mejor-ruta")
-    ?.addEventListener("click", _handleCalcular);
+    ?.addEventListener("click", _handleCalcularMejorRuta);
 
   // ── Populate selects when network loads ──────────────────
   document.addEventListener("skyroute:networkLoaded", (e) => {
     _populateSelects(e.detail.nodes || []);
+  });
+
+  // ── Visualizar / Ejecutar Ruta buttons (event delegation) ──
+  document.getElementById("itinerary-info")?.addEventListener("click", (e) => {
+    // "Ejecutar Ruta" — animated flight simulation
+    const execBtn = e.target.closest(".btn-ejecutar-ruta");
+    if (execBtn) {
+      const path = execBtn.dataset.path?.split(",").filter(Boolean);
+      const transports =
+        execBtn.dataset.transports?.split(",").filter(Boolean) || [];
+      if (path?.length > 1) getRenderer()?.animateFlight(path, transports);
+      return;
+    }
+
+    // "Visualizar" — static path highlight
+    const btn = e.target.closest(".btn-visualizar");
+    if (!btn) return;
+    const path = btn.dataset.path?.split(",").filter(Boolean);
+    const segments = (btn.dataset.segments || "")
+      .split(",")
+      .filter(Boolean)
+      .map((s) => {
+        const [from, to, transport] = s.split(":");
+        return { from, to, transport: decodeURIComponent(transport || "") };
+      });
+    if (path?.length > 1) getRenderer()?.highlightPath(path, segments);
   });
 
   // ── Clear selects and panel on reset ─────────────────────
@@ -62,16 +88,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ════════════════════════════════════════════════════════════
-// Main handler
+// Handlers separados por modal
 // ════════════════════════════════════════════════════════════
 
-async function _handleCalcular() {
+async function _handleCalcularItinerario() {
   const origin = document.getElementById("origen-basico")?.value || "";
-  const destination = document.getElementById("destino-basico")?.value || "";
   const budget =
     parseFloat(document.getElementById("presupuesto-basico")?.value) || 0;
   const availableTime =
     parseFloat(document.getElementById("tiempo-basico")?.value) || 0;
+
+  if (!origin) {
+    showToast2("Selecciona un aeropuerto de origen.", "warning");
+    return;
+  }
+  if (budget <= 0 || availableTime <= 0) {
+    showToast2(
+      "Ingresa un presupuesto y tiempo disponible mayores a 0.",
+      "warning",
+    );
+    return;
+  }
+
+  closeAllModals();
+  showLoading(true, "Generando itinerarios…");
+
+  let result = null;
+  try {
+    const resp = await generateItineraries(origin, budget, availableTime, []);
+    result = resp?.data ?? null;
+  } catch (err) {
+    showToast2(`Itinerario: ${err?.message}`, "error");
+  }
+
+  showLoading(false);
+  if (!result) return;
+
+  _setItineraryPanel(_renderItinerarySection(result));
+  showToast2("Itinerarios calculados correctamente.", "success");
+}
+
+async function _handleCalcularMejorRuta() {
+  const origin = document.getElementById("origen-mejor-ruta")?.value || "";
+  const destination = document.getElementById("destino-basico")?.value || "";
   const criteria = [
     ...document.querySelectorAll('input[name="criterio-basico"]:checked'),
   ].map((el) => el.value);
@@ -81,64 +140,50 @@ async function _handleCalcular() {
     ...document.querySelectorAll('input[name="transporte-basico"]:checked'),
   ].map((el) => el.value);
 
-  // ── Validation ───────────────────────────────────────────
   if (!origin) {
     showToast2("Selecciona un aeropuerto de origen.", "warning");
     return;
   }
+  if (!destination) {
+    showToast2("Selecciona un aeropuerto de destino.", "warning");
+    return;
+  }
+  if (criteria.length === 0) {
+    showToast2("Selecciona al menos un criterio de optimización.", "warning");
+    return;
+  }
+  if (preferredTransports.length === 0) {
+    showToast2("Selecciona al menos un tipo de transporte.", "warning");
+    return;
+  }
 
-  const canOptimize = Boolean(destination && criteria.length > 0);
-  const canItinerary = budget > 0 && availableTime > 0;
+  closeAllModals();
+  showLoading(true, "Calculando mejor ruta…");
 
-  if (!canOptimize && !canItinerary) {
+  let result = null;
+  try {
+    const resp = await calculateOptimizedRoutes(
+      origin,
+      destination,
+      criteria,
+      excludeSecondary,
+      preferredTransports,
+    );
+    result = resp?.data ?? null;
+  } catch (err) {
+    showToast2(`Optimización: ${err?.message}`, "error");
+  }
+
+  showLoading(false);
+  if (!result || Object.keys(result).length === 0) {
     showToast2(
-      "Completa al menos: (destino + criterio) o (presupuesto + tiempo disponible).",
+      "No se encontraron rutas con los parámetros indicados.",
       "warning",
     );
     return;
   }
 
-  // ── Call APIs in parallel ────────────────────────────────
-  closeAllModals();
-  showLoading(true, "Calculando rutas…");
-
-  const optimizeCall = canOptimize
-    ? calculateOptimizedRoutes(
-        origin,
-        destination,
-        criteria,
-        excludeSecondary,
-        preferredTransports,
-      )
-    : Promise.resolve(null);
-
-  const itineraryCall = canItinerary
-    ? generateItineraries(origin, budget, availableTime, preferredTransports)
-    : Promise.resolve(null);
-
-  const [optimizeSettled, itinerarySettled] = await Promise.allSettled([
-    optimizeCall,
-    itineraryCall,
-  ]);
-
-  showLoading(false);
-
-  // ── Extract results / surface errors ─────────────────────
-  const optimizeResult =
-    optimizeSettled.status === "fulfilled" ? optimizeSettled.value?.data : null;
-  const itineraryResult =
-    itinerarySettled.status === "fulfilled"
-      ? itinerarySettled.value?.data
-      : null;
-
-  if (optimizeSettled.status === "rejected")
-    showToast2(`Optimización: ${optimizeSettled.reason?.message}`, "error");
-  if (itinerarySettled.status === "rejected")
-    showToast2(`Itinerario: ${itinerarySettled.reason?.message}`, "error");
-
-  if (!optimizeResult && !itineraryResult) return;
-
-  _renderResults(optimizeResult, itineraryResult);
+  _setItineraryPanel(_renderOptimizeSection(result, preferredTransports));
   showToast2("Rutas calculadas correctamente.", "success");
 }
 
@@ -146,66 +191,43 @@ async function _handleCalcular() {
 // Rendering
 // ════════════════════════════════════════════════════════════
 
-function _renderResults(optimizeResult, itineraryResult) {
+function _renderItinerarySection(itineraryResult) {
+  const { alternative_a, alternative_b } = itineraryResult;
+
+  if (!alternative_a && !alternative_b) {
+    return _emptyAlt(
+      "No se encontraron itinerarios con los parámetros indicados.",
+    );
+  }
+
   let html = "";
-  let pathToHighlight = null;
-
-  // ── Itinerary alternatives ───────────────────────────────
-  if (itineraryResult) {
-    const { alternative_a, alternative_b } = itineraryResult;
-
-    if (!alternative_a && !alternative_b) {
-      html += _emptyAlt(
-        "No se encontraron itinerarios con los parámetros indicados.",
-      );
-    } else {
-      if (alternative_a) {
-        pathToHighlight = alternative_a.sequence;
-        html += _buildItineraryHTML(
-          alternative_a,
-          "Alternativa A — Más destinos por presupuesto",
-          "cost",
-        );
-      } else {
-        html += _emptyAlt(
-          "Alt A: sin alternativa disponible con el presupuesto indicado.",
-        );
-      }
-
-      if (alternative_b) {
-        if (!pathToHighlight) pathToHighlight = alternative_b.sequence;
-        html += _buildItineraryHTML(
-          alternative_b,
-          "Alternativa B — Más destinos en menor tiempo",
-          "time",
-        );
-      } else {
-        html += _emptyAlt(
-          "Alt B: sin alternativa disponible con el tiempo indicado.",
-        );
-      }
-    }
+  if (alternative_a) {
+    html += _buildItineraryHTML(
+      alternative_a,
+      "Alternativa A — Más destinos por presupuesto",
+      "cost",
+    );
+  } else {
+    html += _emptyAlt(
+      "Alt A: sin alternativa disponible con el presupuesto indicado.",
+    );
   }
-
-  // ── Optimize paths ───────────────────────────────────────
-  if (optimizeResult && Object.keys(optimizeResult).length > 0) {
-    if (!pathToHighlight) {
-      const firstKey = Object.keys(optimizeResult)[0];
-      pathToHighlight = optimizeResult[firstKey]?.path;
-    }
-    html += _buildOptimizeHTML(optimizeResult);
+  if (alternative_b) {
+    html += _buildItineraryHTML(
+      alternative_b,
+      "Alternativa B — Más destinos en menor tiempo",
+      "time",
+    );
+  } else {
+    html += _emptyAlt(
+      "Alt B: sin alternativa disponible con el tiempo indicado.",
+    );
   }
+  return html;
+}
 
-  if (!html) {
-    html =
-      '<div class="empty-state"><p>No se encontraron rutas con los parámetros indicados.</p></div>';
-  }
-
-  _setItineraryPanel(html);
-
-  if (pathToHighlight?.length > 1) {
-    getRenderer()?.highlightPath(pathToHighlight);
-  }
+function _renderOptimizeSection(optimizeResult, preferredTransports = []) {
+  return _buildOptimizeHTML(optimizeResult, preferredTransports);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -245,10 +267,16 @@ function _buildItineraryHTML(altData, label, type) {
         <div class="step-details">
           <div class="step-detail-row"><span>Transporte:</span><span>${seg.transport || "—"}</span></div>
           ${metricRows}
+      
         </div>
       </div>`;
     })
     .join("");
+
+  const pathAttr = (altData.sequence || []).join(",");
+  const segmentsAttr = (altData.segments || [])
+    .map((s) => `${s.from}:${s.to}:${encodeURIComponent(s.transport || "")}`)
+    .join(",");
 
   return `
     <div style="margin-bottom:1.5rem">
@@ -257,16 +285,21 @@ function _buildItineraryHTML(altData, label, type) {
         <p style="margin:0.25rem 0 0;font-size:0.8rem;color:var(--text-secondary)">${summary}</p>
       </div>
       ${segmentsHTML}
+      <div style="text-align:right;margin-top:0.5rem">
+        <button class="btn btn-primary btn-visualizar" style="padding:0.35rem 0.9rem;font-size:0.78rem" data-path="${pathAttr}" data-segments="${segmentsAttr}">Visualizar</button>
+      </div>
     </div>`;
 }
 
-function _buildOptimizeHTML(data) {
+function _buildOptimizeHTML(data, preferredTransports = []) {
   const units = { distance: "km", time: "h", cost: "USD" };
   const labels = {
     distance: "Distancia mínima",
     time: "Tiempo mínimo",
     cost: "Costo mínimo",
   };
+
+  const transportAttr = preferredTransports.join(",");
 
   return Object.entries(data)
     .map(([criterion, result]) => {
@@ -277,6 +310,8 @@ function _buildOptimizeHTML(data) {
         typeof result.total_metric === "number"
           ? result.total_metric.toFixed(2)
           : result.total_metric;
+
+      const pathAttr = (result.path || []).join(",");
 
       return `
       <div style="margin-bottom:1.5rem">
@@ -293,6 +328,10 @@ function _buildOptimizeHTML(data) {
               ${pathStr}
             </div>
           </div>
+        </div>
+        <div style="text-align:right;margin-top:0.5rem;display:flex;gap:0.5rem;justify-content:flex-end">
+          <button class="btn btn-secondary btn-visualizar" style="padding:0.35rem 0.9rem;font-size:0.78rem" data-path="${pathAttr}">Visualizar</button>
+          <button class="btn btn-success btn-ejecutar-ruta" style="padding:0.35rem 0.9rem;font-size:0.78rem" data-path="${pathAttr}" data-transports="${transportAttr}">Ejecutar Ruta</button>
         </div>
       </div>`;
     })
@@ -317,7 +356,7 @@ function _populateSelects(nodes) {
 
   const defaultOpt = '<option value="">Seleccione aeropuerto...</option>';
 
-  ["origen-basico", "destino-basico"].forEach((id) => {
+  ["origen-basico", "origen-mejor-ruta", "destino-basico"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = defaultOpt + options;
   });
@@ -325,7 +364,7 @@ function _populateSelects(nodes) {
 
 function _clearSelects() {
   const defaultOpt = '<option value="">Seleccione aeropuerto...</option>';
-  ["origen-basico", "destino-basico"].forEach((id) => {
+  ["origen-basico", "origen-mejor-ruta", "destino-basico"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = defaultOpt;
   });

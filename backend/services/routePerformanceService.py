@@ -1,5 +1,6 @@
 import math
 
+
 class RoutePerformanceService:
     def __init__(self, graph_load_service):
         self.graph_service = graph_load_service
@@ -7,71 +8,93 @@ class RoutePerformanceService:
     # =========================================================================
     # REQUERIMIENTO: RUTAS ÓPTIMAS PUNTO A PUNTO (Multicriterio)
     # =========================================================================
-    def calculate_optimized_routes(self, origin_id, destination_id, criteria, exclude_secondary, preferred_transports):
+    def calculate_optimized_routes(
+        self,
+        origin_id,
+        destination_id,
+        criteria,
+        exclude_secondary,
+        preferred_transports,
+    ):
         graph = self.graph_service.graph
-        
+        aircraft_config = self.graph_service.config.get("aeronaves", {})
+
         # 1. Filtro: Excluir aeropuertos secundarios
         allowed_vertices = None
         if exclude_secondary:
-            # Buscamos en 'isHub' o dentro del diccionario 'metadata' si es hub
             allowed_vertices = {
-                v.identifier for v in graph.vertexes 
-                if getattr(v, 'isHub', getattr(v, 'metadata', {}).get('esHub', True))
+                v.identifier for v in graph.vertexes if getattr(v, "isHub", True)
             }
 
         results = {}
-        
+
         # 2. Calcular ruta por cada criterio
         for criterion in criteria:
-            def get_custom_weight(edge):
-                # Filtro de transporte ajustado al JSON ("aircrafts" como lista)
-                edge_transports = getattr(edge, 'aircrafts', [getattr(edge, 'transport_type', 'Aéreo')])
-                
-                # Validar intersección: ¿la arista tiene al menos uno de los transportes preferidos?
+
+            def get_custom_weight(
+                edge, _c=criterion
+            ):  # capture by value to avoid closure-in-loop bug
+                if getattr(edge, "is_blocked", False):
+                    return math.inf
+
+                edge_transports = getattr(edge, "aircrafts", [])
                 if preferred_transports:
-                    if not any(t in edge_transports for t in preferred_transports):
-                        return math.inf
+                    candidates = [
+                        t for t in edge_transports if t in preferred_transports
+                    ]
+                else:
+                    candidates = list(edge_transports)
+                if not candidates:
+                    return math.inf
 
-                # Nodos destino y su metadata
+                matched = candidates[0]
+                dist_km = getattr(edge, "distanceKm", 0) or 0
+                ac_cfg = aircraft_config.get(matched, {})
                 target = edge.destination
-                metadata = getattr(target, 'metadata', {})
 
-                # Cálculo de peso dinámico según el criterio
-                if criterion == 'distance':
-                    return getattr(edge, 'distance', 0)
-                
-                elif criterion == 'time':
-                    return getattr(edge, 'time', getattr(edge, 'distance', 0) * 0.1)
-                
-                elif criterion == 'cost':
-                    # Costo base del vuelo + Costos del aeropuerto destino
-                    base = getattr(edge, 'cost', getattr(edge, 'distance', 0) * 0.2)
-                    acc = metadata.get('costoAlojamiento', 0)
-                    ali = metadata.get('costoAlimentacion', 0)
-                    return base + acc + ali
-                
+                if _c == "distance":
+                    return dist_km
+
+                elif _c == "time":
+                    flight_time = getattr(edge, "flightTime", 0)
+                    if flight_time > 0:
+                        return flight_time
+                    return dist_km * ac_cfg.get("tiempoKm", 0.1)
+
+                elif _c == "cost":
+                    if getattr(edge, "routeSubsidized", False):
+                        flight_cost = 0
+                    else:
+                        flight_cost = dist_km * ac_cfg.get("costoKm", 0)
+                    acc = getattr(target, "accommodationCost", 0) or 0
+                    ali = getattr(target, "alimentationCost", 0) or 0
+                    return flight_cost + acc + ali
+
                 return 0
 
             try:
-                # El algoritmo Dijkstra fue ajustado en el Grafo para soportar weight_function y allowed_vertices
                 total_weight, path = graph.dijkstra_multi_criteria(
-                    graph, origin_id, destination_id, get_custom_weight, allowed_vertices
+                    graph,
+                    origin_id,
+                    destination_id,
+                    get_custom_weight,
+                    allowed_vertices,
                 )
-                
                 if path and len(path) > 1 and total_weight != math.inf:
-                    results[criterion] = {
-                        "path": path,
-                        "total_metric": total_weight
-                    }
+                    results[criterion] = {"path": path, "total_metric": total_weight}
             except AttributeError:
-                raise Exception("El método 'dijkstra_multi_criteria' no se encontró en la clase Graph.")
+                raise Exception(
+                    "El método 'dijkstra_multi_criteria' no se encontró en la clase Graph."
+                )
 
         return results
 
     # =========================================================================
     # REQUERIMIENTO 2.2: GENERACIÓN AUTOMÁTICA DE ITINERARIOS
     # =========================================================================
-    def generate_automatic_itineraries(self, origin_id, initial_budget, available_time_hours, preferred_transports):
+    def generate_automatic_itineraries(
+        self, origin_id, initial_budget, available_time_hours, preferred_transports
+    ):
         graph = self.graph_service.graph
 
         # Frontend sends hours; graph works internally in minutes
@@ -83,23 +106,37 @@ class RoutePerformanceService:
         try:
             # Alt A: explore unconstrained by time → finds every budget-feasible path
             paths_a = graph.find_itineraries_dfs(
-                graph, origin_id, initial_budget, None, preferred_transports, constraint="budget",
-                aircraft_config=aircraft_config, flight_overhead_min=flight_overhead_min,
+                graph,
+                origin_id,
+                initial_budget,
+                None,
+                preferred_transports,
+                constraint="budget",
+                aircraft_config=aircraft_config,
+                flight_overhead_min=flight_overhead_min,
             )
             # Alt B: explore unconstrained by cost → finds every time-feasible path
             paths_b = graph.find_itineraries_dfs(
-                graph, origin_id, None, available_time_minutes, preferred_transports, constraint="time",
-                aircraft_config=aircraft_config, flight_overhead_min=flight_overhead_min,
+                graph,
+                origin_id,
+                None,
+                available_time_minutes,
+                preferred_transports,
+                constraint="time",
+                aircraft_config=aircraft_config,
+                flight_overhead_min=flight_overhead_min,
             )
         except AttributeError:
-            raise Exception("El método 'find_itineraries_dfs' no se encontró en la clase Graph.")
+            raise Exception(
+                "El método 'find_itineraries_dfs' no se encontró en la clase Graph."
+            )
 
         # Alt A: maximize destinations → maximize transport diversity → minimize cost
         alt_a = max(
             (
-                p for p in paths_a
-                if p["destinations_count"] > 0
-                and p["cost"] <= initial_budget
+                p
+                for p in paths_a
+                if p["destinations_count"] > 0 and p["cost"] <= initial_budget
             ),
             key=lambda x: (x["destinations_count"], len(x["transports"]), -x["cost"]),
             default=None,
@@ -108,9 +145,9 @@ class RoutePerformanceService:
         # Alt B: maximize destinations → maximize transport diversity → minimize time
         alt_b = max(
             (
-                p for p in paths_b
-                if p["destinations_count"] > 0
-                and p["time"] <= available_time_minutes
+                p
+                for p in paths_b
+                if p["destinations_count"] > 0 and p["time"] <= available_time_minutes
             ),
             key=lambda x: (x["destinations_count"], len(x["transports"]), -x["time"]),
             default=None,
@@ -134,17 +171,21 @@ class RoutePerformanceService:
         segments_output = []
         for seg in path_data["segments"]:
             accumulated_cost += seg["cost"]
-            stay_cost = seg.get("accommodation_cost", 0) + seg.get("alimentation_cost", 0)
-            segments_output.append({
-                "from": seg["from"],
-                "to": seg["to"],
-                "transport": seg["transport"],
-                "flight_cost_usd": round(seg.get("flight_cost", 0), 2),
-                "stay_cost_usd": round(stay_cost, 2),
-                "activities_cost_usd": round(seg.get("activities_cost", 0), 2),
-                "segment_cost_usd": round(seg["cost"], 2),
-                "accumulated_cost_usd": round(accumulated_cost, 2),
-            })
+            stay_cost = seg.get("accommodation_cost", 0) + seg.get(
+                "alimentation_cost", 0
+            )
+            segments_output.append(
+                {
+                    "from": seg["from"],
+                    "to": seg["to"],
+                    "transport": seg["transport"],
+                    "flight_cost_usd": round(seg.get("flight_cost", 0), 2),
+                    "stay_cost_usd": round(stay_cost, 2),
+                    "activities_cost_usd": round(seg.get("activities_cost", 0), 2),
+                    "segment_cost_usd": round(seg["cost"], 2),
+                    "accumulated_cost_usd": round(accumulated_cost, 2),
+                }
+            )
 
         return {
             "sequence": path_data["path"],
@@ -166,15 +207,17 @@ class RoutePerformanceService:
             stay_min = seg.get("min_stay_minutes", 0)
             total_min = flight_min + stay_min
             accumulated_minutes += total_min
-            segments_output.append({
-                "from": seg["from"],
-                "to": seg["to"],
-                "transport": seg["transport"],
-                "flight_duration_hours": round(flight_min / 60, 2),
-                "min_stay_hours": round(stay_min / 60, 2),
-                "segment_total_hours": round(total_min / 60, 2),
-                "accumulated_time_hours": round(accumulated_minutes / 60, 2),
-            })
+            segments_output.append(
+                {
+                    "from": seg["from"],
+                    "to": seg["to"],
+                    "transport": seg["transport"],
+                    "flight_duration_hours": round(flight_min / 60, 2),
+                    "min_stay_hours": round(stay_min / 60, 2),
+                    "segment_total_hours": round(total_min / 60, 2),
+                    "accumulated_time_hours": round(accumulated_minutes / 60, 2),
+                }
+            )
 
         return {
             "sequence": path_data["path"],

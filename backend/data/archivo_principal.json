@@ -3143,27 +3143,7 @@
     "costoBase": 0,
     "estanciaMinima": 1440
   },
-    {
-    "origen": "MEX",
-    "destino": "BSB",
-    "distanciaKm": 6830,
-    "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
-    "rutaSubsidiada": false,
-    "tiempoVuelo": 0,
-    "costoBase": 0,
-    "estanciaMinima": 4320
-  },
       {
-    "origen": "BSB",
-    "destino": "MEX",
-    "distanciaKm": 6830,
-    "aeronaves": ["Avión Comercial", "Avión Regional", "Hélice"],
-    "rutaSubsidiada": false,
-    "tiempoVuelo": 0,
-    "costoBase": 0,
-    "estanciaMinima": 1440
-  },
-    {
     "origen": "PTY",
     "destino": "MEX",
     "distanciaKm": 2400,
@@ -3774,26 +3754,6 @@
   "estanciaMinima": 1440
 },
 {
-  "origen": "BOG",
-  "destino": "BSB",
-  "distanciaKm": 3700,
-  "aeronaves": ["Avión Comercial","Avión Regional","Hélice"],
-  "rutaSubsidiada": false,
-  "tiempoVuelo": 0,
-  "costoBase": 0,
-  "estanciaMinima": 4320
-},
-{
-  "origen": "BSB",
-  "destino": "BOG",
-  "distanciaKm": 3700,
-  "aeronaves": ["Avión Comercial","Avión Regional","Hélice"],
-  "rutaSubsidiada": false,
-  "tiempoVuelo": 0,
-  "costoBase": 0,
-  "estanciaMinima": 1440
-},
-{
   "origen": "SSA",
   "destino": "REC",
   "distanciaKm": 680,
@@ -3814,9 +3774,29 @@
   "estanciaMinima": 4320
 },
 {
-  "origen": "REC",
+  "origen": "GYE",
+  "destino": "BOG",
+  "distanciaKm": 720,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "BOG",
+  "destino": "GYE",
+  "distanciaKm": 720,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "GYE",
   "destino": "PTY",
-  "distanciaKm": 5050,
+  "distanciaKm": 1450,
   "aeronaves": ["Avión Comercial"],
   "rutaSubsidiada": false,
   "tiempoVuelo": 0,
@@ -3825,9 +3805,189 @@
 },
 {
   "origen": "PTY",
-  "destino": "REC",
-  "distanciaKm": 5050,
+  "destino": "GYE",
+  "distanciaKm": 1450,
   "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "GYE",
+  "destino": "LIM",
+  "distanciaKm": 1250,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "LIM",
+  "destino": "GYE",
+  "distanciaKm": 1250,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "AEP",
+  "destino": "MVD",
+  "distanciaKm": 230,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "MVD",
+  "destino": "AEP",
+  "distanciaKm": 230,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": true,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "AEP",
+  "destino": "SCL",
+  "distanciaKm": 1130,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "SCL",
+  "destino": "AEP",
+  "distanciaKm": 1130,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "AEP",
+  "destino": "ASU",
+  "distanciaKm": 1070,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "ASU",
+  "destino": "AEP",
+  "distanciaKm": 1070,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "SDQ",
+  "destino": "PTY",
+  "distanciaKm": 1850,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "PTY",
+  "destino": "SDQ",
+  "distanciaKm": 1850,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "SDQ",
+  "destino": "BOG",
+  "distanciaKm": 1940,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "BOG",
+  "destino": "SDQ",
+  "distanciaKm": 1940,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "SAP",
+  "destino": "MEX",
+  "distanciaKm": 1350,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "MEX",
+  "destino": "SAP",
+  "distanciaKm": 1350,
+  "aeronaves": ["Avión Comercial"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "SAP",
+  "destino": "PTY",
+  "distanciaKm": 1390,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "PTY",
+  "destino": "SAP",
+  "distanciaKm": 1390,
+  "aeronaves": ["Avión Comercial","Avión Regional"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 1440
+},
+{
+  "origen": "MDE",
+  "destino": "PTY",
+  "distanciaKm": 790,
+  "aeronaves": ["Avión Regional","Hélice"],
+  "rutaSubsidiada": false,
+  "tiempoVuelo": 0,
+  "costoBase": 0,
+  "estanciaMinima": 2880
+},
+{
+  "origen": "PTY",
+  "destino": "MDE",
+  "distanciaKm": 790,
+  "aeronaves": ["Avión Regional","Hélice"],
   "rutaSubsidiada": false,
   "tiempoVuelo": 0,
   "costoBase": 0,
