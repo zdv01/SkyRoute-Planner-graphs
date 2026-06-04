@@ -43,6 +43,7 @@ export class GraphRenderer {
       hub: "#ef4444", // Red   – Hub airports
       secondary: "#3b82f6", // Blue  – Secondary airports
       nodeSelected: "#10b981", // Green – Selected / active node
+      nodeCurrent: "#09dbe2", // Cyan  – Current traveller position
       nodeHover: "#f59e0b", // Amber – Hovered node
       nodeInPath: "#8b5cf6", // Purple – Node belonging to highlighted path
 
@@ -80,6 +81,7 @@ export class GraphRenderer {
     this.selectedNode = null;
     this.selectedEdge = null;
     this.hoveredNode = null;
+    this.currentNode = null; // IATA code of the traveller's current airport
     this.highlightedPath = []; // Array<string> of IATA codes
 
     // ── Angular-spread cache (recomputed each frame) ──────────
@@ -174,6 +176,12 @@ export class GraphRenderer {
   highlightPath(nodeIds, segments = []) {
     this.highlightedPath = Array.isArray(nodeIds) ? nodeIds : [];
     this.highlightedSegments = Array.isArray(segments) ? segments : [];
+    this._draw();
+  }
+
+  /** Mark the traveller's current airport node with the cyan indicator. */
+  setCurrentNode(nodeId) {
+    this.currentNode = nodeId ?? null;
     this._draw();
   }
 
@@ -729,18 +737,20 @@ export class GraphRenderer {
     const isSelected = this.selectedNode?.id === id;
     const isHovered = this.hoveredNode?.id === id;
     const isInPath = this.highlightedPath.includes(id);
+    const isCurrentNode = this.currentNode === id;
 
-    // Choose fill color by priority: selected > path > hovered > type
+    // Choose fill color by priority: selected > current > path > hovered > type
     let fill;
     if (isSelected) fill = this.colors.nodeSelected;
+    else if (isCurrentNode) fill = this.colors.nodeCurrent;
     else if (isInPath)
       fill = this._nodeTransportColor(id) ?? this.colors.nodeInPath;
     else if (isHovered) fill = this.colors.nodeHover;
     else if (isHub) fill = this.colors.hub;
     else fill = this.colors.secondary;
 
-    // ── Outer glow for selected / hovered ──────────────────
-    if (isSelected || isHovered) {
+    // ── Outer glow for selected / hovered / current ─────────
+    if (isSelected || isHovered || isCurrentNode) {
       ctx.shadowColor = fill;
       ctx.shadowBlur = 20;
     }
@@ -1149,7 +1159,7 @@ export class GraphRenderer {
    * right aircraft colour when the optimize result doesn't carry per-segment
    * transport data.
    */
-  animateFlight(path, preferredTransports = []) {
+  animateFlight(path, preferredTransports = [], onComplete = null) {
     // Cancel any in-progress animation first
     if (this._flightAnim) this._flightAnim.active = false;
 
@@ -1173,7 +1183,10 @@ export class GraphRenderer {
     this.highlightPath(path, segsForHighlight);
 
     const segments = this._buildAnimationSegments(path, preferredTransports);
-    if (!segments.length) return;
+    if (!segments.length) {
+      onComplete?.();
+      return;
+    }
 
     this._flightAnim = {
       segments,
@@ -1181,6 +1194,7 @@ export class GraphRenderer {
       segStartTime: null,
       currentT: 0,
       active: true,
+      onComplete,
     };
     requestAnimationFrame((ts) => this._flightStep(ts));
   }
@@ -1230,6 +1244,7 @@ export class GraphRenderer {
       if (anim.currentSeg >= anim.segments.length) {
         anim.active = false;
         this._draw(); // final draw without ball
+        anim.onComplete?.();
         return;
       }
     }
