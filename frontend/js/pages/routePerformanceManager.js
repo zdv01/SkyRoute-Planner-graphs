@@ -292,11 +292,14 @@ function _buildItineraryHTML(altData, label, type) {
 }
 
 function _buildOptimizeHTML(data, preferredTransports = []) {
-  const units = { distance: "km", time: "h", cost: "USD" };
   const labels = {
     distance: "Distancia mínima",
     time: "Tiempo mínimo",
     cost: "Costo mínimo",
+    "distance+time": "Distancia + Tiempo optimizados",
+    "distance+cost": "Distancia + Costo optimizados",
+    "time+cost": "Tiempo + Costo optimizados",
+    "distance+time+cost": "Distancia + Tiempo + Costo optimizados",
   };
 
   const transportAttr = preferredTransports.join(",");
@@ -304,20 +307,37 @@ function _buildOptimizeHTML(data, preferredTransports = []) {
   return Object.entries(data)
     .map(([criterion, result]) => {
       const pathStr = (result.path || []).join(" → ");
-      const unit = units[criterion] || "";
       const label = labels[criterion] || criterion;
-      const metric =
-        typeof result.total_metric === "number"
-          ? result.total_metric.toFixed(2)
-          : result.total_metric;
-
       const pathAttr = (result.path || []).join(",");
+      const isCombined = criterion.includes("+");
+
+      const singleUnits = { distance: "km", time: "h", cost: "USD" };
+      let metricHTML = "";
+      if (isCombined && result.breakdown) {
+        const subCriteria = new Set(criterion.split("+"));
+        const b = result.breakdown;
+        const parts = [];
+        if (subCriteria.has("distance") && b.distance != null)
+          parts.push(`Distancia: <strong>${b.distance.toFixed(2)} km</strong>`);
+        if (subCriteria.has("time") && b.time != null)
+          parts.push(`Tiempo: <strong>${b.time.toFixed(2)} h</strong>`);
+        if (subCriteria.has("cost") && b.cost != null)
+          parts.push(`Costo: <strong>$${b.cost.toFixed(2)} USD</strong>`);
+        metricHTML = parts.join(" &nbsp;·&nbsp; ");
+      } else {
+        const unit = singleUnits[criterion] || "";
+        const metric =
+          typeof result.total_metric === "number"
+            ? result.total_metric.toFixed(2)
+            : result.total_metric;
+        metricHTML = `<strong>${metric} ${unit}</strong>`;
+      }
 
       return `
       <div style="margin-bottom:1.5rem">
         <div style="padding:0.75rem 0 0.25rem;border-bottom:2px solid var(--secondary-color);margin-bottom:0.75rem">
           <h4 style="margin:0;font-size:0.875rem;color:var(--secondary-color)">Ruta óptima — ${label}</h4>
-          <p style="margin:0.25rem 0 0;font-size:0.8rem;color:var(--text-secondary)"><strong>${metric} ${unit}</strong></p>
+          <p style="margin:0.25rem 0 0;font-size:0.8rem;color:var(--text-secondary)">${metricHTML}</p>
         </div>
         <div class="itinerary-step">
           <div class="step-details" style="padding-top:0">

@@ -26,13 +26,18 @@ class RoutePerformanceService:
                 v.identifier for v in graph.vertexes if getattr(v, "isHub", True)
             }
 
+        # 2. Pre-calcular máximos para normalización de criterios combinados
+        max_weights = self._compute_max_weights(
+            graph, preferred_transports, aircraft_config
+        )
+
         results = {}
 
-        # 2. Calcular ruta por cada criterio
+        # 3. Calcular ruta por cada criterio (individual o combinado)
         for criterion in criteria:
 
             def get_custom_weight(
-                edge, _c=criterion
+                edge, _c=criterion, _mw=max_weights
             ):  # capture by value to avoid closure-in-loop bug
                 if getattr(edge, "is_blocked", False):
                     return math.inf
@@ -52,25 +57,18 @@ class RoutePerformanceService:
                 ac_cfg = aircraft_config.get(matched, {})
                 target = edge.destination
 
-                if _c == "distance":
-                    return dist_km
+                if "+" in _c:
+                    # Criterio combinado: suma de métricas normalizadas
+                    total = 0
+                    for sc in _c.split("+"):
+                        w = self._single_weight(edge, sc, dist_km, ac_cfg, target)
+                        if w == math.inf:
+                            return math.inf
+                        mx = _mw.get(sc, 1.0)
+                        total += w / mx if mx > 0 else w
+                    return total
 
-                elif _c == "time":
-                    flight_time = getattr(edge, "flightTime", 0)
-                    if flight_time > 0:
-                        return flight_time
-                    return dist_km * ac_cfg.get("tiempoKm", 0.1)
-
-                elif _c == "cost":
-                    if getattr(edge, "routeSubsidized", False):
-                        flight_cost = 0
-                    else:
-                        flight_cost = dist_km * ac_cfg.get("costoKm", 0)
-                    acc = getattr(target, "accommodationCost", 0) or 0
-                    ali = getattr(target, "alimentationCost", 0) or 0
-                    return flight_cost + acc + ali
-
-                return 0
+                return self._single_weight(edge, _c, dist_km, ac_cfg, target)
 
             try:
                 total_weight, path = graph.dijkstra_multi_criteria(
@@ -81,13 +79,137 @@ class RoutePerformanceService:
                     allowed_vertices,
                 )
                 if path and len(path) > 1 and total_weight != math.inf:
-                    results[criterion] = {"path": path, "total_metric": total_weight}
+                    entry = {"path": path, "total_metric": total_weight}
+                    if "+" in criterion:
+                        entry["breakdown"] = self._compute_path_breakdown(
+                            graph, path, preferred_transports, aircraft_config
+                        )
+                    results[criterion] = entry
             except AttributeError:
                 raise Exception(
                     "El método 'dijkstra_multi_criteria' no se encontró en la clase Graph."
                 )
 
         return results
+
+    # =========================================================================
+    # HELPERS
+    # =========================================================================
+    def _single_weight(self, edge, criterion, dist_km, ac_cfg, target):
+        """Compute weight for one simple criterion on a single edge."""
+        if criterion == "distance":
+            return dist_km
+
+        if criterion == "time":
+            flight_time = getattr(edge, "flightTime", 0)
+            if flight_time > 0:
+                return flight_time
+            return dist_km * ac_cfg.get("tiempoKm", 0.1)
+
+        if criterion == "cost":
+            if getattr(edge, "routeSubsidized", False):
+                flight_cost = 0
+            else:
+                flight_cost = dist_km * ac_cfg.get("costoKm", 0)
+            acc = getattr(target, "accommodationCost", 0) or 0
+            ali = getattr(target, "alimentationCost", 0) or 0
+            return flight_cost + acc + ali
+
+        return 0
+
+    def _compute_max_weights(self, graph, preferred_transports, aircraft_config):
+        """Scan all edges and return max value per individual criterion for normalization."""
+        max_dist = 0.0
+        max_time = 0.0
+        max_cost = 0.0
+
+        for vertex in graph.vertexes:
+            for edge in getattr(vertex, "adjacencies", []):
+                if getattr(edge, "is_blocked", False):
+                    continue
+                edge_transports = getattr(edge, "aircrafts", [])
+                if preferred_transports:
+                    candidates = [t for t in edge_transports if t in preferred_transports]
+                else:
+                    candidates = list(edge_transports)
+                if not candidates:
+                    continue
+
+                matched = candidates[0]
+                dist_km = getattr(edge, "distanceKm", 0) or 0
+                ac_cfg = aircraft_config.get(matched, {})
+                target = edge.destination
+
+                max_dist = max(max_dist, dist_km)
+
+                flight_time = getattr(edge, "flightTime", 0)
+                t = flight_time if flight_time > 0 else dist_km * ac_cfg.get("tiempoKm", 0.1)
+                max_time = max(max_time, t)
+
+                if getattr(edge, "routeSubsidized", False):
+                    c = 0.0
+                else:
+                    c = dist_km * ac_cfg.get("costoKm", 0)
+                acc = getattr(target, "accommodationCost", 0) or 0
+                ali = getattr(target, "alimentationCost", 0) or 0
+                max_cost = max(max_cost, c + acc + ali)
+
+        return {
+            "distance": max_dist if max_dist > 0 else 1.0,
+            "time": max_time if max_time > 0 else 1.0,
+            "cost": max_cost if max_cost > 0 else 1.0,
+        }
+
+    def _compute_path_breakdown(self, graph, path, preferred_transports, aircraft_config):
+        """Given a path (list of airport IDs), sum individual metrics per segment."""
+        vertex_map = {v.identifier: v for v in graph.vertexes}
+        total = {"distance": 0.0, "time": 0.0, "cost": 0.0}
+
+        for i in range(len(path) - 1):
+            src_id, dst_id = path[i], path[i + 1]
+            src_vertex = vertex_map.get(src_id)
+            if not src_vertex:
+                continue
+
+            edge = next(
+                (
+                    e
+                    for e in getattr(src_vertex, "adjacencies", [])
+                    if getattr(e.destination, "identifier", None) == dst_id
+                ),
+                None,
+            )
+            if not edge or getattr(edge, "is_blocked", False):
+                continue
+
+            edge_transports = getattr(edge, "aircrafts", [])
+            candidates = (
+                [t for t in edge_transports if t in preferred_transports]
+                if preferred_transports
+                else list(edge_transports)
+            )
+            if not candidates:
+                continue
+
+            matched = candidates[0]
+            dist_km = getattr(edge, "distanceKm", 0) or 0
+            ac_cfg = aircraft_config.get(matched, {})
+            target = edge.destination
+
+            total["distance"] += dist_km
+
+            flight_time = getattr(edge, "flightTime", 0)
+            total["time"] += flight_time if flight_time > 0 else dist_km * ac_cfg.get("tiempoKm", 0.1)
+
+            if getattr(edge, "routeSubsidized", False):
+                flight_cost = 0.0
+            else:
+                flight_cost = dist_km * ac_cfg.get("costoKm", 0)
+            acc = getattr(target, "accommodationCost", 0) or 0
+            ali = getattr(target, "alimentationCost", 0) or 0
+            total["cost"] += flight_cost + acc + ali
+
+        return {k: round(v, 2) for k, v in total.items()}
 
     # =========================================================================
     # REQUERIMIENTO 2.2: GENERACIÓN AUTOMÁTICA DE ITINERARIOS

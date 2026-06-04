@@ -265,6 +265,7 @@
         </div>
         <div class="form-group">
           <label>Criterios de Optimización</label>
+          <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:0.35rem">Individuales</div>
           <div class="checkbox-row">
             <label class="checkbox-label">
               <input type="checkbox" name="criterio-basico" value="distance" /> Distancia
@@ -274,6 +275,21 @@
             </label>
             <label class="checkbox-label">
               <input type="checkbox" name="criterio-basico" value="cost" /> Costo
+            </label>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-secondary);margin:0.5rem 0 0.35rem">Combinaciones</div>
+          <div class="checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" name="criterio-basico" value="distance+time" /> Distancia + Tiempo
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="criterio-basico" value="distance+cost" /> Distancia + Costo
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="criterio-basico" value="time+cost" /> Tiempo + Costo
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="criterio-basico" value="distance+time+cost" /> Distancia + Tiempo + Costo
             </label>
           </div>
         </div>
