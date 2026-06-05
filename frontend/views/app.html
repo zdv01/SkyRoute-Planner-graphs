@@ -1,517 +1,796 @@
 <!doctype html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkyRoute Planner - Optimización de Rutas Aéreas</title>
+    <link rel="stylesheet" href="../css/app.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyRoute Planner - Optimización de Rutas Aéreas</title>
-  <link rel="stylesheet" href="../css/app.css" />
-</head>
-
-<body>
-  <!-- ═══════════════════════ HEADER ═══════════════════════ -->
-  <header class="app-header">
-    <div class="header-content">
-      <h1>SkyRoute Planner</h1>
-      <p>Optimización de Rutas Aéreas</p>
-    </div>
-    <div class="header-actions">
-      <label for="json-upload" class="btn btn-primary">
-        Cargar Red Aérea (JSON)
-        <input type="file" id="json-upload" accept=".json" hidden />
-      </label>
-      <button id="btn-reset" class="btn btn-secondary">Reiniciar</button>
-    </div>
-  </header>
-
-  <!-- ═══════════════════════ TOOLBAR ══════════════════════ -->
-  <div class="toolbar">
-    <div class="toolbar-section">
-      <!-- Wired by: routePerformanceManager.js (R2) -->
-      <button class="toolbar-btn" id="btn-planificacion-basica">
-        <span class="label">Planificación Básica</span>
-      </button>
-      <!-- Wired by: dynamicTravelManager.js (R3) -->
-      <button class="toolbar-btn" id="btn-planificacion-avanzada">
-        <span class="label">Planificación Avanzada</span>
-      </button>
-      <!-- Wired by: interruptionManager.js (R4) -->
-      <button class="toolbar-btn" id="btn-interrumpir-ruta">
-        <span class="label">Interrumpir Ruta</span>
-      </button>
-    </div>
-
-    <div class="toolbar-divider"></div>
-
-    <div class="toolbar-section">
-      <!-- Wired by: reportManager.js (R5) -->
-      <button class="toolbar-btn" id="btn-exportar-reporte">
-        <span class="label">Exportar Reporte</span>
-      </button>
-      <!-- Wired by: graphLoadManager.js -->
-      <button class="toolbar-btn" id="btn-configuracion">
-        <span class="label">Configuración</span>
-      </button>
-    </div>
-
-    <div class="toolbar-divider"></div>
-
-    <div class="toolbar-section">
-      <div class="toolbar-info">
-        <span class="info-label">Estado</span>
-        <span class="info-value" id="estado-sistema">Sin datos</span>
+  <body>
+    <!-- ═══════════════════════ HEADER ═══════════════════════ -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1>SkyRoute Planner</h1>
+        <p>Optimización de Rutas Aéreas</p>
       </div>
-      <div class="toolbar-info">
-        <span class="info-label">Aeropuertos</span>
-        <span class="info-value" id="total-aeropuertos">0</span>
+      <div class="header-actions">
+        <label for="json-upload" class="btn btn-primary">
+          Cargar Red Aérea (JSON)
+          <input type="file" id="json-upload" accept=".json" hidden />
+        </label>
+        <button id="btn-reset" class="btn btn-secondary">Reiniciar</button>
       </div>
-      <div class="toolbar-info">
-        <span class="info-label">Rutas</span>
-        <span class="info-value" id="total-rutas">0</span>
-      </div>
-    </div>
-  </div>
+    </header>
 
-  <!-- ════════════════════ MAIN LAYOUT ══════════════════════ -->
-  <div class="main-layout">
-    <!-- ── Left panel ── -->
-    <aside class="info-panel">
-      <div class="panel-section">
-        <div class="panel-header">
-          <h3>Información del Aeropuerto</h3>
-        </div>
-        <div class="panel-content" id="airport-info">
-          <div class="empty-state">
-            <p>Haz clic en un aeropuerto para ver su información</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-section">
-        <div class="panel-header">
-          <h3>Itinerario Calculado</h3>
-          <button class="btn-icon-small" id="btn-limpiar-itinerario" title="Limpiar">✕</button>
-        </div>
-        <div class="panel-content" id="itinerary-info">
-          <div class="empty-state">
-            <p>No hay itinerario calculado</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-section" id="journey-summary" style="display:none">
-        <div class="panel-header">
-          <h3>Resumen del Viaje</h3>
-        </div>
-        <div class="panel-content">
-          <div class="summary-stats">
-            <div class="stat-item">
-              <div class="stat-label">Presupuesto Actual</div>
-              <div class="stat-value" id="presupuesto-actual">$0</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label">Tiempo Transcurrido</div>
-              <div class="stat-value" id="tiempo-transcurrido">0h</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label">Destinos Visitados</div>
-              <div class="stat-value" id="destinos-visitados">0</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label">Ubicación Actual</div>
-              <div class="stat-value" id="ubicacion-actual">-</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-section" id="final-report" style="display:none">
-        <div class="panel-header">
-          <h3>Reporte Final</h3>
-        </div>
-        <div class="panel-content" id="report-content"></div>
-      </div>
-    </aside>
-
-    <!-- ── Graph canvas ── -->
-    <main class="graph-area">
-      <canvas id="network-canvas"></canvas>
-
-      <div class="canvas-controls">
-        <button class="control-btn" id="btn-zoom-in" title="Acercar">+</button>
-        <button class="control-btn" id="btn-zoom-out" title="Alejar">−</button>
-        <button class="control-btn" id="btn-reset-view" title="Centrar Vista">⌖</button>
-      </div>
-
-      <div class="graph-legend">
-        <h4>Leyenda</h4>
-        <div class="legend-items">
-          <div class="legend-item">
-            <div class="legend-marker hub"></div>
-            <span>Aeropuerto Hub</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-marker secondary"></div>
-            <span>Aeropuerto Secundario</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-line active"></div>
-            <span>Ruta Activa</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-line blocked"></div>
-            <span>Ruta Bloqueada</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-line selected"></div>
-            <span>Ruta en Itinerario</span>
-          </div>
-          <div class="legend-item">
-            <div style="width:10px;height:10px;border-radius:50%;background:#8b5cf6;flex-shrink:0;"></div>
-            <span>Avión Comercial</span>
-          </div>
-          <div class="legend-item">
-            <div style="width:10px;height:10px;border-radius:50%;background:#06b6d4;flex-shrink:0;"></div>
-            <span>Avión Regional</span>
-          </div>
-          <div class="legend-item">
-            <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
-            <span>Hélice</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="canvas-placeholder" id="canvas-placeholder">
-        <div class="placeholder-content">
-          <span class="placeholder-icon"></span>
-          <h3>Carga un archivo JSON para visualizar la red aérea</h3>
-          <p>Haz clic en "Cargar Red Aérea (JSON)" en la parte superior</p>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- ═══════════════════════ MODALS ════════════════════════ -->
-
-  <!-- R2: Basic planning — wired by routePerformanceManager.js -->
-  <div class="modal" id="modal-planificacion-basica">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Escoge El Tipo De Planificación</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <button class="btn btn-basic" id="btn-itinerario-basico">
-          <span class="label">Itinerario Básico</span>
+    <!-- ═══════════════════════ TOOLBAR ══════════════════════ -->
+    <div class="toolbar">
+      <div class="toolbar-section">
+        <!-- Wired by: routePerformanceManager.js (R2) -->
+        <button class="toolbar-btn" id="btn-planificacion-basica">
+          <span class="label">Planificación Básica</span>
         </button>
-        <button class="btn btn-basic" id="btn-mejor-ruta">
-          <span class="label">Mejor Ruta</span>
+        <!-- Wired by: dynamicTravelManager.js (R3) -->
+        <button class="toolbar-btn" id="btn-planificacion-avanzada">
+          <span class="label">Planificación Avanzada</span>
+        </button>
+        <!-- Wired by: interruptionManager.js (R4) -->
+        <button class="toolbar-btn" id="btn-interrumpir-ruta">
+          <span class="label">Interrumpir Ruta</span>
         </button>
       </div>
-    </div>
-  </div>
 
-  <div class="modal" id="modal-itinerario-basico">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Planificación Básica de Itinerario</h3>
-        <button class="btn-close">&times;</button>
+      <div class="toolbar-divider"></div>
+
+      <div class="toolbar-section">
+        <!-- Wired by: reportManager.js (R5) -->
+        <button class="toolbar-btn" id="btn-exportar-reporte">
+          <span class="label">Exportar Reporte</span>
+        </button>
+        <!-- Wired by: graphLoadManager.js -->
+        <button class="toolbar-btn" id="btn-configuracion">
+          <span class="label">Configuración</span>
+        </button>
       </div>
-      <div class="modal-body">
-        <div class="form-grid">
+
+      <div class="toolbar-divider"></div>
+
+      <div class="toolbar-section">
+        <div class="toolbar-info">
+          <span class="info-label">Estado</span>
+          <span class="info-value" id="estado-sistema">Sin datos</span>
+        </div>
+        <div class="toolbar-info">
+          <span class="info-label">Aeropuertos</span>
+          <span class="info-value" id="total-aeropuertos">0</span>
+        </div>
+        <div class="toolbar-info">
+          <span class="info-label">Rutas</span>
+          <span class="info-value" id="total-rutas">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ MAIN LAYOUT ══════════════════════ -->
+    <div class="main-layout">
+      <!-- ── Left panel ── -->
+      <aside class="info-panel">
+        <div class="panel-section">
+          <div class="panel-header">
+            <h3>Información del Aeropuerto</h3>
+          </div>
+          <div class="panel-content" id="airport-info">
+            <div class="empty-state">
+              <p>Haz clic en un aeropuerto para ver su información</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-header">
+            <h3>Itinerario Calculado</h3>
+            <button
+              class="btn-icon-small"
+              id="btn-limpiar-itinerario"
+              title="Limpiar"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="panel-content" id="itinerary-info">
+            <div class="empty-state">
+              <p>No hay itinerario calculado</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section" id="journey-summary" style="display: none">
+          <div class="panel-header">
+            <h3>Resumen del Viaje</h3>
+          </div>
+          <div class="panel-content">
+            <div class="summary-stats">
+              <div class="stat-item">
+                <div class="stat-label">Presupuesto Actual</div>
+                <div class="stat-value" id="presupuesto-actual">$0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Tiempo Transcurrido</div>
+                <div class="stat-value" id="tiempo-transcurrido">0h</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Destinos Visitados</div>
+                <div class="stat-value" id="destinos-visitados">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Ubicación Actual</div>
+                <div class="stat-value" id="ubicacion-actual">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section" id="final-report" style="display: none">
+          <div class="panel-header">
+            <h3>Reporte Final</h3>
+          </div>
+          <div class="panel-content" id="report-content"></div>
+        </div>
+      </aside>
+
+      <!-- ── Graph canvas ── -->
+      <main class="graph-area">
+        <canvas id="network-canvas"></canvas>
+
+        <div class="canvas-controls">
+          <button class="control-btn" id="btn-zoom-in" title="Acercar">
+            +
+          </button>
+          <button class="control-btn" id="btn-zoom-out" title="Alejar">
+            −
+          </button>
+          <button class="control-btn" id="btn-reset-view" title="Centrar Vista">
+            ⌖
+          </button>
+        </div>
+
+        <div class="graph-legend">
+          <h4>Leyenda</h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="legend-marker hub"></div>
+              <span>Aeropuerto Hub</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-marker secondary"></div>
+              <span>Aeropuerto Secundario</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line active"></div>
+              <span>Ruta Activa</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line blocked"></div>
+              <span>Ruta Bloqueada</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line selected"></div>
+              <span>Ruta en Itinerario</span>
+            </div>
+            <div class="legend-item">
+              <div
+                style="
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 50%;
+                  background: #8b5cf6;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span>Avión Comercial</span>
+            </div>
+            <div class="legend-item">
+              <div
+                style="
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 50%;
+                  background: #06b6d4;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span>Avión Regional</span>
+            </div>
+            <div class="legend-item">
+              <div
+                style="
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 50%;
+                  background: #f59e0b;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span>Hélice</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="canvas-placeholder" id="canvas-placeholder">
+          <div class="placeholder-content">
+            <span class="placeholder-icon"></span>
+            <h3>Carga un archivo JSON para visualizar la red aérea</h3>
+            <p>Haz clic en "Cargar Red Aérea (JSON)" en la parte superior</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ═══════════════════════ MODALS ════════════════════════ -->
+
+    <!-- R2: Basic planning — wired by routePerformanceManager.js -->
+    <div class="modal" id="modal-planificacion-basica">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Escoge El Tipo De Planificación</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <button class="btn btn-basic" id="btn-itinerario-basico">
+            <span class="label">Itinerario Básico</span>
+          </button>
+          <button class="btn btn-basic" id="btn-mejor-ruta">
+            <span class="label">Mejor Ruta</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-itinerario-basico">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Planificación Básica de Itinerario</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="origen-basico">Aeropuerto de Origen</label>
+              <select id="origen-basico" class="form-control">
+                <option value="">Seleccione aeropuerto...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="presupuesto-basico">Presupuesto Inicial (USD)</label>
+              <input
+                type="number"
+                id="presupuesto-basico"
+                class="form-control"
+                min="0"
+                step="10"
+                placeholder="500"
+              />
+            </div>
+            <div class="form-group">
+              <label for="tiempo-basico">Tiempo Disponible (horas)</label>
+              <input
+                type="number"
+                id="tiempo-basico"
+                class="form-control"
+                min="1"
+                step="1"
+                placeholder="48"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Cancelar</button>
+          <button class="btn btn-success" id="btn-calcular-basico">
+            Calcular Itinerario Básico
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-mejor-ruta">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Planificación De Mejor Ruta</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="origen-mejor-ruta">Aeropuerto de Origen</label>
+              <select id="origen-mejor-ruta" class="form-control">
+                <option value="">Seleccione aeropuerto...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="destino-basico">Aeropuerto de Destino</label>
+              <select id="destino-basico" class="form-control">
+                <option value="">Seleccione aeropuerto...</option>
+              </select>
+            </div>
+          </div>
           <div class="form-group">
-            <label for="origen-basico">Aeropuerto de Origen</label>
-            <select id="origen-basico" class="form-control">
+            <label>Criterios de Optimización</label>
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                margin-bottom: 0.35rem;
+              "
+            >
+              Individuales
+            </div>
+            <div class="checkbox-row">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="criterio-basico"
+                  value="distance"
+                />
+                Distancia
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="criterio-basico" value="time" />
+                Tiempo
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="criterio-basico" value="cost" />
+                Costo
+              </label>
+            </div>
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                margin: 0.5rem 0 0.35rem;
+              "
+            >
+              Combinaciones
+            </div>
+            <div class="checkbox-row">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="criterio-basico"
+                  value="distance+time"
+                />
+                Distancia + Tiempo
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="criterio-basico"
+                  value="distance+cost"
+                />
+                Distancia + Costo
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="criterio-basico"
+                  value="time+cost"
+                />
+                Tiempo + Costo
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="criterio-basico"
+                  value="distance+time+cost"
+                />
+                Distancia + Tiempo + Costo
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="excluir-secundarios" />
+              Excluir aeropuertos secundarios
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Tipos de Transporte</label>
+            <div class="checkbox-row">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="transporte-basico"
+                  value="Avión Comercial"
+                />
+                Avión Comercial
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="transporte-basico"
+                  value="Avión Regional"
+                />
+                Avión Regional
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="transporte-basico"
+                  value="Hélice"
+                />
+                Hélice
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Cancelar</button>
+          <button class="btn btn-success" id="btn-calcular-mejor-ruta">
+            Calcular Ruta
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- R3: Advanced planning — wired by dynamicTravelManager.js -->
+    <div class="modal" id="modal-planificacion-avanzada">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Planificación Avanzada - Modo Paso a Paso</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="origen-avanzado">Aeropuerto de Origen</label>
+            <select id="origen-avanzado" class="form-control">
               <option value="">Seleccione aeropuerto...</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="presupuesto-basico">Presupuesto Inicial (USD)</label>
-            <input type="number" id="presupuesto-basico" class="form-control" min="0" step="10" placeholder="500" />
+            <label for="presupuesto-avanzado">Presupuesto Inicial (USD)</label>
+            <input
+              type="number"
+              id="presupuesto-avanzado"
+              class="form-control"
+              min="0"
+              step="10"
+              placeholder="500"
+            />
           </div>
-          <div class="form-group">
-            <label for="tiempo-basico">Tiempo Disponible (horas)</label>
-            <input type="number" id="tiempo-basico" class="form-control" min="1" step="1" placeholder="48" />
+          <div class="alert alert-info">
+            <strong>Modo Avanzado:</strong> El viaje se ejecutará paso a paso.
+            Podrás tomar decisiones en cada aeropuerto sobre actividades,
+            trabajos y rutas.
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-cancel">Cancelar</button>
-        <button class="btn btn-success" id="btn-calcular-basico">Calcular Itinerario Básico</button>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Cancelar</button>
+          <button class="btn btn-success" id="btn-iniciar-avanzado">
+            Iniciar Viaje
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal" id="modal-mejor-ruta">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Planificación De Mejor Ruta</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-grid">
+    <!-- R4: Interrupt route — wired by interruptionManager.js -->
+    <div
+      class="modal"
+      id="modal-interrumpir-ruta"
+      style="background: rgba(0, 0, 0, 0.35); backdrop-filter: none"
+    >
+      <div class="modal-dialog modal-sm">
+        <div class="modal-header">
+          <h3>Interrumpir Ruta</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Dropdown con todas las rutas activas -->
           <div class="form-group">
-            <label for="origen-mejor-ruta">Aeropuerto de Origen</label>
-            <select id="origen-mejor-ruta" class="form-control">
-              <option value="">Seleccione aeropuerto...</option>
+            <label for="select-ruta-bloquear">Ruta a interrumpir</label>
+            <select id="select-ruta-bloquear" class="form-control">
+              <option value="">— Selecciona una ruta —</option>
             </select>
           </div>
+
+          <!-- Motivo del bloqueo -->
           <div class="form-group">
-            <label for="destino-basico">Aeropuerto de Destino</label>
-            <select id="destino-basico" class="form-control">
-              <option value="">Seleccione aeropuerto...</option>
+            <label for="motivo-bloqueo">Motivo</label>
+            <select id="motivo-bloqueo" class="form-control">
+              <option value="clima">Condiciones meteorológicas adversas</option>
+              <option value="espacio">Cierre de espacio aéreo</option>
+              <option value="aerolinea">Cancelación de aerolínea</option>
+              <option value="otro">Otro</option>
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label>Criterios de Optimización</label>
-          <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:0.35rem">Individuales</div>
-          <div class="checkbox-row">
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="distance" /> Distancia
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="time" /> Tiempo
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="cost" /> Costo
-            </label>
-          </div>
-          <div style="font-size:0.75rem;color:var(--text-secondary);margin:0.5rem 0 0.35rem">Combinaciones</div>
-          <div class="checkbox-row">
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="distance+time" /> Distancia + Tiempo
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="distance+cost" /> Distancia + Costo
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="time+cost" /> Tiempo + Costo
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="criterio-basico" value="distance+time+cost" /> Distancia + Tiempo + Costo
-            </label>
-          </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btn-ver-bloqueos">
+            Gestionar Bloqueos
+          </button>
+          <button class="btn btn-danger" id="btn-confirmar-bloqueo" disabled>
+            Bloquear Ruta
+          </button>
         </div>
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="excluir-secundarios" />
-            Excluir aeropuertos secundarios
-          </label>
-        </div>
-        <div class="form-group">
-          <label>Tipos de Transporte</label>
-          <div class="checkbox-row">
-            <label class="checkbox-label">
-              <input type="checkbox" name="transporte-basico" value="Avión Comercial" /> Avión Comercial
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="transporte-basico" value="Avión Regional" /> Avión Regional
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="transporte-basico" value="Hélice" /> Hélice
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-cancel">Cancelar</button>
-        <button class="btn btn-success" id="btn-calcular-mejor-ruta">Calcular Ruta</button>
       </div>
     </div>
-  </div>
 
-  <!-- R3: Advanced planning — wired by dynamicTravelManager.js -->
-  <div class="modal" id="modal-planificacion-avanzada">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Planificación Avanzada - Modo Paso a Paso</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="origen-avanzado">Aeropuerto de Origen</label>
-          <select id="origen-avanzado" class="form-control">
-            <option value="">Seleccione aeropuerto...</option>
-          </select>
+    <!-- R4: Manage blocked routes + recalculate -->
+    <div class="modal" id="modal-gestionar-bloqueos">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Gestión de Rutas Bloqueadas</h3>
+          <button class="btn-close">&times;</button>
         </div>
-        <div class="form-group">
-          <label for="presupuesto-avanzado">Presupuesto Inicial (USD)</label>
-          <input type="number" id="presupuesto-avanzado" class="form-control" min="0" step="10" placeholder="500" />
-        </div>
-        <div class="alert alert-info">
-          <strong>Modo Avanzado:</strong> El viaje se ejecutará paso a paso.
-          Podrás tomar decisiones en cada aeropuerto sobre actividades, trabajos y rutas.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-cancel">Cancelar</button>
-        <button class="btn btn-success" id="btn-iniciar-avanzado">Iniciar Viaje</button>
-      </div>
-    </div>
-  </div>
+        <div class="modal-body">
+          <!-- Lista de rutas bloqueadas -->
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 0.75rem;
+            "
+          >
+            <h4 style="margin: 0; font-size: 0.9rem">
+              Rutas bloqueadas actualmente
+            </h4>
+            <button
+              class="btn btn-secondary"
+              id="btn-limpiar-todos-bloqueos"
+              style="padding: 0.25rem 0.75rem; font-size: 0.8rem"
+            >
+              Reactivar todas
+            </button>
+          </div>
+          <div id="blocked-routes-list">
+            <p style="font-size: 0.82rem; color: var(--text-secondary)">
+              No hay rutas bloqueadas.
+            </p>
+          </div>
 
-  <!-- R4: Interrupt route — wired by interruptionManager.js -->
-  <div class="modal" id="modal-interrumpir-ruta">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-header">
-        <h3>Interrumpir Ruta</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="margin-bottom:1rem;font-size:0.875rem;">
-          Haz clic sobre una arista en el mapa para seleccionar la ruta a bloquear.
-        </p>
-        <div class="form-group">
-          <label>Ruta seleccionada:</label>
-          <div id="ruta-seleccionada-info" class="alert alert-warning">
-            Ninguna ruta seleccionada
+          <!-- Sección recalcular ruta alternativa -->
+          <div
+            id="recalc-section"
+            style="
+              margin-top: 1.5rem;
+              border-top: 1px solid var(--border-color);
+              padding-top: 1rem;
+            "
+          >
+            <h4 style="font-size: 0.9rem; margin: 0 0 0.75rem">
+              Recalcular ruta alternativa
+            </h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="recalc-origin">Origen</label>
+                <select id="recalc-origin" class="form-control">
+                  <option value="">Seleccione aeropuerto…</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="recalc-destination">Destino</label>
+                <select id="recalc-destination" class="form-control">
+                  <option value="">Seleccione aeropuerto…</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="motivo-bloqueo">Motivo del bloqueo:</label>
-          <select id="motivo-bloqueo" class="form-control">
-            <option value="clima">Condiciones meteorológicas adversas</option>
-            <option value="espacio">Cierre de espacio aéreo</option>
-            <option value="aerolinea">Cancelación de aerolínea</option>
-            <option value="otro">Otro</option>
-          </select>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Cerrar</button>
+          <button class="btn btn-success" id="btn-recalcular-ruta">
+            Recalcular Ruta
+          </button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-cancel">Cancelar</button>
-        <button class="btn btn-danger" id="btn-confirmar-bloqueo" disabled>Bloquear Ruta</button>
-      </div>
     </div>
-  </div>
 
-  <!-- Configuration — wired by graphLoadManager.js -->
-  <div class="modal" id="modal-configuracion">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Configuración del Sistema</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <h4>Costos y Tiempos de Aeronaves</h4>
-        <table class="config-table">
-          <thead>
-            <tr>
-              <th>Aeronave</th>
-              <th>Costo (USD/km)</th>
-              <th>Tiempo (min/km)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Avión Comercial</td>
-              <td><input type="number" id="costo-comercial" class="form-control-sm" value="0.18" step="0.01" /></td>
-              <td><input type="number" id="tiempo-comercial" class="form-control-sm" value="0.7" step="0.1" /></td>
-            </tr>
-            <tr>
-              <td>Avión Regional</td>
-              <td><input type="number" id="costo-regional" class="form-control-sm" value="0.25" step="0.01" /></td>
-              <td><input type="number" id="tiempo-regional" class="form-control-sm" value="1.1" step="0.1" /></td>
-            </tr>
-            <tr>
-              <td>Hélice</td>
-              <td><input type="number" id="costo-helice" class="form-control-sm" value="0.12" step="0.01" /></td>
-              <td><input type="number" id="tiempo-helice" class="form-control-sm" value="2.5" step="0.1" /></td>
-            </tr>
-          </tbody>
-        </table>
-        <h4 class="mt-3">Parámetros del Viajero</h4>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="intervalo-alojamiento">Intervalo de Alojamiento (h)</label>
-            <input type="number" id="intervalo-alojamiento" class="form-control" value="20" />
-          </div>
-          <div class="form-group">
-            <label for="intervalo-alimentacion">Intervalo de Alimentación (h)</label>
-            <input type="number" id="intervalo-alimentacion" class="form-control" value="8" />
-          </div>
-          <div class="form-group">
-            <label for="umbral-trabajo">Umbral para Trabajos (%)</label>
-            <input type="number" id="umbral-trabajo" class="form-control" value="35" min="0" max="100" />
+    <!-- Configuration — wired by graphLoadManager.js -->
+    <div class="modal" id="modal-configuracion">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Configuración del Sistema</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <h4>Costos y Tiempos de Aeronaves</h4>
+          <table class="config-table">
+            <thead>
+              <tr>
+                <th>Aeronave</th>
+                <th>Costo (USD/km)</th>
+                <th>Tiempo (min/km)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Avión Comercial</td>
+                <td>
+                  <input
+                    type="number"
+                    id="costo-comercial"
+                    class="form-control-sm"
+                    value="0.18"
+                    step="0.01"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="tiempo-comercial"
+                    class="form-control-sm"
+                    value="0.7"
+                    step="0.1"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Avión Regional</td>
+                <td>
+                  <input
+                    type="number"
+                    id="costo-regional"
+                    class="form-control-sm"
+                    value="0.25"
+                    step="0.01"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="tiempo-regional"
+                    class="form-control-sm"
+                    value="1.1"
+                    step="0.1"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Hélice</td>
+                <td>
+                  <input
+                    type="number"
+                    id="costo-helice"
+                    class="form-control-sm"
+                    value="0.12"
+                    step="0.01"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="tiempo-helice"
+                    class="form-control-sm"
+                    value="2.5"
+                    step="0.1"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <h4 class="mt-3">Parámetros del Viajero</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="intervalo-alojamiento"
+                >Intervalo de Alojamiento (h)</label
+              >
+              <input
+                type="number"
+                id="intervalo-alojamiento"
+                class="form-control"
+                value="20"
+              />
+            </div>
+            <div class="form-group">
+              <label for="intervalo-alimentacion"
+                >Intervalo de Alimentación (h)</label
+              >
+              <input
+                type="number"
+                id="intervalo-alimentacion"
+                class="form-control"
+                value="8"
+              />
+            </div>
+            <div class="form-group">
+              <label for="umbral-trabajo">Umbral para Trabajos (%)</label>
+              <input
+                type="number"
+                id="umbral-trabajo"
+                class="form-control"
+                value="35"
+                min="0"
+                max="100"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="btn-restaurar-defaults">Restaurar Predeterminados</button>
-        <button class="btn btn-success" id="btn-guardar-config">Guardar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- R3: Activities — wired by dynamicTravelManager.js -->
-  <div class="modal" id="modal-actividades">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Actividades Disponibles</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="actividades-list"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-cancel">Omitir</button>
-        <button class="btn btn-success" id="btn-confirmar-actividades">Confirmar Selección</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- R3: Jobs — wired by dynamicTravelManager.js -->
-  <div class="modal" id="modal-trabajos">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Trabajos Disponibles</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-warning">
-          Tu presupuesto está por debajo del umbral. Puedes tomar un trabajo.
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btn-restaurar-defaults">
+            Restaurar Predeterminados
+          </button>
+          <button class="btn btn-success" id="btn-guardar-config">
+            Guardar
+          </button>
         </div>
-        <div id="trabajos-list"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-cancel">Omitir</button>
-        <button class="btn btn-success" id="btn-confirmar-trabajo">Confirmar</button>
       </div>
     </div>
-  </div>
 
-  <!-- R3: Transport — wired by dynamicTravelManager.js -->
-  <div class="modal" id="modal-transporte">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-header">
-        <h3>Seleccionar Transporte</h3>
-        <button class="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="transporte-list"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success" id="btn-confirmar-transporte">Confirmar</button>
+    <!-- R3: Activities — wired by dynamicTravelManager.js -->
+    <div class="modal" id="modal-actividades">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Actividades Disponibles</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="actividades-list"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Omitir</button>
+          <button class="btn btn-success" id="btn-confirmar-actividades">
+            Confirmar Selección
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ══════════════ LOADING OVERLAY ═══════════════════════ -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="spinner"></div>
-    <p id="loading-text">Procesando…</p>
-  </div>
+    <!-- R3: Jobs — wired by dynamicTravelManager.js -->
+    <div class="modal" id="modal-trabajos">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Trabajos Disponibles</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning">
+            Tu presupuesto está por debajo del umbral. Puedes tomar un trabajo.
+          </div>
+          <div id="trabajos-list"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-cancel">Omitir</button>
+          <button class="btn btn-success" id="btn-confirmar-trabajo">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
 
-  <!-- ══════════════ TOAST CONTAINER ═══════════════════════ -->
-  <div id="toast-container" class="sky-toast-container"></div>
+    <!-- R3: Transport — wired by dynamicTravelManager.js -->
+    <div class="modal" id="modal-transporte">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-header">
+          <h3>Seleccionar Transporte</h3>
+          <button class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="transporte-list"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" id="btn-confirmar-transporte">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
 
-  <script type="module" src="../js/services/graphLoadService.js"></script>
-  <script type="module" src="../js/models/graphRenderer.js"></script>
-  <script type="module" src="../js/pages/graphLoadManager.js"></script>
-  <script type="module" src="../js/pages/interruptionManager.js"></script>
-  <script type="module" src="../js/pages/routePerformanceManager.js"></script>
-  <script type="module" src="../js/pages/dynamicTravelManager.js"></script>
-  <script type="module" src="../js/pages/main.js"></script>
-</body>
+    <!-- ══════════════ LOADING OVERLAY ═══════════════════════ -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+      <p id="loading-text">Procesando…</p>
+    </div>
 
+    <!-- ══════════════ TOAST CONTAINER ═══════════════════════ -->
+    <div id="toast-container" class="sky-toast-container"></div>
+
+    <script type="module" src="../js/services/graphLoadService.js"></script>
+    <script type="module" src="../js/models/graphRenderer.js"></script>
+    <script type="module" src="../js/pages/graphLoadManager.js"></script>
+    <script type="module" src="../js/pages/interruptionManager.js"></script>
+    <script type="module" src="../js/pages/routePerformanceManager.js"></script>
+    <script type="module" src="../js/pages/dynamicTravelManager.js"></script>
+    <script type="module" src="../js/pages/main.js"></script>
+  </body>
 </html>

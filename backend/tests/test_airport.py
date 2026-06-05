@@ -2,7 +2,7 @@ from backend.utils.utils import readJson
 from backend.models.graph import Graph
 from backend.models.vertex import Vertex
 from backend.models.edge import Edge
-from backend.models.Airport import Airport
+from backend.models.airport import Airport
 from backend.services.reportService import FinalReport
 from pathlib import Path
 

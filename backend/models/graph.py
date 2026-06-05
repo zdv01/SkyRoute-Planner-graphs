@@ -21,65 +21,45 @@ class Graph:
         print("-------------------------------------")
 
     def dijkstra_simple(self, graph, start_id, destination_id):
-        # Get all the identifiers
+        """
+        Dijkstra shortest path. Skips blocked edges (R4 requirement).
+        """
         all_vertex = [v.identifier for v in graph.vertexes]
 
         dist = {v: math.inf for v in all_vertex}
         pred = {v: None for v in all_vertex}
         dist[start_id] = 0
-
         not_visited = set(all_vertex)
-
-        # Map ID → Vertex object for quick access
         map_vertexes = {v.identifier: v for v in graph.vertexes}
 
-        print("=== Iteration initial ===")
-        for v in all_vertex:
-            print(f"{v}: ({'∞' if dist[v] == math.inf else dist[v]}, {pred[v]})")
-        print()
-
         while not_visited:
-            # Choose the unvisited vertex with the shortest distance
             u = min(not_visited, key=lambda v: dist[v])
             if dist[u] == math.inf:
                 break
-
-            print(f"Processing vertex {u} with distance {dist[u]}")
             not_visited.remove(u)
-
             if u == destination_id:
-                print(f"\nDestination {destination_id} found. End of search.\n")
                 break
 
-            # Relax edges using the Edge structure
             current_vertex = map_vertexes[u]
             for edge in current_vertex.adjacencies:
-                v_vertex = edge.destination
-                v = v_vertex.identifier
+                if getattr(edge, "is_blocked", False):   # R4: skip blocked routes
+                    continue
+                v = edge.destination.identifier
                 if v in not_visited:
                     new_dist = dist[u] + edge.get_Weight()
                     if new_dist < dist[v]:
                         dist[v] = new_dist
                         pred[v] = u
-                        print(f"  Updated {v}: comes from {u}, new cost = {new_dist}")
 
-            print("\nCurrent tags:")
-            for v in all_vertex:
-                cost = "∞" if dist[v] == math.inf else dist[v]
-                print(f"{v}: ({cost}, {pred[v]})")
-            print()
-
-        # Rebuild shortest path
         path = []
         current = destination_id
         while current is not None:
             path.insert(0, current)
             current = pred[current]
 
-        print(
-            f"Path shorter than {start_id} a {destination_id}: {' → '.join(str(n) for n in path)}"
-        )
-        print(f"Total distance: {dist[destination_id]}")
+        if not path or path[0] != start_id:
+            return dist, pred, []
+
         return dist, pred, path
 
     def breadthFirstSearch_traversal(self, graph, initial_vertex_id):

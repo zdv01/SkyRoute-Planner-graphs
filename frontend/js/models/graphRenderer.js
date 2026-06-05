@@ -159,6 +159,10 @@ export class GraphRenderer {
     // Copy edge data as-is (source/target are IATA codes)
     this.links = links.map((l) => ({ ...l }));
 
+    // Cancel any in-progress flight animation
+    if (this._flightAnim) this._flightAnim.active = false;
+    this._flightAnim = null;
+
     // Reset interaction
     this.selectedNode = null;
     this.selectedEdge = null;
@@ -187,6 +191,9 @@ export class GraphRenderer {
 
   /** Clear all highlights and selections. */
   clearHighlight() {
+    if (this._flightAnim) this._flightAnim.active = false;
+    this._flightAnim = null;
+    this.highlightedPath = [];
     this.highlightedPath = [];
     this.highlightedSegments = [];
     this.selectedNode = null;

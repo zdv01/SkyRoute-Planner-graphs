@@ -44,6 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("btn-iniciar-avanzado")
     ?.addEventListener("click", _handleIniciarViaje);
 
+    // R4: Release step lock if a flight is interrupted mid-transit
+  document.addEventListener("skyroute:flightInterrupted", (e) => {
+    _stepLocked = false;
+    const { returnAirport } = e.detail;
+    if (_travelState) {
+      _travelState.current_node = returnAirport;
+      showToast2(`Viaje pausado. El avión regresó a ${returnAirport}.`, "warning", 5000);
+      _renderTravelPanel([], null);
+    }
+  });
+
   // Event delegation for panel actions (flight buttons + end journey)
   document.getElementById("itinerary-info")?.addEventListener("click", (e) => {
     if (e.target.closest("#btn-fin-viaje")) {
