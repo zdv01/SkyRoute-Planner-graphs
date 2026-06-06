@@ -1,6 +1,6 @@
 import json
 from models.graph import Graph
-from models.airport import Airport
+from models.Airport import Airport
 from models.edge import Edge
 
 

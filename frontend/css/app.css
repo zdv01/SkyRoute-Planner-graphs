@@ -546,6 +546,10 @@ body {
     color: white;
 }
 
+.btn-cancel {
+    margin-right: auto;
+}
+
 .btn-secondary:hover {
     background: var(--text-primary);
 }

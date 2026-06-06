@@ -24,6 +24,8 @@
  * @version 1.2
  */
 
+const FLIGHT_ANIM_DURATION_MS = 25_000; // universal duration per segment
+
 export class GraphRenderer {
   /**
    * @param {string} canvasId - ID of the <canvas> element to draw on.
@@ -1220,10 +1222,7 @@ export class GraphRenderer {
         : aircrafts;
       const transport = candidates[0] || aircrafts[0] || "Avión Comercial";
 
-      // flightTime is stored in minutes; 1 simulated minute = 1 real second → × 1000 ms
-      const flightMin =
-        link.flightTime > 0 ? link.flightTime : (link.distance || 0) * 0.07;
-      const durationMs = Math.max(flightMin * 1000, 500); // minimum 0.5 s for very short segments
+      const durationMs = FLIGHT_ANIM_DURATION_MS;
 
       segments.push({ from, to, transport, durationMs });
     }
@@ -1259,62 +1258,63 @@ export class GraphRenderer {
   }
 
   /**
- * Animate the plane travelling BACKWARDS along the segment it was flying.
- * The ball moves from its current position (startT) back to T=0 (origin).
- *
- * Why use the forward curve in reverse instead of the reverse edge?
- * → We want the ball to retrace the exact pixels it just crossed, which
- *   looks natural. Using a separate reverse edge would draw a different
- *   (parallel) curve, which would look wrong.
- *
- * @param {string}   from       - Origin IATA of the interrupted segment
- * @param {string}   to         - Destination IATA of the interrupted segment
- * @param {number}   [startT=1] - Current position along the curve (0–1)
- * @param {Function} [onComplete]
- */
+   * Animate the plane travelling BACKWARDS along the segment it was flying.
+   * The ball moves from its current position (startT) back to T=0 (origin).
+   *
+   * Why use the forward curve in reverse instead of the reverse edge?
+   * → We want the ball to retrace the exact pixels it just crossed, which
+   *   looks natural. Using a separate reverse edge would draw a different
+   *   (parallel) curve, which would look wrong.
+   *
+   * @param {string}   from       - Origin IATA of the interrupted segment
+   * @param {string}   to         - Destination IATA of the interrupted segment
+   * @param {number}   [startT=1] - Current position along the curve (0–1)
+   * @param {Function} [onComplete]
+   */
   animateReturn(from, to, startT = 1.0, onComplete = null) {
     if (this._flightAnim) this._flightAnim.active = false;
-  
+
     const link = this.links.find((l) => l.source === from && l.target === to);
     if (!link) {
       // Edge not found — skip animation and call complete immediately
       onComplete?.();
       return;
     }
-  
-    const flightMin  = link.flightTime > 0
-      ? link.flightTime
-      : (link.distance || 0) * 0.07;
-    // Duration proportional to how far along the curve the plane already is
-    const durationMs = Math.max(startT * flightMin * 1000, 600);
-  
+
+    const durationMs = FLIGHT_ANIM_DURATION_MS;
+
     this._flightAnim = {
-      isReturn : true,
-      from, to, link,
+      isReturn: true,
+      from,
+      to,
+      link,
       startT,
-      currentT : startT,   // counts DOWN to 0
+      currentT: startT, // counts DOWN to 0
       startTime: null,
       durationMs,
-      active   : true,
+      active: true,
       onComplete,
     };
     requestAnimationFrame((ts) => this._returnStep(ts));
   }
-  
+
   _returnStep(timestamp) {
     const anim = this._flightAnim;
     if (!anim?.active || !anim.isReturn) return;
-  
+
     if (anim.startTime === null) anim.startTime = timestamp;
-  
-    const progress  = Math.min((timestamp - anim.startTime) / anim.durationMs, 1);
-    anim.currentT   = anim.startT * (1 - progress); // startT → 0
-  
+
+    const progress = Math.min(
+      (timestamp - anim.startTime) / anim.durationMs,
+      1,
+    );
+    anim.currentT = anim.startT * (1 - progress); // startT → 0
+
     this._draw();
-  
+
     if (progress >= 1) {
-      anim.active        = false;
-      this._flightAnim   = null;
+      anim.active = false;
+      this._flightAnim = null;
       this._draw();
       anim.onComplete?.();
       return;
@@ -1325,85 +1325,85 @@ export class GraphRenderer {
   _drawFlightBall() {
     const anim = this._flightAnim;
     if (!anim?.active) return;
-  
+
     // ── Return animation (plane travels back to segment origin) ──
     if (anim.isReturn) {
       const sourceNode = this.nodeMap[anim.from];
       const targetNode = this.nodeMap[anim.to];
       if (!sourceNode || !targetNode) return;
-  
+
       const curve = this._edgeCurve(sourceNode, targetNode, anim.link);
       if (!curve) return;
-  
-      const pos   = this._quadraticPoint(curve, anim.currentT);
-      const tan   = this._quadraticTangent(curve, anim.currentT);
+
+      const pos = this._quadraticPoint(curve, anim.currentT);
+      const tan = this._quadraticTangent(curve, anim.currentT);
       // Add π so the arrow points BACKWARDS (returning to origin)
       const angle = Math.atan2(tan.y, tan.x) + Math.PI;
       this._drawBallAt(pos, angle, "#ef4444"); // red = emergency return
       return;
     }
-  
+
     // ── Normal forward animation ─────────────────────────────────
-    const seg        = anim.segments[anim.currentSeg];
-    const t          = anim.currentT;
+    const seg = anim.segments[anim.currentSeg];
+    const t = anim.currentT;
     const sourceNode = this.nodeMap[seg.from];
     const targetNode = this.nodeMap[seg.to];
-    const link       = this.links.find(
+    const link = this.links.find(
       (l) => l.source === seg.from && l.target === seg.to,
     );
     if (!sourceNode || !targetNode || !link) return;
-  
+
     const curve = this._edgeCurve(sourceNode, targetNode, link);
     if (!curve) return;
-  
-    const pos   = this._quadraticPoint(curve, t);
-    const tan   = this._quadraticTangent(curve, t);
+
+    const pos = this._quadraticPoint(curve, t);
+    const tan = this._quadraticTangent(curve, t);
     const angle = Math.atan2(tan.y, tan.x);
     this._drawBallAt(pos, angle, this._aircraftColor(seg.transport));
   }
 
   /**
- * Draw the animated plane dot + directional arrow.
- * Shared by both the forward and the return animation.
- *
- * @param {{ x: number, y: number }} pos   - World-space position on the curve
- * @param {number}                   angle - Radians; the arrow points this way
- * @param {string}                   color - CSS colour for the dot and arrow
- */
+   * Draw the animated plane dot + directional arrow.
+   * Shared by both the forward and the return animation.
+   *
+   * @param {{ x: number, y: number }} pos   - World-space position on the curve
+   * @param {number}                   angle - Radians; the arrow points this way
+   * @param {string}                   color - CSS colour for the dot and arrow
+   */
   _drawBallAt(pos, angle, color) {
     const ctx = this.ctx;
     ctx.save();
     ctx.translate(pos.x, pos.y);
     ctx.rotate(angle);
-  
+
     // ── Dot ─────────────────────────────────────────────────────
     ctx.beginPath();
     ctx.arc(0, 0, 10, 0, Math.PI * 2);
-    ctx.fillStyle   = color;
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth   = 2.5;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
-  
+
     // ── Directional arrow above the dot ─────────────────────────
     const arrowY = -20;
     ctx.strokeStyle = color;
-    ctx.lineWidth   = 2.5;
-    ctx.lineCap     = "round";
-    ctx.lineJoin    = "round";
-  
-    ctx.beginPath();          // shaft
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    ctx.beginPath(); // shaft
     ctx.moveTo(-7, arrowY);
-    ctx.lineTo( 7, arrowY);
+    ctx.lineTo(7, arrowY);
     ctx.stroke();
-  
-    ctx.beginPath();          // arrowhead
+
+    ctx.beginPath(); // arrowhead
     ctx.moveTo(7, arrowY);
     ctx.lineTo(2, arrowY - 5);
     ctx.moveTo(7, arrowY);
     ctx.lineTo(2, arrowY + 5);
     ctx.stroke();
-  
+
     ctx.restore();
   }
 

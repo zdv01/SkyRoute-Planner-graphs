@@ -34,14 +34,21 @@ class InterruptionService:
         if not edge_found:
             return {"success": False, "message": f"Route {origin_id} → {destination_id} not found"}
 
-        edge_found.block()
+        already_blocked = any(
+            r["origin"] == origin_id and r["destination"] == destination_id
+            for r in self.blocked_routes
+        )
+        if not already_blocked:
+            edge_found.block()
+            self.blocked_routes.append({
+                "origin": origin_id,
+                "destination": destination_id,
+                "reason": reason,
+                "edge": edge_found,
+            })
 
-        self.blocked_routes.append({
-            "origin": origin_id,
-            "destination": destination_id,
-            "reason": reason,
-            "edge": edge_found,
-        })
+        # Block reverse direction if it exists and is not already blocked
+        self._block_reverse(destination_id, origin_id, reason)
 
         return {
             "success": True,
@@ -50,7 +57,7 @@ class InterruptionService:
                 "origin": origin_id,
                 "destination": destination_id,
                 "reason": reason,
-                "distanciaKm": getattr(edge_found, "distanceKm", 0),  # FIX: was 'distanciaKm'
+                "distanciaKm": getattr(edge_found, "distanceKm", 0),
             },
         }
 
@@ -61,12 +68,14 @@ class InterruptionService:
                 route_to_remove = route
                 break
 
-        if route_to_remove:
-            route_to_remove["edge"].unblock()
-            self.blocked_routes.remove(route_to_remove)
-            return {"success": True, "message": f"Route {origin_id} → {destination_id} reactivated"}
+        if not route_to_remove:
+            return {"success": False, "message": "Route was not blocked"}
 
-        return {"success": False, "message": "Route was not blocked"}
+        route_to_remove["edge"].unblock()
+        self.blocked_routes.remove(route_to_remove)
+        # Also unblock the reverse direction if it was blocked
+        self._unblock_reverse(destination_id, origin_id)
+        return {"success": True, "message": f"Route {origin_id} → {destination_id} reactivated"}
 
     def clear_all_blocks(self):
         for route in self.blocked_routes:
@@ -164,3 +173,34 @@ class InterruptionService:
             if vertex.identifier == vertex_id:
                 return vertex
         return None
+
+    def _block_reverse(self, origin_id: str, destination_id: str, reason: str) -> None:
+        already = any(
+            r["origin"] == origin_id and r["destination"] == destination_id
+            for r in self.blocked_routes
+        )
+        if already:
+            return
+        origin_vertex = self._find_vertex(origin_id)
+        if not origin_vertex:
+            return
+        for edge in origin_vertex.adjacencies:
+            if edge.destination.identifier == destination_id:
+                edge.block()
+                self.blocked_routes.append({
+                    "origin": origin_id,
+                    "destination": destination_id,
+                    "reason": reason,
+                    "edge": edge,
+                })
+                return
+
+    def _unblock_reverse(self, origin_id: str, destination_id: str) -> None:
+        route_to_remove = None
+        for route in self.blocked_routes:
+            if route["origin"] == origin_id and route["destination"] == destination_id:
+                route_to_remove = route
+                break
+        if route_to_remove:
+            route_to_remove["edge"].unblock()
+            self.blocked_routes.remove(route_to_remove)

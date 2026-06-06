@@ -49,10 +49,31 @@ document.addEventListener("DOMContentLoaded", () => {
     _stepLocked = false;
     const { returnAirport } = e.detail;
     if (_travelState) {
+      // Revertir el vuelo interrumpido: restaurar estado pre-vuelo completo
+      if (window._skyRoutePreFlightSnapshot) {
+        const snap = window._skyRoutePreFlightSnapshot;
+        _travelState.current_budget   = snap.budget;
+        _travelState.visited          = snap.visited;
+        _travelState.time_since_sleep = snap.timeSinceSleep;
+        _travelState.time_since_food  = snap.timeSinceFood;
+        _travelState.total_time_mins  = snap.totalTimeMins;
+        _travelState.history = (_travelState.history || []).slice(0, snap.historyLength);
+        window._skyRoutePreFlightSnapshot = null;
+      }
       _travelState.current_node = returnAirport;
-      showToast2(`Viaje pausado. El avión regresó a ${returnAirport}.`, "warning", 5000);
-      _renderTravelPanel([], null);
+      window._skyRouteTravelState = _travelState;
+      showToast2(`Vuelo cancelado y reembolsado. El avión regresó a ${returnAirport}.`, "warning", 6000);
+      _refreshFlightsOnly();
     }
+  });
+
+  // R4: Recálculo de ruta alternativa mientras viaje avanzado está activo
+  document.addEventListener("skyroute:routeRecalculated", () => {
+    _refreshFlightsOnly();
+  });
+
+  document.addEventListener("skyroute:routeBlocked", () => {
+    _refreshFlightsOnly();
   });
 
   // Event delegation for panel actions (flight buttons + end journey)
@@ -116,6 +137,7 @@ async function _handleIniciarViaje() {
     visited: [],
     history: [],
   };
+  window._skyRouteTravelState = _travelState;
   window._skyRouteLastTravelState = null;
   _currentFlights = [];
 
@@ -125,6 +147,19 @@ async function _handleIniciarViaje() {
     '<div class="empty-state"><p>Iniciando viaje…</p></div>',
   );
   await _runNextStep();
+}
+
+// ─── Refresh flights without triggering job/activity modals ──
+
+async function _refreshFlightsOnly() {
+  if (!_travelState) return;
+  try {
+    const resp = await getNextStepOptions(_travelState);
+    _currentFlights = resp?.options?.flights || [];
+    _renderTravelPanel(_currentFlights, resp?.suggestion ?? null);
+  } catch {
+    _renderTravelPanel([], null);
+  }
 }
 
 // ─── Core loop ───────────────────────────────────────────────
@@ -209,6 +244,7 @@ async function _processAction(type, details) {
   }
 
   _travelState = result.new_state;
+  window._skyRouteTravelState = _travelState;
   return result.new_state;
 }
 
@@ -249,6 +285,7 @@ function _endJourney() {
   getRenderer()?.clearHighlight();
  
   _travelState   = null;
+  window._skyRouteTravelState = null;
   _currentFlights = [];
   _stepLocked    = false;
 }
@@ -390,8 +427,19 @@ async function _showTransportModal(flights) {
     return;
   }
 
+  // Guardar snapshot antes de procesar: si el vuelo se interrumpe se puede revertir
+  window._skyRoutePreFlightSnapshot = {
+    budget:        _travelState.current_budget,
+    visited:       [..._travelState.visited],
+    timeSinceSleep: _travelState.time_since_sleep,
+    timeSinceFood:  _travelState.time_since_food,
+    totalTimeMins:  _travelState.total_time_mins,
+    historyLength:  (_travelState.history || []).length,
+  };
+
   const result = await _processAction("flight", flightOption);
   if (!result) {
+    window._skyRoutePreFlightSnapshot = null;
     _stepLocked = false;
     return;
   }
@@ -401,6 +449,7 @@ async function _showTransportModal(flights) {
   const to = _travelState.current_node;
   getRenderer()?.setCurrentNode(to);
   await _waitForFlight(from, to, flightOption.aircraft);
+  window._skyRoutePreFlightSnapshot = null; // vuelo completado exitosamente
 
   showToast2(`Llegaste a ${flightOption.to}.`, "info", 2500);
   await _runNextStep();

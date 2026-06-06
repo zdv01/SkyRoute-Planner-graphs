@@ -24,7 +24,11 @@ import {
   clearAllBlocks,
 } from "../services/interruptionService.js";
 
-import { getRenderer, getNetworkData, requireNetwork } from "./graphLoadManager.js";
+import {
+  getRenderer,
+  getNetworkData,
+  requireNetwork,
+} from "./graphLoadManager.js";
 
 import {
   showToast2,
@@ -38,7 +42,6 @@ import {
 // ════════════════════════════════════════════════════════════
 
 document.addEventListener("DOMContentLoaded", () => {
-
   document
     .getElementById("btn-interrumpir-ruta")
     ?.addEventListener("click", () =>
@@ -92,10 +95,14 @@ function _populateRouteSelect() {
 
   const active = (getNetworkData()?.links ?? [])
     .filter((l) => !l.isBlocked)
-    .sort((a, b) => a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
+    .sort(
+      (a, b) =>
+        a.source.localeCompare(b.source) || a.target.localeCompare(b.target),
+    );
 
   if (active.length === 0) {
-    sel.innerHTML = '<option value="">No hay rutas activas disponibles</option>';
+    sel.innerHTML =
+      '<option value="">No hay rutas activas disponibles</option>';
     return;
   }
 
@@ -130,7 +137,11 @@ async function _handleConfirmBlock() {
     }
 
     getRenderer()?.updateEdgeState(source, target, true);
+    getRenderer()?.updateEdgeState(target, source, true);
     _updateToolbarStats();
+    document.dispatchEvent(
+      new CustomEvent("skyroute:routeBlocked", { detail: { source, target } }),
+    );
     _checkInTransitInterruption(source, target);
 
     showToast2(`Ruta ${source} → ${target} bloqueada.`, "success");
@@ -152,7 +163,7 @@ async function _handleConfirmBlock() {
 
 function _checkInTransitInterruption(blockedOrigin, blockedDest) {
   const renderer = getRenderer();
-  const anim     = renderer?._flightAnim;
+  const anim = renderer?._flightAnim;
   if (!anim?.active || anim.isReturn) return;
 
   const currentSeg = anim.segments?.[anim.currentSeg];
@@ -161,10 +172,10 @@ function _checkInTransitInterruption(blockedOrigin, blockedDest) {
   // ── Case A: Plane is currently flying the blocked segment ──────────────
   if (currentSeg.from === blockedOrigin && currentSeg.to === blockedDest) {
     const finalDest = anim.segments.at(-1)?.to ?? "";
-    const startT    = anim.currentT ?? 1.0;
+    const startT = anim.currentT ?? 1.0;
 
     // Stop forward animation
-    anim.active          = false;
+    anim.active = false;
     renderer._flightAnim = null;
     renderer.clearHighlight();
 
@@ -206,7 +217,7 @@ function _checkInTransitInterruption(blockedOrigin, blockedDest) {
     (seg, idx) =>
       idx > anim.currentSeg &&
       seg.from === blockedOrigin &&
-      seg.to   === blockedDest,
+      seg.to === blockedDest,
   );
 
   if (futureSegIdx === -1) return; // Blocked route is not in the planned path
@@ -215,7 +226,7 @@ function _checkInTransitInterruption(blockedOrigin, blockedDest) {
 
   showToast2(
     `Ruta ${blockedOrigin} → ${blockedDest} bloqueada. ` +
-    `El itinerario se recalculará automáticamente al llegar a ${blockedOrigin}.`,
+      `El itinerario se recalculará automáticamente al llegar a ${blockedOrigin}.`,
     "warning",
     7000,
   );
@@ -244,7 +255,7 @@ async function _handleAutoReroute(origin, finalDest) {
     if (!result.success) {
       showToast2(
         `No hay ruta alternativa desde ${origin} a ${finalDest}. ` +
-        `Todas las rutas disponibles están bloqueadas.`,
+          `Todas las rutas disponibles están bloqueadas.`,
         "error",
         7000,
       );
@@ -301,12 +312,28 @@ async function _handleAutoReroute(origin, finalDest) {
 
 async function _openManager(scrollToRecalc = false) {
   await _refreshBlockedList();
+  _syncRecalcOriginWithTrip();
   openModal("modal-gestionar-bloqueos");
   if (scrollToRecalc) {
     setTimeout(
-      () => document.getElementById("recalc-section")?.scrollIntoView({ behavior: "smooth" }),
+      () =>
+        document
+          .getElementById("recalc-section")
+          ?.scrollIntoView({ behavior: "smooth" }),
       300,
     );
+  }
+}
+
+function _syncRecalcOriginWithTrip() {
+  const oSel = document.getElementById("recalc-origin");
+  if (!oSel) return;
+  const node = window._skyRouteTravelState?.current_node;
+  if (node) {
+    oSel.value = node;
+    oSel.disabled = true;
+  } else {
+    oSel.disabled = false;
   }
 }
 
@@ -318,7 +345,7 @@ async function _refreshBlockedList() {
     '<p style="font-size:0.82rem;color:var(--text-secondary)">Consultando red…</p>';
 
   try {
-    const status  = await getNetworkStatus();
+    const status = await getNetworkStatus();
     const blocked = status.blocked_routes_detail || [];
 
     if (blocked.length === 0) {
@@ -362,8 +389,12 @@ window._skyRouteUnblock = async function (origin, destination) {
   showLoading(true, `Desbloqueando ${origin} → ${destination}…`);
   try {
     const result = await unblockRoute(origin, destination);
-    if (!result.success) { showToast2(result.message || "Error.", "error"); return; }
+    if (!result.success) {
+      showToast2(result.message || "Error.", "error");
+      return;
+    }
     getRenderer()?.updateEdgeState(origin, destination, false);
+    getRenderer()?.updateEdgeState(destination, origin, false);
     _updateToolbarStats();
     showToast2(`Ruta ${origin} → ${destination} reactivada.`, "success");
     await _refreshBlockedList();
@@ -379,7 +410,9 @@ window._skyRoutePreFillRecalc = function (origin, destination) {
   const dSel = document.getElementById("recalc-destination");
   if (oSel) oSel.value = origin;
   if (dSel) dSel.value = destination;
-  document.getElementById("recalc-section")?.scrollIntoView({ behavior: "smooth" });
+  document
+    .getElementById("recalc-section")
+    ?.scrollIntoView({ behavior: "smooth" });
 };
 
 // ════════════════════════════════════════════════════════════
@@ -387,8 +420,9 @@ window._skyRoutePreFillRecalc = function (origin, destination) {
 // ════════════════════════════════════════════════════════════
 
 async function _handleRecalculate() {
-  const origin      = document.getElementById("recalc-origin")?.value      ?? "";
-  const destination = document.getElementById("recalc-destination")?.value ?? "";
+  const origin = document.getElementById("recalc-origin")?.value ?? "";
+  const destination =
+    document.getElementById("recalc-destination")?.value ?? "";
 
   if (!origin || !destination) {
     showToast2("Selecciona aeropuerto de origen y destino.", "warning");
@@ -404,7 +438,10 @@ async function _handleRecalculate() {
     const result = await recalculateRoute(origin, destination);
 
     if (!result.success) {
-      showToast2(result.message || "No existe ruta alternativa disponible.", "warning");
+      showToast2(
+        result.message || "No existe ruta alternativa disponible.",
+        "warning",
+      );
       return;
     }
 
@@ -432,12 +469,18 @@ async function _handleRecalculate() {
 // ════════════════════════════════════════════════════════════
 
 function _setAltRoutePanel(result) {
+  // Si hay un viaje avanzado activo, no sobreescribir su panel — solo refrescar vuelos
+  if (window._skyRouteTravelState) {
+    document.dispatchEvent(new CustomEvent("skyroute:routeRecalculated"));
+    return;
+  }
+
   const el = document.getElementById("itinerary-info");
   if (!el) return;
 
   const pathAttr = result.path.join(",");
-  const pathStr  = result.path.join(" → ");
-  const stops    = result.path.length - 1;
+  const pathStr = result.path.join(" → ");
+  const stops = result.path.length - 1;
 
   el.innerHTML = `
     <div style="font-family:inherit">
@@ -541,8 +584,10 @@ function _clearRecalcSelects() {
 function _updateToolbarStats() {
   const networkData = getNetworkData();
   if (!networkData) return;
-  const total        = networkData.links?.length ?? 0;
-  const blockedCount = getRenderer()?.links?.filter((l) => l.isBlocked).length ?? 0;
+  const total = networkData.links?.length ?? 0;
+  const blockedCount =
+    getRenderer()?.links?.filter((l) => l.isBlocked).length ?? 0;
   const el = document.getElementById("total-rutas");
-  if (el) el.textContent = `${total - blockedCount} activas · ${blockedCount} bloqueadas`;
+  if (el)
+    el.textContent = `${total - blockedCount} activas · ${blockedCount} bloqueadas`;
 }
