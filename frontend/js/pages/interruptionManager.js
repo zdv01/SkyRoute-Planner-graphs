@@ -5,9 +5,13 @@
  *  1. "Interrumpir Ruta" → open modal, populate <select> with active routes
  *  2. User picks a route. Flight animation keeps running behind the modal.
  *  3. Confirm → block on backend, edge turns red/dashed on canvas.
- *  4. If the animated ball is flying on that exact segment → stop forward
- *     motion and play animateReturn() so the ball travels visually back
- *     to the segment origin before opening the manager.
+ *  4a. If the animated ball is flying THAT segment right now → stop forward
+ *      motion and play animateReturn() so the ball travels visually back
+ *      to the segment origin before opening the manager.
+ *  4b. [NEW] If the blocked segment is a FUTURE segment in the planned path →
+ *      truncate the animation at the diversion node (the segment's origin),
+ *      and automatically recalculate + display an alternative route when
+ *      the plane arrives there.
  *  5. Recalculate → highlight path on canvas AND render it in the
  *     "Itinerario Calculado" left panel so the user can execute it.
  */
@@ -140,7 +144,10 @@ async function _handleConfirmBlock() {
 }
 
 // ════════════════════════════════════════════════════════════
-// In-transit interruption with return animation
+// In-transit interruption detection
+// Handles two cases:
+//   A) The plane is CURRENTLY flying the blocked segment → return animation
+//   B) The blocked segment is a FUTURE segment          → auto-reroute on arrival
 // ════════════════════════════════════════════════════════════
 
 function _checkInTransitInterruption(blockedOrigin, blockedDest) {
@@ -150,40 +157,142 @@ function _checkInTransitInterruption(blockedOrigin, blockedDest) {
 
   const currentSeg = anim.segments?.[anim.currentSeg];
   if (!currentSeg) return;
-  if (currentSeg.from !== blockedOrigin || currentSeg.to !== blockedDest) return;
+
+  // ── Case A: Plane is currently flying the blocked segment ──────────────
+  if (currentSeg.from === blockedOrigin && currentSeg.to === blockedDest) {
+    const finalDest = anim.segments.at(-1)?.to ?? "";
+    const startT    = anim.currentT ?? 1.0;
+
+    // Stop forward animation
+    anim.active          = false;
+    renderer._flightAnim = null;
+    renderer.clearHighlight();
+
+    showToast2(
+      `Vuelo interrumpido. El avión regresa a ${blockedOrigin}…`,
+      "warning",
+      7000,
+    );
+
+    // Animate ball returning to origin along the same curve (reversed)
+    renderer.animateReturn(blockedOrigin, blockedDest, startT, () => {
+      renderer.setCurrentNode(blockedOrigin);
+
+      document.dispatchEvent(
+        new CustomEvent("skyroute:flightInterrupted", {
+          detail: { returnAirport: blockedOrigin, finalDestination: finalDest },
+        }),
+      );
+
+      setTimeout(() => {
+        const oSel = document.getElementById("recalc-origin");
+        const dSel = document.getElementById("recalc-destination");
+        if (oSel) oSel.value = blockedOrigin;
+        if (dSel && finalDest) dSel.value = finalDest;
+        _openManager(true);
+      }, 600);
+    });
+    return;
+  }
+
+  // ── Case B: Blocked segment is a FUTURE leg of the planned path ────────
+  //
+  // The plane has NOT reached blockedOrigin yet. We:
+  //  1. Truncate anim.segments so the animation stops naturally at
+  //     blockedOrigin (the last reachable node before the blocked leg).
+  //  2. Override onComplete to fire auto-reroute once the plane lands there.
+  //
+  const futureSegIdx = (anim.segments ?? []).findIndex(
+    (seg, idx) =>
+      idx > anim.currentSeg &&
+      seg.from === blockedOrigin &&
+      seg.to   === blockedDest,
+  );
+
+  if (futureSegIdx === -1) return; // Blocked route is not in the planned path
 
   const finalDest = anim.segments.at(-1)?.to ?? "";
-  const startT    = anim.currentT ?? 1.0;
-
-  // Stop forward animation
-  anim.active          = false;
-  renderer._flightAnim = null;
-  renderer.clearHighlight();
 
   showToast2(
-    `Vuelo interrumpido. El avión regresa a ${blockedOrigin}…`,
+    `Ruta ${blockedOrigin} → ${blockedDest} bloqueada. ` +
+    `El itinerario se recalculará automáticamente al llegar a ${blockedOrigin}.`,
     "warning",
     7000,
   );
 
-  // Animate ball returning to origin along the same curve (reversed)
-  renderer.animateReturn(blockedOrigin, blockedDest, startT, () => {
+  // Truncate: keep only segments up to (but not including) the blocked one.
+  // The plane will now stop at blockedOrigin instead of flying onwards.
+  anim.segments = anim.segments.slice(0, futureSegIdx);
+
+  // Replace the completion callback with our auto-reroute trigger.
+  anim.onComplete = () => {
     renderer.setCurrentNode(blockedOrigin);
+    _handleAutoReroute(blockedOrigin, finalDest);
+  };
+}
 
-    document.dispatchEvent(
-      new CustomEvent("skyroute:flightInterrupted", {
-        detail: { returnAirport: blockedOrigin, finalDestination: finalDest },
-      }),
-    );
+// ════════════════════════════════════════════════════════════
+// Auto-reroute: called when the plane arrives at the diversion node
+// ════════════════════════════════════════════════════════════
 
-    setTimeout(() => {
+async function _handleAutoReroute(origin, finalDest) {
+  showLoading(true, `Recalculando ruta alternativa desde ${origin}…`);
+  try {
+    const result = await recalculateRoute(origin, finalDest);
+    showLoading(false);
+
+    if (!result.success) {
+      showToast2(
+        `No hay ruta alternativa desde ${origin} a ${finalDest}. ` +
+        `Todas las rutas disponibles están bloqueadas.`,
+        "error",
+        7000,
+      );
+
+      // Update the itinerary panel to reflect the dead-end
+      const el = document.getElementById("itinerary-info");
+      if (el) {
+        el.innerHTML = `
+          <div style="font-family:inherit">
+            <div style="padding:0.6rem 0 0.4rem;
+                        border-bottom:2px solid var(--danger-color,#ef4444);
+                        margin-bottom:0.75rem">
+              <h4 style="margin:0;font-size:0.875rem;color:var(--danger-color,#ef4444)">
+                Sin ruta alternativa disponible
+              </h4>
+            </div>
+            <p style="font-size:0.82rem;color:var(--text-secondary)">
+              El avión se detuvo en <strong>${origin}</strong>. No existe ninguna
+              ruta que alcance <strong>${finalDest}</strong> sin pasar por tramos
+              bloqueados.
+            </p>
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.5rem">
+              Desbloquea alguna ruta e intenta recalcular desde el gestor de bloqueos.
+            </p>
+          </div>`;
+      }
+
+      // Pre-fill recalc selects so the user can retry manually
       const oSel = document.getElementById("recalc-origin");
       const dSel = document.getElementById("recalc-destination");
-      if (oSel) oSel.value = blockedOrigin;
+      if (oSel) oSel.value = origin;
       if (dSel && finalDest) dSel.value = finalDest;
-      _openManager(true);
-    }, 600);
-  });
+      return;
+    }
+
+    // ── Success: show the alternative route ──────────────────────────────
+    getRenderer()?.highlightPath(result.path);
+    _setAltRoutePanel(result);
+
+    showToast2(
+      `Ruta alternativa calculada automáticamente: ${result.path.join(" → ")} · ${result.total_distance} km`,
+      "success",
+      9000,
+    );
+  } catch (err) {
+    showLoading(false);
+    showToast2(`Error al recalcular ruta: ${err.message}`, "error");
+  }
 }
 
 // ════════════════════════════════════════════════════════════
@@ -274,7 +383,7 @@ window._skyRoutePreFillRecalc = function (origin, destination) {
 };
 
 // ════════════════════════════════════════════════════════════
-// Recalculate alternative route
+// Recalculate alternative route (manual trigger from modal)
 // ════════════════════════════════════════════════════════════
 
 async function _handleRecalculate() {
@@ -320,8 +429,6 @@ async function _handleRecalculate() {
 
 // ════════════════════════════════════════════════════════════
 // Render recalculated route in the "Itinerario Calculado" panel.
-// btn-visualizar and btn-ejecutar-ruta are picked up by the
-// event delegation already wired in routePerformanceManager.
 // ════════════════════════════════════════════════════════════
 
 function _setAltRoutePanel(result) {

@@ -194,10 +194,10 @@ export class GraphRenderer {
     if (this._flightAnim) this._flightAnim.active = false;
     this._flightAnim = null;
     this.highlightedPath = [];
-    this.highlightedPath = [];
     this.highlightedSegments = [];
     this.selectedNode = null;
     this.selectedEdge = null;
+    this.currentNode = null;
     this._draw();
   }
 
