@@ -1222,7 +1222,10 @@ export class GraphRenderer {
         : aircrafts;
       const transport = candidates[0] || aircrafts[0] || "Avión Comercial";
 
-      const durationMs = FLIGHT_ANIM_DURATION_MS;
+      // flightTime is stored in minutes; 1 simulated minute = 1 real second → × 1000 ms
+      const flightMin =
+        link.flightTime > 0 ? link.flightTime : (link.distance || 0) * 0.07;
+      const durationMs = 20000; // minimum 0.5 s for very short segments
 
       segments.push({ from, to, transport, durationMs });
     }
@@ -1281,7 +1284,10 @@ export class GraphRenderer {
       return;
     }
 
-    const durationMs = FLIGHT_ANIM_DURATION_MS;
+    const flightMin =
+      link.flightTime > 0 ? link.flightTime : (link.distance || 0) * 0.07;
+    // Duration proportional to how far along the curve the plane already is
+    const durationMs = Math.max(startT * flightMin * 1000, 600);
 
     this._flightAnim = {
       isReturn: true,
