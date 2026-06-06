@@ -1223,7 +1223,7 @@ export class GraphRenderer {
       // flightTime is stored in minutes; 1 simulated minute = 1 real second → × 1000 ms
       const flightMin =
         link.flightTime > 0 ? link.flightTime : (link.distance || 0) * 0.07;
-      const durationMs = Math.max(flightMin * 1000, 500); // minimum 0.5 s for very short segments
+      const durationMs = 20000; // minimum 0.5 s for very short segments
 
       segments.push({ from, to, transport, durationMs });
     }
@@ -1286,14 +1286,14 @@ export class GraphRenderer {
       ? link.flightTime
       : (link.distance || 0) * 0.07;
     // Duration proportional to how far along the curve the plane already is
-    const durationMs = Math.max(startT * flightMin * 1000, 600);
+    const durationMs = 20000;
   
     this._flightAnim = {
       isReturn : true,
       from, to, link,
       startT,
       currentT : startT,   // counts DOWN to 0
-      startTime: null,
+      startTime: 0,
       durationMs,
       active   : true,
       onComplete,
