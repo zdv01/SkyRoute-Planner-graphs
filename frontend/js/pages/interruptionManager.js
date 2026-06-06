@@ -2,12 +2,14 @@
  * interruptionManager.js — R4: Route interruptions
  *
  * Flow:
- *  1. "Interrumpir Ruta" → open modal, populate <select> with all active routes
- *  2. User picks a route (e.g. ASU → MVD). Flight animation keeps running behind modal.
+ *  1. "Interrumpir Ruta" → open modal, populate <select> with active routes
+ *  2. User picks a route. Flight animation keeps running behind the modal.
  *  3. Confirm → block on backend, edge turns red/dashed on canvas.
- *  4. If the animation is flying on that exact segment → stop it, snap plane
- *     back to segment origin, dispatch skyroute:flightInterrupted.
- *  5. Manager modal: list blocked routes, unblock individually, recalculate alternative.
+ *  4. If the animated ball is flying on that exact segment → stop forward
+ *     motion and play animateReturn() so the ball travels visually back
+ *     to the segment origin before opening the manager.
+ *  5. Recalculate → highlight path on canvas AND render it in the
+ *     "Itinerario Calculado" left panel so the user can execute it.
  */
 
 import {
@@ -33,18 +35,16 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ── Toolbar: "Interrumpir Ruta" ──────────────────────────
   document
     .getElementById("btn-interrumpir-ruta")
     ?.addEventListener("click", () =>
       requireNetwork(() => {
-        _populateRouteSelect();   // fill dropdown with current active routes
+        _populateRouteSelect();
         _resetBlockModal();
         openModal("modal-interrumpir-ruta");
       }),
     );
 
-  // ── Enable confirm button only when a route is chosen ────
   document
     .getElementById("select-ruta-bloquear")
     ?.addEventListener("change", (e) => {
@@ -52,28 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (btn) btn.disabled = !e.target.value;
     });
 
-  // ── Confirm block ────────────────────────────────────────
   document
     .getElementById("btn-confirmar-bloqueo")
     ?.addEventListener("click", _handleConfirmBlock);
 
-  // ── Open manager from block modal ────────────────────────
   document.getElementById("btn-ver-bloqueos")?.addEventListener("click", () => {
     closeAllModals();
     _openManager();
   });
 
-  // ── Recalculate (inside manager modal) ───────────────────
   document
     .getElementById("btn-recalcular-ruta")
     ?.addEventListener("click", _handleRecalculate);
 
-  // ── Clear all blocks (inside manager modal) ──────────────
   document
     .getElementById("btn-limpiar-todos-bloqueos")
     ?.addEventListener("click", _handleClearAll);
 
-  // ── Sync selects when graph loads / resets ───────────────
   document.addEventListener("skyroute:networkLoaded", (e) => {
     _populateRecalcSelects(e.detail.nodes || []);
   });
@@ -91,10 +86,7 @@ function _populateRouteSelect() {
   const sel = document.getElementById("select-ruta-bloquear");
   if (!sel) return;
 
-  const links = getNetworkData()?.links ?? [];
-
-  // Only list routes that are not already blocked
-  const active = links
+  const active = (getNetworkData()?.links ?? [])
     .filter((l) => !l.isBlocked)
     .sort((a, b) => a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
 
@@ -108,9 +100,7 @@ function _populateRouteSelect() {
     active
       .map(
         (l) =>
-          `<option value="${l.source}|${l.target}">
-            ${l.source} → ${l.target} &nbsp; (${l.distance ?? "?"} km)
-          </option>`,
+          `<option value="${l.source}|${l.target}">${l.source} → ${l.target} (${l.distance ?? "?"} km)</option>`,
       )
       .join("");
 }
@@ -120,8 +110,7 @@ function _populateRouteSelect() {
 // ════════════════════════════════════════════════════════════
 
 async function _handleConfirmBlock() {
-  const sel    = document.getElementById("select-ruta-bloquear");
-  const value  = sel?.value ?? "";
+  const value = document.getElementById("select-ruta-bloquear")?.value ?? "";
   if (!value) return;
 
   const [source, target] = value.split("|");
@@ -136,11 +125,8 @@ async function _handleConfirmBlock() {
       return;
     }
 
-    // 1. Visual update on canvas: edge turns red/dashed
     getRenderer()?.updateEdgeState(source, target, true);
     _updateToolbarStats();
-
-    // 2. In-transit check: is the animation currently on this segment?
     _checkInTransitInterruption(source, target);
 
     showToast2(`Ruta ${source} → ${target} bloqueada.`, "success");
@@ -154,50 +140,50 @@ async function _handleConfirmBlock() {
 }
 
 // ════════════════════════════════════════════════════════════
-// In-transit interruption
-// If the flight animation is currently flying the blocked segment,
-// stop it, snap the plane back to the segment origin, and notify
-// dynamicTravelManager so it can unlock and re-render the panel.
+// In-transit interruption with return animation
 // ════════════════════════════════════════════════════════════
 
 function _checkInTransitInterruption(blockedOrigin, blockedDest) {
   const renderer = getRenderer();
   const anim     = renderer?._flightAnim;
-  if (!anim?.active) return;
+  if (!anim?.active || anim.isReturn) return;
 
   const currentSeg = anim.segments?.[anim.currentSeg];
   if (!currentSeg) return;
   if (currentSeg.from !== blockedOrigin || currentSeg.to !== blockedDest) return;
 
-  // The plane is on the blocked segment → interrupt
   const finalDest = anim.segments.at(-1)?.to ?? "";
+  const startT    = anim.currentT ?? 1.0;
 
+  // Stop forward animation
   anim.active          = false;
   renderer._flightAnim = null;
-  renderer.setCurrentNode(blockedOrigin);
   renderer.clearHighlight();
 
-  // Notify other modules (dynamicTravelManager listens to this)
-  document.dispatchEvent(
-    new CustomEvent("skyroute:flightInterrupted", {
-      detail: { returnAirport: blockedOrigin, finalDestination: finalDest },
-    }),
-  );
-
   showToast2(
-    `✈ Vuelo interrumpido en tránsito. El avión regresa a ${blockedOrigin}.`,
+    `Vuelo interrumpido. El avión regresa a ${blockedOrigin}…`,
     "warning",
     7000,
   );
 
-  // Pre-fill the recalculate form and open the manager after a short pause
-  setTimeout(() => {
-    const oSel = document.getElementById("recalc-origin");
-    const dSel = document.getElementById("recalc-destination");
-    if (oSel) oSel.value = blockedOrigin;
-    if (dSel && finalDest) dSel.value = finalDest;
-    _openManager(true);
-  }, 900);
+  // Animate ball returning to origin along the same curve (reversed)
+  renderer.animateReturn(blockedOrigin, blockedDest, startT, () => {
+    renderer.setCurrentNode(blockedOrigin);
+
+    document.dispatchEvent(
+      new CustomEvent("skyroute:flightInterrupted", {
+        detail: { returnAirport: blockedOrigin, finalDestination: finalDest },
+      }),
+    );
+
+    setTimeout(() => {
+      const oSel = document.getElementById("recalc-origin");
+      const dSel = document.getElementById("recalc-destination");
+      if (oSel) oSel.value = blockedOrigin;
+      if (dSel && finalDest) dSel.value = finalDest;
+      _openManager(true);
+    }, 600);
+  });
 }
 
 // ════════════════════════════════════════════════════════════
@@ -263,16 +249,11 @@ async function _refreshBlockedList() {
   }
 }
 
-// ── Exposed globals for inline onclick handlers ───────────────
-
 window._skyRouteUnblock = async function (origin, destination) {
   showLoading(true, `Desbloqueando ${origin} → ${destination}…`);
   try {
     const result = await unblockRoute(origin, destination);
-    if (!result.success) {
-      showToast2(result.message || "Error al desbloquear.", "error");
-      return;
-    }
+    if (!result.success) { showToast2(result.message || "Error.", "error"); return; }
     getRenderer()?.updateEdgeState(origin, destination, false);
     _updateToolbarStats();
     showToast2(`Ruta ${origin} → ${destination} reactivada.`, "success");
@@ -314,14 +295,16 @@ async function _handleRecalculate() {
     const result = await recalculateRoute(origin, destination);
 
     if (!result.success) {
-      showToast2(
-        result.message || "No existe ruta alternativa disponible.",
-        "warning",
-      );
+      showToast2(result.message || "No existe ruta alternativa disponible.", "warning");
       return;
     }
 
+    // Highlight on canvas
     getRenderer()?.highlightPath(result.path);
+
+    // Show in itinerary panel
+    _setAltRoutePanel(result);
+
     showToast2(
       `Ruta alternativa: ${result.path.join(" → ")} · ${result.total_distance} km`,
       "success",
@@ -333,6 +316,67 @@ async function _handleRecalculate() {
   } finally {
     showLoading(false);
   }
+}
+
+// ════════════════════════════════════════════════════════════
+// Render recalculated route in the "Itinerario Calculado" panel.
+// btn-visualizar and btn-ejecutar-ruta are picked up by the
+// event delegation already wired in routePerformanceManager.
+// ════════════════════════════════════════════════════════════
+
+function _setAltRoutePanel(result) {
+  const el = document.getElementById("itinerary-info");
+  if (!el) return;
+
+  const pathAttr = result.path.join(",");
+  const pathStr  = result.path.join(" → ");
+  const stops    = result.path.length - 1;
+
+  el.innerHTML = `
+    <div style="font-family:inherit">
+      <div style="padding:0.6rem 0 0.4rem;
+                  border-bottom:2px solid var(--danger-color,#ef4444);
+                  margin-bottom:0.75rem">
+        <h4 style="margin:0;font-size:0.875rem;color:var(--danger-color,#ef4444)">
+          Ruta alternativa recalculada
+        </h4>
+        <p style="margin:0.25rem 0 0;font-size:0.8rem;color:var(--text-secondary)">
+          Evita las rutas bloqueadas actualmente
+        </p>
+      </div>
+
+      <div class="itinerary-step">
+        <div class="step-details">
+          <div class="step-detail-row"><span>Secuencia:</span></div>
+          <div style="font-family:monospace;font-size:0.8rem;margin-top:0.25rem;
+                      color:var(--text-primary);word-break:break-word">
+            ${pathStr}
+          </div>
+          <div class="step-detail-row" style="margin-top:0.5rem">
+            <span>Distancia total:</span>
+            <span><strong>${result.total_distance} km</strong></span>
+          </div>
+          <div class="step-detail-row">
+            <span>Tramos:</span>
+            <span>${stops}</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:right;margin-top:0.75rem;
+                  display:flex;gap:0.5rem;justify-content:flex-end">
+        <button class="btn btn-secondary btn-visualizar"
+                style="padding:0.35rem 0.9rem;font-size:0.78rem"
+                data-path="${pathAttr}">
+          Visualizar
+        </button>
+        <button class="btn btn-success btn-ejecutar-ruta"
+                style="padding:0.35rem 0.9rem;font-size:0.78rem"
+                data-path="${pathAttr}" data-transports="">
+          Ejecutar Ruta
+        </button>
+      </div>
+    </div>`;
 }
 
 // ════════════════════════════════════════════════════════════
