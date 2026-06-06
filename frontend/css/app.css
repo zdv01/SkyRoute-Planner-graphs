@@ -963,3 +963,304 @@ body {
     font-weight: 700;
     line-height: 1;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   REPORT MODAL — R5
+   Append these rules to the bottom of frontend/css/app.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Modal sizing for the report ──────────────────────────── */
+#modal-reporte .modal-dialog {
+  max-width: 860px;
+  width: 95%;
+  max-height: 92vh;
+}
+
+/* ── Report body scroll container ─────────────────────────── */
+#reporte-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-primary, #0f172a);
+  line-height: 1.55;
+}
+
+/* ── Report header strip ──────────────────────────────────── */
+.rpt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 0 1rem;
+  border-bottom: 3px solid var(--primary-color, #479699);
+  margin-bottom: 1.25rem;
+}
+
+.rpt-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color, #479699);
+}
+
+.rpt-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-secondary, #64748b);
+  margin-top: 0.2rem;
+}
+
+.rpt-badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rpt-badge-ok   { background: #dcfce7; color: #15803d; }
+.rpt-badge-warn { background: #fef9c3; color: #a16207; }
+
+/* ── KPI strip ────────────────────────────────────────────── */
+.rpt-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+}
+
+.rpt-kpi {
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 10px;
+  padding: 0.75rem 0.65rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.rpt-kpi-red   { border-color: #fca5a5; background: #fef2f2; }
+.rpt-kpi-green { border-color: #86efac; background: #f0fdf4; }
+
+.rpt-kpi-icon  { font-size: 1.35rem; }
+.rpt-kpi-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+.rpt-kpi-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ── Section ──────────────────────────────────────────────── */
+.rpt-section {
+  margin-bottom: 1.5rem;
+}
+
+.rpt-section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-color, #479699);
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Destination cards ────────────────────────────────────── */
+.rpt-card {
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+}
+
+.rpt-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--bg-tertiary, #f1f5f9);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  font-size: 0.875rem;
+}
+
+.rpt-card-num {
+  background: var(--primary-color, #479699);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.rpt-card-grid {
+  padding: 0.6rem 0.9rem;
+}
+
+.rpt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.28rem 0;
+  border-bottom: 1px dashed var(--border-color, #e2e8f0);
+  font-size: 0.825rem;
+}
+
+.rpt-row:last-child  { border-bottom: none; }
+
+.rpt-row-total {
+  font-weight: 600;
+  color: var(--primary-color, #479699);
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  margin-top: 0.2rem;
+  padding-top: 0.35rem;
+}
+
+/* ── Tags ─────────────────────────────────────────────────── */
+.rpt-tag {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+}
+
+.rpt-tag-hub { background: #fee2e2; color: #b91c1c; }
+.rpt-tag-sec { background: #dbeafe; color: #1d4ed8; }
+.rpt-tag-sub { background: #dcfce7; color: #15803d; }
+.rpt-tag-act { background: #ede9fe; color: #6d28d9; }
+
+/* ── Tables ───────────────────────────────────────────────── */
+.rpt-table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.rpt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.rpt-table th {
+  background: var(--bg-tertiary, #f1f5f9);
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary, #64748b);
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
+}
+
+.rpt-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  vertical-align: middle;
+}
+
+.rpt-table tbody tr:last-child td { border-bottom: none; }
+.rpt-table tbody tr:hover td { background: var(--bg-secondary, #f8fafc); }
+
+.rpt-table tfoot td {
+  background: var(--bg-tertiary, #f1f5f9);
+  border-top: 2px solid var(--border-color, #e2e8f0);
+  font-weight: 600;
+  padding: 0.55rem 0.75rem;
+}
+
+/* ── Totals grid ──────────────────────────────────────────── */
+.rpt-totales-grid {
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rpt-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  font-size: 0.855rem;
+}
+
+.rpt-total-row:last-child   { border-bottom: none; }
+.rpt-total-row.rpt-neg      { background: #fef2f2; }
+.rpt-total-row.rpt-pos      { background: #f0fdf4; }
+.rpt-total-row.rpt-divider  { border-top: 2px solid var(--border-color, #e2e8f0); }
+.rpt-total-row.rpt-highlight {
+  background: var(--bg-tertiary, #f1f5f9);
+  border-top: 2px solid var(--primary-color, #479699);
+  font-size: 0.9rem;
+}
+
+.rpt-num      { font-variant-numeric: tabular-nums; }
+.rpt-positive { color: #15803d; font-weight: 600; }
+.rpt-negative { color: #b91c1c; font-weight: 600; }
+
+.rpt-empty {
+  font-size: 0.82rem;
+  color: var(--text-secondary, #64748b);
+  padding: 0.5rem 0;
+  font-style: italic;
+}
+
+/* ── Print styles ─────────────────────────────────────────── */
+@media print {
+  .app-header,
+  .toolbar,
+  .info-panel,
+  .canvas-controls,
+  .graph-legend,
+  .modal-header,
+  .modal-footer,
+  .loading-overlay,
+  #toast-container { display: none !important; }
+
+  .modal {
+    position: static;
+    background: none;
+    backdrop-filter: none;
+  }
+
+  .modal-dialog {
+    max-width: 100%;
+    max-height: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+  }
+
+  .modal-body {
+    overflow: visible;
+  }
+
+  .rpt-kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Responsive: collapse KPI grid on small screens ──────── */
+@media (max-width: 600px) {
+  .rpt-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rpt-header {
+    flex-direction: column;
+  }
+}

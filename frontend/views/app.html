@@ -776,6 +776,34 @@
       </div>
     </div>
 
+    <div class="modal" id="modal-reporte">
+      <div
+        class="modal-dialog"
+        style="max-width: 860px; width: 95%; max-height: 92vh"
+      >
+        <div class="modal-header">
+          <h3> Reporte Final del Viaje</h3>
+          <button class="btn-close" id="btn-cerrar-reporte">&times;</button>
+        </div>
+
+        <!-- Scrollable body where reportManager.js injects HTML -->
+        <div class="modal-body" id="reporte-body">
+          <div class="empty-state">
+            <p>Generando reporte…</p>
+          </div>
+        </div>
+
+        <div
+          class="modal-footer"
+          style="justify-content: space-between; align-items: center"
+        >
+          <span style="font-size: 0.78rem; color: var(--text-secondary)">
+            La ruta completa ha sido resaltada en el mapa.
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- ══════════════ LOADING OVERLAY ═══════════════════════ -->
     <div class="loading-overlay" id="loading-overlay">
       <div class="spinner"></div>
@@ -791,6 +819,7 @@
     <script type="module" src="../js/pages/interruptionManager.js"></script>
     <script type="module" src="../js/pages/routePerformanceManager.js"></script>
     <script type="module" src="../js/pages/dynamicTravelManager.js"></script>
+    <script type="module" src="../js/pages/reportManager.js"></script>
     <script type="module" src="../js/pages/main.js"></script>
   </body>
 </html>

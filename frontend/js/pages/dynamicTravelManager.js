@@ -116,6 +116,7 @@ async function _handleIniciarViaje() {
     visited: [],
     history: [],
   };
+  window._skyRouteLastTravelState = null;
   _currentFlights = [];
 
   closeAllModals();
@@ -225,18 +226,31 @@ function _waitForFlight(from, to, aircraft) {
 
 function _endJourney() {
   if (!_travelState) return;
-  const spent = _travelState.initial_budget - _travelState.current_budget;
-  showToast2(
-    `Viaje finalizado: ${_travelState.visited.length} destinos · $${spent.toFixed(2)} USD gastados.`,
-    "success",
-    6000,
+ 
+  // ── Save final state for reportManager BEFORE clearing it ──
+  const finalState = { ..._travelState };
+  window._skyRouteLastTravelState = finalState;
+ 
+  // ── Fire event so reportManager can react immediately ──────
+  document.dispatchEvent(
+    new CustomEvent("skyroute:journeyEnded", { detail: { state: finalState } }),
   );
-  _setItineraryPanel(_buildFinalSummaryHTML(_travelState));
+ 
+  const spent = finalState.initial_budget - finalState.current_budget;
+  showToast2(
+    `Viaje finalizado: ${finalState.visited.length} destinos · $${spent.toFixed(2)} USD gastados. ` +
+    `Usa "Exportar Reporte" para ver el detalle completo.`,
+    "success",
+    7000,
+  );
+ 
+  _setItineraryPanel(_buildFinalSummaryHTML(finalState));
   getRenderer()?.setCurrentNode(null);
   getRenderer()?.clearHighlight();
-  _travelState = null;
+ 
+  _travelState   = null;
   _currentFlights = [];
-  _stepLocked = false;
+  _stepLocked    = false;
 }
 
 // ════════════════════════════════════════════════════════════
