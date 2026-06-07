@@ -311,10 +311,10 @@ class Graph:
     ):
         all_vertex = [v.identifier for v in graph.vertexes]
 
-        # 1. Filtro de vértices permitidos
+        # 1. Filter allowed vertices
         if allowed_vertices is not None:
-            # CORRECCIÓN: Garantizar que origen y destino siempre estén en la lista,
-            # de lo contrario dará KeyError en dist[start_id]
+            # FIX: Ensure origin and destination are always in the list,
+            # otherwise it will raise KeyError on dist[start_id]
             if start_id not in allowed_vertices:
                 allowed_vertices.add(start_id)
             if destination_id not in allowed_vertices:
@@ -322,7 +322,7 @@ class Graph:
 
             all_vertex = [v for v in all_vertex if v in allowed_vertices]
 
-        # Si por alguna razón el origen o destino no existen en el grafo
+        # If for any reason origin or destination are not in the graph
         if start_id not in all_vertex or destination_id not in all_vertex:
             return math.inf, []
 
@@ -348,9 +348,9 @@ class Graph:
             for edge in current_vertex.adjacencies:
                 v = edge.destination.identifier
                 if v in not_visited:
-                    # Inyección de la función de peso
+                    # Inject weight function
                     weight = weight_function(edge)
-                    if weight == math.inf:  # Se descarta por transporte inválido
+                    if weight == math.inf:  # Skip: invalid transport type
                         continue
 
                     new_dist = dist[u] + weight
@@ -358,7 +358,7 @@ class Graph:
                         dist[v] = new_dist
                         pred[v] = u
 
-        # CORRECCIÓN: Validar que realmente se llegó al destino
+        # FIX: Confirm the destination was actually reached
         if dist[destination_id] == math.inf:
             return math.inf, []
 

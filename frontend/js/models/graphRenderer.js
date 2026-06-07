@@ -700,7 +700,7 @@ export class GraphRenderer {
   _aircraftColor(type) {
     if (type.includes("Comercial")) return this.colors.aircraftComercial;
     if (type.includes("Regional")) return this.colors.aircraftRegional;
-    return this.colors.aircraftHelice; // Hélice
+    return this.colors.aircraftHelice; // Propeller
   }
 
   /** Returns true if the edge (src→tgt) belongs to the currently highlighted path. */

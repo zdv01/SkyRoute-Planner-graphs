@@ -45,14 +45,14 @@ def process_action():
         if not data:
             return jsonify({"error": "No payload provided"}), 400
             
-        # Validación de campos mínimos obligatorios para operar
+        # Validate minimum required fields
         if not data.get("action_type") or not data.get("current_state"):
             return jsonify({"error": "Faltan parámetros requeridos (action_type, current_state)"}), 400
 
-        # Delegar al servicio
+        # Delegate to service
         result = travel_service.process_user_action(data)
         
-        # Evaluar el resultado del servicio
+        # Evaluate service result
         if "error" in result:
             return jsonify({"status": "error", "message": result["error"]}), 400
             

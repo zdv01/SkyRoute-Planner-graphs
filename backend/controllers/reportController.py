@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-# Asegúrate de ajustar el path de importación según tu estructura real
+# Adjust the import path to match your actual project structure
 from services.reportService import FinalReport 
 
 report_bp = Blueprint('report', __name__)
@@ -11,10 +11,10 @@ def generate_final_report():
         if not data:
             return jsonify({"error": "No payload provided"}), 400
 
-        # Usamos el classmethod que definiste para instanciar el reporte
+        # Use the classmethod to instantiate the report
         report = FinalReport.from_dict(data)
 
-        # Devolvemos el reporte formateado usando tu método to_dict()
+        # Return the formatted report using to_dict()
         return jsonify({
             "status": "success",
             "message": "Report generated successfully",

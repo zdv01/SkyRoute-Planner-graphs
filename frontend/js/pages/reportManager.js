@@ -283,22 +283,22 @@ function _renderReportModal(report, state) {
       ${_kpi("Actividades", String(totales.actividadesRealizadas), "")}
     </div>
 
-    ${_section("Destinos Visitados", _renderDestinos(destinosVisitados))}
-    ${_section("Tramos de Vuelo", _renderVuelos(vuelosRecorridos))}
+    ${_section("Destinos Visitados", _renderDestinations(destinosVisitados))}
+    ${_section("Tramos de Vuelo", _renderFlights(vuelosRecorridos))}
     ${
       actividadesRealizadas.length
         ? _section(
             "Actividades Realizadas",
-            _renderActividades(actividadesRealizadas),
+            _renderActivities(actividadesRealizadas),
           )
         : ""
     }
     ${
       trabajosRealizados.length
-        ? _section("Trabajos Realizados", _renderTrabajos(trabajosRealizados))
+        ? _section("Trabajos Realizados", _renderJobs(trabajosRealizados))
         : ""
     }
-    ${_section("Resumen de Totales", _renderTotales(totales))}
+    ${_section("Resumen de Totales", _renderTotals(totales))}
   `;
 }
 
@@ -326,7 +326,7 @@ function _kpi(label, value, icon, accent = "") {
 /**
  * Renders the HTML block for visited destinations.
  */
-function _renderDestinos(destinos) {
+function _renderDestinations(destinos) {
   if (!destinos?.length)
     return '<p class="rpt-empty">No hay destinos registrados.</p>';
 
@@ -364,7 +364,7 @@ function _renderDestinos(destinos) {
 /**
  * Renders the HTML table for flown segments.
  */
-function _renderVuelos(vuelos) {
+function _renderFlights(vuelos) {
   if (!vuelos?.length)
     return '<p class="rpt-empty">No hay vuelos registrados.</p>';
 
@@ -416,7 +416,7 @@ function _renderVuelos(vuelos) {
 /**
  * Renders the HTML table for completed activities.
  */
-function _renderActividades(acts) {
+function _renderActivities(acts) {
   if (!acts?.length)
     return '<p class="rpt-empty">No hay actividades registradas.</p>';
 
@@ -459,7 +459,7 @@ function _renderActividades(acts) {
 /**
  * Renders the HTML table for completed jobs.
  */
-function _renderTrabajos(jobs) {
+function _renderJobs(jobs) {
   if (!jobs?.length)
     return '<p class="rpt-empty">No hay trabajos registrados.</p>';
 
@@ -503,7 +503,7 @@ function _renderTrabajos(jobs) {
 /**
  * Renders the HTML block summarizing all totals.
  */
-function _renderTotales(t) {
+function _renderTotals(t) {
   const balance = t.totalGanado - t.totalGastado;
 
   return `

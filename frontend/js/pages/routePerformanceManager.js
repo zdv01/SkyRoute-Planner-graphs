@@ -42,10 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Calculate button ─────────────────────────────────────
   document
     .getElementById("btn-calcular-basico")
-    ?.addEventListener("click", _handleCalcularItinerario);
+    ?.addEventListener("click", _handleCalculateItinerary);
   document
     .getElementById("btn-calcular-mejor-ruta")
-    ?.addEventListener("click", _handleCalcularMejorRuta);
+    ?.addEventListener("click", _handleCalculateBestRoute);
 
   // ── Populate selects when network loads ──────────────────
   document.addEventListener("skyroute:networkLoaded", (e) => {
@@ -88,10 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ════════════════════════════════════════════════════════════
-// Handlers separados por modal
+// Handlers per modal
 // ════════════════════════════════════════════════════════════
 
-async function _handleCalcularItinerario() {
+async function _handleCalculateItinerary() {
   const origin = document.getElementById("origen-basico")?.value || "";
   const budget =
     parseFloat(document.getElementById("presupuesto-basico")?.value) || 0;
@@ -128,7 +128,7 @@ async function _handleCalcularItinerario() {
   showToast2("Itinerarios calculados correctamente.", "success");
 }
 
-async function _handleCalcularMejorRuta() {
+async function _handleCalculateBestRoute() {
   const origin = document.getElementById("origen-mejor-ruta")?.value || "";
   const destination = document.getElementById("destino-basico")?.value || "";
   const criteria = [

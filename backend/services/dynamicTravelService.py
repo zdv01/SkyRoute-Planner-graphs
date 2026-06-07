@@ -33,19 +33,21 @@ class DynamicTravelService:
 
         vertex_data = vertex.to_dict() if hasattr(vertex, "to_dict") else {}
 
-        # 1. TRABAJOS (solo si presupuesto < umbral configurado)
+        # 1. JOBS (only if budget < configured threshold)
         available_jobs = []
-        if initial_budget and current_budget < (initial_budget * cfg["presupuesto_minimo_porc"]):
+        if initial_budget and current_budget < (
+            initial_budget * cfg["presupuesto_minimo_porc"]
+        ):
             available_jobs = vertex_data.get("trabajos", [])
 
-        # 2. ACTIVIDADES opcionales del nodo actual
+        # 2. Optional ACTIVITIES at the current node
         activities = vertex_data.get("actividades", [])
 
-        # 3. VUELOS con cálculo de costos desde configuración del JSON
-        aeronaves = cfg["aeronaves"]
+        # 3. FLIGHTS with cost calculation from JSON config
+        aircraft_config = cfg["aeronaves"]
         overhead = cfg["overhead_vuelo"]
-        intervalo_alimentacion = cfg["intervalo_alimentacion"]
-        intervalo_alojamiento = cfg["intervalo_alojamiento"]
+        feeding_interval = cfg["intervalo_alimentacion"]
+        lodging_interval = cfg["intervalo_alojamiento"]
 
         flight_options = []
         for edge in vertex.adjacencies:
@@ -54,27 +56,27 @@ class DynamicTravelService:
 
             dest = edge.destination
             dist_km = getattr(edge, "distanceKm", 0)
-            aeronaves_disponibles = getattr(edge, "aircrafts", [])
+            available_aircraft = getattr(edge, "aircrafts", [])
             is_subsidized = getattr(edge, "routeSubsidized", False)
 
-            for plane_type in aeronaves_disponibles:
-                perf = aeronaves.get(plane_type, {})
-                costo_km = perf.get("costoKm", 0.12)
-                tiempo_km = perf.get("tiempoKm", 0.4)
+            for plane_type in available_aircraft:
+                perf = aircraft_config.get(plane_type, {})
+                cost_per_km = perf.get("costoKm", 0.12)
+                time_per_km = perf.get("tiempoKm", 0.4)
 
-                flight_time_mins = dist_km * tiempo_km + overhead
-                flight_cost = 0 if is_subsidized else dist_km * costo_km
+                flight_time_mins = dist_km * time_per_km + overhead
+                flight_cost = 0 if is_subsidized else dist_km * cost_per_km
 
-                # Gastos obligatorios durante el vuelo
+                # Mandatory costs during the flight
                 extra_costs = 0
                 temp_time_food = time_since_food + (flight_time_mins / 60)
                 temp_time_sleep = time_since_sleep + (flight_time_mins / 60)
 
-                if temp_time_food >= intervalo_alimentacion:
+                if temp_time_food >= feeding_interval:
                     extra_costs += vertex_data.get(
                         "costoAlimentacion", getattr(vertex, "alimentationCost", 0)
                     )
-                if temp_time_sleep >= intervalo_alojamiento:
+                if temp_time_sleep >= lodging_interval:
                     extra_costs += vertex_data.get(
                         "costoAlojamiento", getattr(vertex, "accommodationCost", 0)
                     )
@@ -171,49 +173,51 @@ class DynamicTravelService:
             current_node = destination
 
         elif action_type == "job":
-            tarifa = action_details.get("tarifaHora", 0)
-            horas = action_details.get("horas", 0)
-            max_horas = action_details.get("maxHoras", horas)
+            hourly_rate = action_details.get("tarifaHora", 0)
+            hours = action_details.get("horas", 0)
+            max_hours = action_details.get("maxHoras", hours)
 
-            if horas > max_horas:
-                return {"error": f"No puedes trabajar más de {max_horas} horas en este empleo."}
+            if hours > max_hours:
+                return {
+                    "error": f"No puedes trabajar más de {max_hours} horas en este empleo."
+                }
 
-            ingreso = tarifa * horas
-            current_budget += ingreso
-            total_time_mins += horas * 60
-            time_since_sleep += horas
-            time_since_food += horas
+            earnings = hourly_rate * hours
+            current_budget += earnings
+            total_time_mins += hours * 60
+            time_since_sleep += hours
+            time_since_food += hours
 
             history.append(
                 {
                     "type": "job",
                     "location": current_node,
                     "name": action_details.get("nombre"),
-                    "earned": round(ingreso, 2),
-                    "hours": horas,
+                    "earned": round(earnings, 2),
+                    "hours": hours,
                 }
             )
 
         elif action_type == "activity":
-            costo = action_details.get("costoUSD", 0)
-            duracion = action_details.get("duracionMin", 0)
+            cost = action_details.get("costoUSD", 0)
+            duration = action_details.get("duracionMin", 0)
 
-            if current_budget < costo:
+            if current_budget < cost:
                 return {"error": "Presupuesto insuficiente para esta actividad."}
 
-            current_budget -= costo
-            total_time_mins += duracion
-            duracion_horas = duracion / 60.0
-            time_since_sleep += duracion_horas
-            time_since_food += duracion_horas
+            current_budget -= cost
+            total_time_mins += duration
+            duration_hours = duration / 60.0
+            time_since_sleep += duration_hours
+            time_since_food += duration_hours
 
             history.append(
                 {
                     "type": "activity",
                     "location": current_node,
                     "name": action_details.get("nombre"),
-                    "cost": round(costo, 2),
-                    "time_mins": duracion,
+                    "cost": round(cost, 2),
+                    "time_mins": duration,
                 }
             )
         else:

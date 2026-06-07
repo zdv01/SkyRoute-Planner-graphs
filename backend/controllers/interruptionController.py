@@ -2,10 +2,10 @@ from flask import Blueprint, request, jsonify
 from services.interruptionService import InterruptionService
 from controllers.graphLoadController import load_service
 
-# Definición del Blueprint
+# Blueprint definition
 interruption_bp = Blueprint('interruptions', __name__)
 
-# Instancia del servicio inyectando el load_service completo
+# Service instance injecting the full load_service
 interruption_service = InterruptionService(load_service)
 
 @interruption_bp.route('/block', methods=['POST'])
@@ -49,7 +49,7 @@ def recalculate():
     data = request.get_json() or {}
     origin = data.get("origin")
     destination = data.get("destination")
-    # Nota: Tu Service actual usa Dijkstra por defecto internamente
+    # Note: the current Service uses Dijkstra internally by default
 
     if not origin or not destination:
         return jsonify({"error": "Origin and destination required"}), 400
@@ -61,7 +61,7 @@ def recalculate():
 @interruption_bp.route('/transit', methods=['POST'])
 def handle_transit():
     data = request.get_json() or {}
-    # Segun tu requerimiento: redirigir al ORIGEN del tramo actual
+    # Per requirement: redirect to the ORIGIN of the current segment
     current_segment_origin = data.get("origin") 
     final_destination = data.get("finalDestination")
 

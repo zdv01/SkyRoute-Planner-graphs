@@ -469,7 +469,7 @@ async function _handleRecalculate() {
 // ════════════════════════════════════════════════════════════
 
 function _setAltRoutePanel(result) {
-  // Si hay un viaje avanzado activo, no sobreescribir su panel — solo refrescar vuelos
+  // If there is an active advanced journey, do not overwrite its panel — just refresh flights
   if (window._skyRouteTravelState) {
     document.dispatchEvent(new CustomEvent("skyroute:routeRecalculated"));
     return;

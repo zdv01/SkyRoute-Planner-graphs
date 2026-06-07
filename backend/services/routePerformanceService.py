@@ -6,7 +6,7 @@ class RoutePerformanceService:
         self.graph_service = graph_load_service
 
     # =========================================================================
-    # REQUERIMIENTO: RUTAS ÓPTIMAS PUNTO A PUNTO (Multicriterio)
+    # REQUIREMENT: POINT-TO-POINT OPTIMAL ROUTES (Multi-criteria)
     # =========================================================================
     def calculate_optimized_routes(
         self,
@@ -19,21 +19,21 @@ class RoutePerformanceService:
         graph = self.graph_service.graph
         aircraft_config = self.graph_service.config.get("aeronaves", {})
 
-        # 1. Filtro: Excluir aeropuertos secundarios
+        # 1. Filter: Exclude secondary airports
         allowed_vertices = None
         if exclude_secondary:
             allowed_vertices = {
                 v.identifier for v in graph.vertexes if getattr(v, "isHub", True)
             }
 
-        # 2. Pre-calcular máximos para normalización de criterios combinados
+        # 2. Pre-compute maximums for combined criteria normalization
         max_weights = self._compute_max_weights(
             graph, preferred_transports, aircraft_config
         )
 
         results = {}
 
-        # 3. Calcular ruta por cada criterio (individual o combinado)
+        # 3. Calculate route per criterion (individual or combined)
         for criterion in criteria:
 
             def get_custom_weight(
@@ -58,7 +58,7 @@ class RoutePerformanceService:
                 target = edge.destination
 
                 if "+" in _c:
-                    # Criterio combinado: suma de métricas normalizadas
+                    # Combined criterion: sum of normalized metrics
                     total = 0
                     for sc in _c.split("+"):
                         w = self._single_weight(edge, sc, dist_km, ac_cfg, target)
@@ -212,7 +212,7 @@ class RoutePerformanceService:
         return {k: round(v, 2) for k, v in total.items()}
 
     # =========================================================================
-    # REQUERIMIENTO 2.2: GENERACIÓN AUTOMÁTICA DE ITINERARIOS
+    # REQUIREMENT 2.2: AUTOMATIC ITINERARY GENERATION
     # =========================================================================
     def generate_automatic_itineraries(
         self, origin_id, initial_budget, available_time_hours, preferred_transports

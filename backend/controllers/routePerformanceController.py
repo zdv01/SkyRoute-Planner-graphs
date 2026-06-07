@@ -2,10 +2,10 @@ from flask import Blueprint, request, jsonify
 from services.routePerformanceService import RoutePerformanceService
 from controllers.graphLoadController import load_service
 
-# Definición del Blueprint
+# Blueprint definition
 route_performance_bp = Blueprint('route_performance', __name__)
 
-# Instancia del servicio inyectando el estado global del grafo cargado
+# Service instance injecting the global loaded graph state
 performance_service = RoutePerformanceService(load_service)
 
 @route_performance_bp.route('/optimize', methods=['POST'])

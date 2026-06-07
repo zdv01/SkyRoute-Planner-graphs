@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentación — SkyRoute Planner</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/documentation.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img src="../assets/images/ucaldas.png" alt="Logo" class="header-logo" />
+      <nav class="header-nav">
+        <button class="btn-nav" onclick="window.location.href='index.html'">← Volver</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="docs-page">
+      <h1 class="docs-title">Documentación</h1>
+      <p class="docs-subtitle">Selecciona el documento que deseas abrir</p>
+
+      <div class="docs-grid">
+        <div class="doc-card" onclick="window.open('../docs/Manual_Usuario_SkyRoute.pdf', '_blank')">
+          <div class="doc-card-icon">📘</div>
+          <div class="doc-card-title">Manual de Usuario</div>
+          <div class="doc-card-desc">Guía de uso del sistema SkyRoute Planner</div>
+        </div>
+
+        <div class="doc-card" onclick="window.open('../docs/Manual Técnico — SkyRoute Planner.pdf', '_blank')">
+          <div class="doc-card-icon">📗</div>
+          <div class="doc-card-title">Manual Técnico</div>
+          <div class="doc-card-desc">Documentación técnica y de arquitectura</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

@@ -42,32 +42,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document
     .getElementById("btn-iniciar-avanzado")
-    ?.addEventListener("click", _handleIniciarViaje);
+    ?.addEventListener("click", _handleStartJourney);
 
-    // R4: Release step lock if a flight is interrupted mid-transit
+  // R4: Release step lock if a flight is interrupted mid-transit
   document.addEventListener("skyroute:flightInterrupted", (e) => {
     _stepLocked = false;
     const { returnAirport } = e.detail;
     if (_travelState) {
-      // Revertir el vuelo interrumpido: restaurar estado pre-vuelo completo
+      // Revert the interrupted flight: restore full pre-flight state
       if (window._skyRoutePreFlightSnapshot) {
         const snap = window._skyRoutePreFlightSnapshot;
-        _travelState.current_budget   = snap.budget;
-        _travelState.visited          = snap.visited;
+        _travelState.current_budget = snap.budget;
+        _travelState.visited = snap.visited;
         _travelState.time_since_sleep = snap.timeSinceSleep;
-        _travelState.time_since_food  = snap.timeSinceFood;
-        _travelState.total_time_mins  = snap.totalTimeMins;
-        _travelState.history = (_travelState.history || []).slice(0, snap.historyLength);
+        _travelState.time_since_food = snap.timeSinceFood;
+        _travelState.total_time_mins = snap.totalTimeMins;
+        _travelState.history = (_travelState.history || []).slice(
+          0,
+          snap.historyLength,
+        );
         window._skyRoutePreFlightSnapshot = null;
       }
       _travelState.current_node = returnAirport;
       window._skyRouteTravelState = _travelState;
-      showToast2(`Vuelo cancelado y reembolsado. El avión regresó a ${returnAirport}.`, "warning", 6000);
+      showToast2(
+        `Vuelo cancelado y reembolsado. El avión regresó a ${returnAirport}.`,
+        "warning",
+        6000,
+      );
       _refreshFlightsOnly();
     }
   });
 
-  // R4: Recálculo de ruta alternativa mientras viaje avanzado está activo
+  // R4: Alternative route recalculation while advanced travel is active
   document.addEventListener("skyroute:routeRecalculated", () => {
     _refreshFlightsOnly();
   });
@@ -113,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Handlers
 // ════════════════════════════════════════════════════════════
 
-async function _handleIniciarViaje() {
+async function _handleStartJourney() {
   const origin = document.getElementById("origen-avanzado")?.value || "";
   const budget =
     parseFloat(document.getElementById("presupuesto-avanzado")?.value) || 0;
@@ -143,9 +150,7 @@ async function _handleIniciarViaje() {
 
   closeAllModals();
   getRenderer()?.setCurrentNode(origin);
-  _setItineraryPanel(
-    '<div class="empty-state"><p>Iniciando viaje…</p></div>',
-  );
+  _setItineraryPanel('<div class="empty-state"><p>Iniciando viaje…</p></div>');
   await _runNextStep();
 }
 
@@ -253,7 +258,10 @@ async function _processAction(type, details) {
 function _waitForFlight(from, to, aircraft) {
   return new Promise((resolve) => {
     const renderer = getRenderer();
-    if (!renderer) { resolve(); return; }
+    if (!renderer) {
+      resolve();
+      return;
+    }
     renderer.animateFlight([from, to], [aircraft], resolve);
   });
 }
@@ -262,32 +270,32 @@ function _waitForFlight(from, to, aircraft) {
 
 function _endJourney() {
   if (!_travelState) return;
- 
+
   // ── Save final state for reportManager BEFORE clearing it ──
   const finalState = { ..._travelState };
   window._skyRouteLastTravelState = finalState;
- 
+
   // ── Fire event so reportManager can react immediately ──────
   document.dispatchEvent(
     new CustomEvent("skyroute:journeyEnded", { detail: { state: finalState } }),
   );
- 
+
   const spent = finalState.initial_budget - finalState.current_budget;
   showToast2(
     `Viaje finalizado: ${finalState.visited.length} destinos · $${spent.toFixed(2)} USD gastados. ` +
-    `Usa "Exportar Reporte" para ver el detalle completo.`,
+      `Usa "Exportar Reporte" para ver el detalle completo.`,
     "success",
     7000,
   );
- 
+
   _setItineraryPanel(_buildFinalSummaryHTML(finalState));
   getRenderer()?.setCurrentNode(null);
   getRenderer()?.clearHighlight();
- 
-  _travelState   = null;
+
+  _travelState = null;
   window._skyRouteTravelState = null;
   _currentFlights = [];
-  _stepLocked    = false;
+  _stepLocked = false;
 }
 
 // ════════════════════════════════════════════════════════════
@@ -427,14 +435,14 @@ async function _showTransportModal(flights) {
     return;
   }
 
-  // Guardar snapshot antes de procesar: si el vuelo se interrumpe se puede revertir
+  // Save snapshot before processing: if the flight is interrupted it can be reverted
   window._skyRoutePreFlightSnapshot = {
-    budget:        _travelState.current_budget,
-    visited:       [..._travelState.visited],
+    budget: _travelState.current_budget,
+    visited: [..._travelState.visited],
     timeSinceSleep: _travelState.time_since_sleep,
-    timeSinceFood:  _travelState.time_since_food,
-    totalTimeMins:  _travelState.total_time_mins,
-    historyLength:  (_travelState.history || []).length,
+    timeSinceFood: _travelState.time_since_food,
+    totalTimeMins: _travelState.total_time_mins,
+    historyLength: (_travelState.history || []).length,
   };
 
   const result = await _processAction("flight", flightOption);
@@ -650,10 +658,7 @@ function _buildTravelPanelHTML(flights, suggestion) {
   // One button per unique destination, sorted by min cost
   const destMap = new Map();
   for (const f of flights) {
-    if (
-      !destMap.has(f.to) ||
-      f.total_step_cost < destMap.get(f.to).minCost
-    ) {
+    if (!destMap.has(f.to) || f.total_step_cost < destMap.get(f.to).minCost) {
       destMap.set(f.to, {
         to: f.to,
         to_name: f.to_name,
@@ -775,8 +780,7 @@ function _populateOriginSelect(nodes) {
       return `<option value="${n.id}">${n.id} — ${name}</option>`;
     })
     .join("");
-  el.innerHTML =
-    '<option value="">Seleccione aeropuerto...</option>' + options;
+  el.innerHTML = '<option value="">Seleccione aeropuerto...</option>' + options;
 }
 
 function _setItineraryPanel(html) {
