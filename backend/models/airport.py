@@ -1,9 +1,8 @@
-from .vertex import Vertex
 from .Activity import Activity
 from .Job import Job
 
 
-class Airport(Vertex):
+class Airport:
     """It represents an airport with complete information for the routing system"""
 
     def __init__(
